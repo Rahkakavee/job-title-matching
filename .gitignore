@@ -1,0 +1,39 @@
+# OS
+.DS_Store
+.DS_Store?
+
+# VE 
+.venv
+venv/
+
+# mypy 
+.mypy_cache/
+
+.__pychache__
+.pyc
+
+# packages 
+__pypackages__/
+
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+
+## Core latex/pdflatex auxiliary files:
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
