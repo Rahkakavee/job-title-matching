@@ -3,8 +3,8 @@ from spacy.kb import KnowledgeBase
 import json
 import os
 
-nlp = spacy.load("de_dep_news_trf")
-kb = KnowledgeBase(vocab=nlp.vocab, entity_vector_length=0)
+nlp = spacy.load("de_core_news_lg")
+kb = KnowledgeBase(vocab=nlp.vocab, entity_vector_length=300)
 
 with open("src/modeling/NEL/kb_dir/entities.jsonl", "r") as f:
     entities = [json.loads(line) for line in f]

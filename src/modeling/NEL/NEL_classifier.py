@@ -57,9 +57,9 @@ random.shuffle(train)
 random.shuffle(test)
 
 TRAIN_EXAMPLES = []
-if "parser" not in nlp.pipe_names:
-    nlp.add_pipe("parser")
-sentencizer = nlp.get_pipe("parser")
+if "sentencizer" not in nlp.pipe_names:
+    nlp.add_pipe("sentencizer")
+sentencizer = nlp.get_pipe("sentencizer")
 for text, annotation in train:
     example = Example.from_dict(nlp.make_doc(text), annotation)
     example.reference = sentencizer(example.reference)

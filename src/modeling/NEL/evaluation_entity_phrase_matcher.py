@@ -26,26 +26,37 @@ for entry in kldb_level_5.training_data:
 
 nlp = spacy.load("src/modeling/NEL/models/nlp_NEL")
 
+
+# examples = []
+# for text, annots in dataset:
+#     doc = nlp.make_doc(text)
+#     examples.append(Example.from_dict(doc, annots))
+
+# scores = nlp.evaluate(examples)
+# print(f"entity_linker_performance: {scores}")
+
+tp = 0  # richtige predicted
+fn = 0  # keine ents
+fp = 0  # prediction falsch
+
 for text, true_annot in dataset:
-    print(text)
-    print(f"Gold annotation: {true_annot}")
     doc = nlp(text)
-    for ent in doc.ents:
-        print(f"Prediction: {ent.text}, {ent.kb_id_}")
+    if len(doc.ents) == 0:
+        fn += 1
+    if len(doc.ents) != 0:
+        links = true_annot["links"]
+        ids = links[list(true_annot["links"].keys())[0]]
+        id = list(ids.keys())[0]
+        doc = nlp(text)
+        for ent in doc.ents:
+            if id == ent.kb_id_:
+                tp += 1
+            if id == ent.kb_id_:
+                fp += 1
 
-examples = []
-for text, annots in dataset:
-    doc = nlp.make_doc(text)
-    try:
-        examples.append(Example.from_dict(doc, annots))
-    except:
-        (
-            "[E981] The offsets of the annotations for `links` could not be aligned to token boundaries."
-        )
+# TODO: Nochmal überprüfen, ob das wirklich Sinn macht
+precision = tp / (tp + fp)
+recall = tp / (tp + fn)
 
-len(examples)
-
-scores = nlp.evaluate(examples)
-# print(f"ents_precision: {scores['ents_p']}")
-# print(f"ents_recall: {scores['ents_r']}")
-# print(f"ents_f:{scores['ents_f']}")
+print(f"precision: {precision}")
+print(f"recall: {recall}")
