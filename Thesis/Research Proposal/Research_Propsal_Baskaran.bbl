@@ -1,0 +1,213 @@
+\begin{thebibliography}{}
+
+\bibitem[Aly, 2005]{Aly2005}
+Aly, M. (2005).
+\newblock Survey on multiclass classification methods.
+\newblock {\em Neural Netw}, 19:1--9.
+
+\bibitem[Bouaziz et~al., 2014]{Bouaziz2014}
+Bouaziz, A., Dartigues-Pallez, C., da~Costa~Pereira, C., Precioso, F., and
+  Lloret, P. (2014).
+\newblock Short text classification using semantic random forest.
+\newblock {\em Lecture Notes in Computer Science (including subseries Lecture
+  Notes in Artificial Intelligence and Lecture Notes in Bioinformatics)}, 8646
+  LNCS:288--299.
+
+\bibitem[Boydston and Hirst, 2019]{Bodyston2019}
+Boydston, P.~S. and Hirst, E. S.~J. (2019).
+\newblock Public perceptions and understanding of job titles related to
+  behavior analysis.
+\newblock {\em Behavior Analysis in Practice 2019 13:2}, 13:394--401.
+
+\bibitem[Chen et~al., 2019]{Chen2019}
+Chen, J., Hu, Y., Liu, J., Xiao, Y., and Jiang, H. (2019).
+\newblock Deep short text classification with knowledge powered attention.
+\newblock {\em 33rd AAAI Conference on Artificial Intelligence, AAAI 2019},
+  pages 6252--6259.
+
+\bibitem[Colas and Brazdil, 2006]{Colas2006}
+Colas, F. and Brazdil, P. (2006).
+\newblock Comparison of svm and some older classification algorithms in text
+  classification tasks.
+\newblock {\em IFIP International Federation for Information Processing},
+  217:169--178.
+
+\bibitem[Decorte et~al., 2021]{Decorte2021}
+Decorte, J.-J., Hautte, J.~V., Demeester, T., and Develder, C. (2021).
+\newblock Jobbert: Understanding job titles through skills.
+\newblock {\em arXiv preprint arXiv}, pages 1--9.
+
+\bibitem[Farooq et~al., 2017]{Farooq2017}
+Farooq, A., Anwar, S., Awais, M., and Rehman, S. (2017).
+\newblock A deep cnn based multi-class classification of alzheimer's disease
+  using mri.
+\newblock {\em IST 2017 - IEEE International Conference on Imaging Systems and
+  Techniques, Proceedings}, 2018-January:1--6.
+
+\bibitem[Guo and Wang, 2015]{Guo2015}
+Guo, H. and Wang, W. (2015).
+\newblock An active learning-based svm multi-class classification model.
+\newblock {\em Pattern Recognition}, 48:1577--1597.
+
+\bibitem[Japkowicz, 2000]{Japkowicz2000}
+Japkowicz, N. (2000).
+\newblock Learning from imbalanced data sets: A comparison of various
+  strategies.
+\newblock {\em AAAI Technical Report WS-00-05}.
+
+\bibitem[Javed et~al., 2015]{Javed2015}
+Javed, F., Luo, Q., McNair, M., Jacob, F., Zhao, M., and Kang, T.~S. (2015).
+\newblock Carotene: A job title classification system for the online
+  recruitment domain.
+\newblock {\em Proceedings - 2015 IEEE 1st International Conference on Big Data
+  Computing Service and Applications, BigDataService 2015}, pages 286--293.
+
+\bibitem[Javed et~al., 2016]{Javed2016}
+Javed, F., McNair, M., Jacob, F., and Zhao, M. (2016).
+\newblock Towards a job title classification system.
+\newblock {\em arXiv preprint arXiv}, pages 1--4.
+
+\bibitem[Khamar, 2013]{Khamar2013}
+Khamar, K. (2013).
+\newblock Short text classification using knn based on distance function.
+\newblock {\em International Journal of Advanced Research in Computer and
+  Communication Engineering}, 2:1916--1919.
+
+\bibitem[Kowsari et~al., 2019]{Kowsari2019}
+Kowsari, K., Meimandi, K.~J., Heidarysafa, M., Mendu, S., Barnes, L., and
+  Brown, D. (2019).
+\newblock Text classification algorithms: A survey.
+\newblock {\em Information 2019, Vol. 10, Page 150}, 10:150.
+
+\bibitem[Le and Smola, 2006]{Le2006}
+Le, Q.~V. and Smola, A.~J. (2006).
+\newblock Simpler knowledge-based support vector machines.
+\newblock {\em Proceedings of the 23rd international conference on Machine
+  learning - ICML '06}.
+
+\bibitem[Li et~al., 2021]{Li2021}
+Li, L., Peltsverger, S., Zheng, J., Le, L., and Handlin, M. (2021).
+\newblock Retrieving and classifying linkedin job titles for alumni career
+  analysis.
+\newblock {\em SIGITE '21: Proceedings of the 22st Annual Conference on
+  Information Technology Education}, pages 85--90.
+
+\bibitem[Li et~al., 2004]{Li2004}
+Li, T., Zhang, C., and Ogihara, M. (2004).
+\newblock A comparative study of feature selection and multiclass
+  classification methods for tissue classification based on gene expression.
+\newblock {\em Bioinformatics}, 20:2429--2437.
+
+\bibitem[Malherbe et~al., 2014]{Malherbe2014}
+Malherbe, E., Diaby, M., Cataldi, M., Viennet, E., and Aufaure, M.~A. (2014).
+\newblock Field selection for job categorization and recommendation to social
+  network users.
+\newblock {\em ASONAM 2014 - Proceedings of the 2014 IEEE/ACM International
+  Conference on Advances in Social Networks Analysis and Mining}, pages
+  588--595.
+
+\bibitem[Marinescu and Wolthoff, 2020]{Marinescu2020}
+Marinescu, I. and Wolthoff, R. (2020).
+\newblock Opening the black box of the matching function: The power of words.
+\newblock {\em Journal of Labor Economics}, 38:535--568.
+
+\bibitem[Martin-Caughey, 2021]{Martin2021}
+Martin-Caughey, A. (2021).
+\newblock What’s in an occupation? investigating within-occupation variation
+  and gender segregation using job titles and task descriptions:.
+\newblock {\em American Social Review}, 86:960--999.
+
+\bibitem[Neculoiu et~al., 2016]{Neculoiu2016}
+Neculoiu, P., Versteegh, M., Rotaru, M., and Amsterdam, T. B.~V. (2016).
+\newblock Learning text similarity with siamese recurrent networks.
+\newblock {\em Association for Computational Linguistics}, pages 148--157.
+
+\bibitem[Paulus and Matthes, 2013]{Paulus2013}
+Paulus, W. and Matthes, B. (2013).
+\newblock Klassifikation der berufe : Struktur, codierung und
+  umsteigeschlüssel.
+\newblock {\em FDZ Methodenreport}.
+
+\bibitem[Schapire and Singer, 2000]{Schapire2000}
+Schapire, R.~E. and Singer, Y. (2000).
+\newblock Boostexter: A boosting-based system for text categorization.
+\newblock {\em Machine Learning}, 39:135--168.
+
+\bibitem[Sebastiani, 2001]{Sebastiani2001}
+Sebastiani, F. (2001).
+\newblock Machine learning in automated text categorization.
+\newblock {\em ACM Computing Surveys}, 34:1--47.
+
+\bibitem[Slamet et~al., 2018]{Slamet018}
+Slamet, C., Andrian, R., Maylawati, D.~S., Suhendar, Darmalaksana, W., and
+  Ramdhani, M.~A. (2018).
+\newblock Web scraping and naïve bayes classification for job search engine.
+\newblock {\em IOP Conference Series: Materials Science and Engineering},
+  288:012038.
+
+\bibitem[Smith et~al., 1989]{Smith1989}
+Smith, B.~N., Hornsby, J.~S., Benson, P.~G., and Wesolowski, M. (1989).
+\newblock What is in a name: The impact of job titles on job evaluation
+  results.
+\newblock {\em Journal of Business and Psychology}, 3:341--351.
+
+\bibitem[Song et~al., 2014]{Song2014}
+Song, G., Ye, Y., Du, X., Huang, X., and Bie, S. (2014).
+\newblock Short text classification: A survey.
+\newblock {\em Journal of Multimedia}, 9.
+
+\bibitem[Tang et~al., 2019]{Tang2019}
+Tang, L., Tian, Y., and Pardalos, P.~M. (2019).
+\newblock A novel perspective on multiclass classification: Regular simplex
+  support vector machine.
+\newblock {\em Information Sciences}, 480:324--338.
+
+\bibitem[Tomar and Agarwal, 2015]{Tomar2015}
+Tomar, D. and Agarwal, S. (2015).
+\newblock A comparison on multi-class classification methods based on least
+  squares twin support vector machine.
+\newblock {\em Knowledge-Based Systems}, 81:131--147.
+
+\bibitem[Uter, 2020]{Uter2020}
+Uter, W. (2020).
+\newblock Classification of occupations.
+\newblock {\em Kanerva's Occupational Dermatology}, pages 61--67.
+
+\bibitem[Vijayan et~al., 2017]{Vijayan2017}
+Vijayan, V.~K., Bindu, K.~R., and Parameswaran, L. (2017).
+\newblock A comprehensive study of text classification algorithms.
+\newblock {\em 2017 International Conference on Advances in Computing,
+  Communications and Informatics, ICACCI 2017}, 2017-January:1109--1113.
+
+\bibitem[Wang et~al., 2014]{WangF2014}
+Wang, F., Wang, Z., Li, Z., and Wen, J.~R. (2014).
+\newblock Concept-based short text classification and ranking.
+\newblock {\em CIKM 2014 - Proceedings of the 2014 ACM International Conference
+  on Information and Knowledge Management}, pages 1069--1078.
+
+\bibitem[Wang et~al., 2019]{WangJ2019}
+Wang, J., Abdelfatah, K., Korayem, M., and Balaji, J. (2019).
+\newblock Deepcarotene -job title classification with multi-stream
+  convolutional neural network.
+\newblock {\em Proceedings - 2019 IEEE International Conference on Big Data,
+  Big Data 2019}, pages 1953--1961.
+
+\bibitem[Wang et~al., 2017a]{WangJ2017}
+Wang, J., Wang, Z., Zhang, D., and Yan, J. (2017a).
+\newblock Combining knowledge with deep convolutional neural networks for short
+  text classification.
+\newblock {\em Proceedings of the Twenty-Sixth International Joint Conference
+  on Artificial Intelligence}.
+
+\bibitem[Wang et~al., 2017b]{WangY2017}
+Wang, Y., Zhou, Z., Jin, S., Liu, D., and Lu, M. (2017b).
+\newblock Comparisons and selections of features and classifiers for short text
+  classification.
+\newblock {\em IOP Conference Series: Materials Science and Engineering}, 261.
+
+\bibitem[Zhu et~al., 2017]{Zhu2017}
+Zhu, Y., Javed, F., and Ozturk, O. (2017).
+\newblock Document embedding strategies for job title classification.
+\newblock {\em The Thirtieth International Flairs Conference}.
+
+\end{thebibliography}
