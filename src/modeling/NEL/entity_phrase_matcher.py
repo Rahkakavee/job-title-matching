@@ -107,7 +107,7 @@ for doc in tqdm(docs):
     if len(doc.ents) > 0:
         for ent in doc.ents:
             text = doc.text
-            offset = (ent.start, ent.end)
+            offset = (ent.start_char, ent.end_char)
             entity_label = ent.label_
             for entry in kldb_level_1.training_data:
                 if entry["title"] == doc.text:
