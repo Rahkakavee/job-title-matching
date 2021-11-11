@@ -80,7 +80,7 @@
 
     \textbf{Supervisor:} Prof. Dr. Susumu Shikano
 
-    \textbf{Supervisor:} JunProf. Dr. Juhi Kuleshtra
+    \textbf{Supervisor:} JunProf. Dr. Juhi Kulshrestha
 
 \end{textblock*}
 
@@ -89,8 +89,10 @@
 \medskip
 
 \section{Introduction}
+\subsection{Motivation}
 Job titles are key information within the labor market. They are useful for job seekers to find jobs \citep{Marinescu2020}. They are an important component of job search engines \citep{Slamet018, Javed2015, Javed2016} and job recommendation systems \citep{Malherbe2014}. And lastly, they serve as a valuable data source for various analyses, such as job market trend \citep{Martin2021, Li2021}, job perception \citep{Smith1989, Bodyston2019} or social science analyses \citep{Martin2021}. However, since job titles are not normalized, it is challenging to structure them in an appropriate way for downstream tasks. Various institutions developed job taxonomies in order to structure and generalize job titles. Established taxonomies are, for example, the ``International Standard Classification of Occupation'' (ISCO) for the European job market or the ``Klassifikation der Berufe 2010'' (KLdB) for the German job market \citep{Uter2020}. Matching job titles from job postings with classes from those taxonomies is inevitable in order to improve job search engines or recommendation systems as well as analyzing the labor market. In Natural Language Processing (NLP), this process of matching is known as text classification. 
 
+\subsection{Related Work}
 Text classification, a highly researched area, is the process of classifying text documents or text segments into a set of predefined classes. During the last decades, researches developed a various number of classifiers. As \cite{Kowsari2019} summarize in their survey of classifiers, we can group the approaches mainly into three groups. The first group contains traditional methods like Naive Bayes (NV), Support Vector Machines (SVM), K-nearest neighbors (KNN),  Logistic Regressions (LR) or Decision Trees (DT) \citep{Vijayan2017, Colas2006, Kowsari2019, Sebastiani2001}. Deep learning methods like Convolutional Neural Networks (CNN) or Recurrent Neural Networks (RNN), which are currently the most advanced algorithms for NLP, form the second group. The last group consists of ensemble learning techniques like Boosting and Bagging.
 
 Each text classification task presents different challenges. One challenge is that domain-specific problems may arise. There is some work that deals with job classification in the English speaking job market. 
@@ -105,7 +107,7 @@ A last challenge of text classification tasks comes with the number of classes. 
 
 \section{Goal of the Thesis}
 \subsection{Problem Statement}
-The presented work on job classification has several gaps. First, while there is extensive work on job title classification for the English speaking job market, as far as I know, there have not been any classification attempts for the German job market. However, an accurate classification of job titles with the German taxonomy would facilitate several downstream tasks for the German job market. With the KldB 2010, an occupational classification was created for Germany that reflects the current trends in the labor market based on empirical and theoretical foundations. It contains 5 hierarchical levels, each of them reflecting different aspects. Especially level 3, which represents the professionalism of occupations, and level 5, which gives information on the requirements for a job are powerful tools for job market analyses \citep{Paulus2013}. In addition, the KldB 2010 is based on ISCO, which makes it easier to link the two taxonomies. The strengths of the KldB clearly show that an accurate classification of job titles according to KldB 2010 opens up new possibilities for labor market analyses. Furthermore, the classification could improve job search engines and recommendation systems. 
+The presented work on job classification has several gaps. First, while there is extensive work on job title classification for the English speaking job market, as far as I know, there have not been any classification attempts for the German job market. However, an accurate classification of job titles with the German taxonomy would facilitate several downstream tasks for the German job market. With the KldB 2010, an occupational classification was created for Germany that reflects the current trends in the labor market based on empirical and theoretical foundations. It contains 5 hierarchical levels, each of them reflecting different aspects. Especially level 3, which represents the professionalism of occupations, and level 5, which gives information on the requirements for a job are powerful tools for job market analyses \citep{Paulus2013}. In addition, the KldB 2010 is based on ISCO, which makes it easier to link the two taxonomies. Further, since job portals often use different categories for job titles, a classification according to the standardized KldB 2010 facilitates comparisons across job portals. The strengths of the KldB clearly show that an accurate classification of job titles according to KldB 2010 opens up new possibilities for labor market analyses. Furthermore, the classification could improve job search engines and recommendation systems. 
 
 Second, the brevity of the input texts and the large number of classes are the main challenges in job title classification. In the previous approaches to job title classification, the challenges are partly mentioned and considered, but the frameworks are not built on the basis of these challenges. A clear focus on methods from the two problem areas, could help to improve classification.  
 
