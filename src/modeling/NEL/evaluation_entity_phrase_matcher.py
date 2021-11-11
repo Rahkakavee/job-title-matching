@@ -1,7 +1,63 @@
 from src.preparation.training_data import TrainingData
 from src.preparation.json_load import load_json
 import spacy
-from spacy.training import Example
+from tqdm import tqdm
+from spacy.matcher import PhraseMatcher
+from spacy.tokens import Span
+from spacy.language import Language
+
+
+## define Phrase Matcher
+class EntityPhraseMatcher(object):
+    """pipline component for PhraseMatching
+
+    Parameters
+    ----------
+    object : None
+        None
+
+    Returns
+    -------
+    doc object
+        creates doc object and call the individual pipeline components on the Doc order
+    """
+
+    name = "phrase_entity_matcher"
+
+    def __init__(self, nlp, terms, label):
+        patterns = [nlp(term) for term in terms]
+        self.matcher = PhraseMatcher(nlp.vocab)
+        self.matcher.add(label, None, *patterns)
+
+    def __call__(self, doc):
+        matches = self.matcher(doc)
+        # filter matches
+        filtered_matches = []
+        current_start = -1
+        current_stop = -1
+        for label, start, stop in sorted(matches):
+            if start > current_stop:
+                # this segment starts after the last segment stops
+                # just add a new segment
+                filtered_matches.append((start, stop, label))
+                current_start, current_stop = start, stop
+            else:
+                # segments overlap, replace
+                filtered_matches[-1] = (current_start, stop, label)
+                # current_start already guaranteed to be lower
+                current_stop = max(current_stop, stop)
+        # convert to spans
+        spans = []
+        for start, end, label in filtered_matches:
+            span = Span(doc, start, end, label=label)
+            spans.append(span)
+
+        # add to docs
+        doc.ents = list(doc.ents) + spans
+
+        # filtered = filter_spans(spans)
+        # doc.ents = list(doc.ents) + filtered
+        return doc
 
 
 # load data
@@ -24,39 +80,35 @@ for entry in kldb_level_5.training_data:
     entities = [(offset[0], offset[1], entity_label)]
     dataset.append((text, {"links": {offset: links_dict}, "entities": entities}))
 
-nlp = spacy.load("src/modeling/NEL/models/nlp_NEL")
+terms = []
+for kldb in tqdm(kldbs):
+    if "searchwords" in kldb.keys():
+        for searchword in kldb["searchwords"]:
+            terms.append(searchword["name"])
 
 
-# examples = []
-# for text, annots in dataset:
-#     doc = nlp.make_doc(text)
-#     examples.append(Example.from_dict(doc, annots))
+@Language.factory("phrase_entity_matcher")
+def create_phrase_matcher(nlp, name):
+    """initialize EntityPhraseMatcher class"""
+    return EntityPhraseMatcher(nlp, terms, "occupation")
 
-# scores = nlp.evaluate(examples)
-# print(f"entity_linker_performance: {scores}")
 
-tp = 0  # richtige predicted
-fn = 0  # keine ents
-fp = 0  # prediction falsch
+nlp = spacy.load("src/modeling/NEL/models/nel")
 
-for text, true_annot in dataset:
+tp = 0  # richtig Klasse
+fp = 0  # falsche Klasse
+
+for text, true_annot in tqdm(dataset):
     doc = nlp(text)
-    if len(doc.ents) == 0:
-        fn += 1
-    if len(doc.ents) != 0:
+    if len(doc.ents) == 1:
         links = true_annot["links"]
         ids = links[list(true_annot["links"].keys())[0]]
         id = list(ids.keys())[0]
-        doc = nlp(text)
-        for ent in doc.ents:
-            if id == ent.kb_id_:
-                tp += 1
-            if id == ent.kb_id_:
-                fp += 1
+        if id == doc.ents[0].kb_id_:
+            tp += 1
+        if id != doc.ents[0].kb_id_:
+            fp += 1
 
-# TODO: Nochmal überprüfen, ob das wirklich Sinn macht
 precision = tp / (tp + fp)
-recall = tp / (tp + fn)
 
 print(f"precision: {precision}")
-print(f"recall: {recall}")

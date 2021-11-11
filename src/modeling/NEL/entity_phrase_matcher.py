@@ -15,12 +15,10 @@ from spacy.util import minibatch, compounding
 from tqdm import tqdm
 from spacy.training import Example
 from spacy.ml.models import load_kb
+import jsonlines
 
 
-# TODO: Nochmal durchlaufen lassen
-nlp = spacy.load("de_core_news_lg", exclude="ner")
-
-
+## define Phrase Matcher
 class EntityPhraseMatcher(object):
     """pipline component for PhraseMatching
 
@@ -73,35 +71,40 @@ class EntityPhraseMatcher(object):
         return doc
 
 
+## load nlp model
+nlp = spacy.load("src/modeling/NEL/models/nlp", exclude="ner")  # load trained nlp model
+
+
+## add terms for PhraseMatcher
+# load data
 kldb_ontologies = load_json(path="data/raw/dictionary_occupations_complete_update.json")
 
+# add terms
 terms = []
-
 for kldb in tqdm(kldb_ontologies):
     if "searchwords" in kldb.keys():
         for searchword in kldb["searchwords"]:
-            if searchword["type"] == "jobtitle":
-                terms.append(searchword["name"])
-
+            terms.append(searchword["name"])
+# remove duplicates
 terms = list(set(terms))
 
-
+## set up PhraseMatcher
 @Language.factory("phrase_entity_matcher")
 def create_phrase_matcher(nlp, name):
     """initialize EntityPhraseMatcher class"""
     return EntityPhraseMatcher(nlp, terms, "occupation")
 
 
+## add to pipeline
 nlp.add_pipe("phrase_entity_matcher")
 
-
+## train PhraseMatcher
+# load data
 jobs = load_json(path="data/raw/2021-10-22_12-21-00_all_jobs_7.json")
-
 kldb_level_1 = TrainingData(kldbs=kldb_ontologies, data=jobs, kldb_level=5)
 kldb_level_1.create_training_data()
-
 docs = []
-
+# apply data
 for job in tqdm(kldb_level_1.training_data):
     try:
         docs.append(nlp(job["title"]))
@@ -110,8 +113,9 @@ for job in tqdm(kldb_level_1.training_data):
             "[E1010] Unable to set entity information for token 0 which is included in more than one span in entities, blocked, missing or outside."
         )
 
-dataset = []
 
+## preprocess data for entity linking
+dataset = []
 for doc in tqdm(docs):
     if len(doc.ents) > 0:
         for ent in doc.ents:
@@ -127,23 +131,11 @@ for doc in tqdm(docs):
                         (text, {"links": {offset: links_dict}, "entities": entities})
                     )
 
-
-# load data
-kldbs = load_json("data/raw/dictionary_occupations_complete_update.json")
-jobs = load_json("data/raw/2021-10-22_12-21-00_all_jobs_7.json")
-
-## Level 5
-# create data
-kldb_level_5 = TrainingData(kldbs=kldbs, data=jobs, kldb_level=5)
-kldb_level_5.create_training_data()
-
-nlp = spacy.load("src/modeling/NEL/models/nlp")  # load trained nlp model
+## load knowledgebase
 kb = KnowledgeBase(vocab=nlp.vocab, entity_vector_length=1)  # load knowledgebase
-
-
 kb.from_disk("src/modeling/NEL/models/kb")
 
-
+## create golden_ids
 gold_ids = []  # create ids
 for text, annot in dataset:
     for span, links_dict in annot["links"].items():
@@ -151,7 +143,7 @@ for text, annot in dataset:
             if value:
                 gold_ids.append(link)
 
-# split into test and training dataset
+## split into test and training dataset
 ids = list(set(kb.get_entity_strings()))  # ids for checking
 train: List = []
 test: List = []
@@ -160,11 +152,11 @@ for id in ids:
     train.extend(dataset[index] for index in indices[0:8])  # first 8 in training
     test.extend(dataset[index] for index in indices[8:10])
 
-
+## shuffle train and test
 random.shuffle(train)
 random.shuffle(test)
 
-
+## create train examples
 TRAIN_EXAMPLES = []
 if "parser" not in nlp.pipe_names:
     nlp.add_pipe("parser")
@@ -174,15 +166,15 @@ for text, annotation in train:
     example.reference = sentencizer(example.reference)
     TRAIN_EXAMPLES.append(example)
 
-
+## add entity linker
 entity_linker = nlp.add_pipe("entity_linker", config={"incl_prior": False}, last=True)
 entity_linker.initialize(
     get_examples=lambda: TRAIN_EXAMPLES, kb_loader=load_kb("src/modeling/NEL/models/kb")
 )
 
+# other_pipes = [pipe for pipe in nlp.pipe_names if pipe != "entity_linker"]
 
-other_pipes = [pipe for pipe in nlp.pipe_names if pipe != "entity_linker"]
-
+## train entity linker
 with nlp.select_pipes(enable=["entity_linker"]):  # train only the entity_linker
     optimizer = nlp.resume_training()
     for itn in tqdm(range(500)):
@@ -202,10 +194,10 @@ with nlp.select_pipes(enable=["entity_linker"]):  # train only the entity_linker
             print(itn, "Losses", losses)  # print the training loss
 print(itn, "Losses", losses)
 
-examples = []
-
+# export NEL model
 nlp.to_disk("src/modeling/NEL/models")
 
+examples = []
 for text, annots in test:
     doc = nlp.make_doc(text)
     examples.append(Example.from_dict(doc, annots))
@@ -213,28 +205,38 @@ for text, annots in test:
 scores = nlp.evaluate(examples)
 print(f"entity_linker_performance: {scores}")
 
-tp = 0  # richtige predicted
-fn = 0  # keine ents
-fp = 0  # prediction falsch
+
+tp = 0  # richtig Klasse
+fp = 0  # falsche Klasse
 
 for text, true_annot in test:
     doc = nlp(text)
-    if len(doc.ents) == 0:
-        fn += 1
-    if len(doc.ents) != 0:
+    if len(doc.ents) == 1:
         links = true_annot["links"]
         ids = links[list(true_annot["links"].keys())[0]]
         id = list(ids.keys())[0]
-        doc = nlp(text)
-        for ent in doc.ents:
-            if id == ent.kb_id_:
-                tp += 1
-            if id == ent.kb_id_:
-                fp += 1
-
+        if id == doc.ents[0].kb_id_:
+            tp += 1
+        if id != doc.ents[0].kb_id_:
+            fp += 1
 
 precision = tp / (tp + fp)
-recall = tp / (tp + fn)
 
 print(f"precision: {precision}")
-print(f"recall: {recall}")
+
+
+results = []
+
+for text, true_annot in test:
+    doc = nlp(text)
+    links = true_annot["links"]
+    ids = links[list(true_annot["links"].keys())[0]]
+    id = list(ids.keys())[0]
+    print(f"title: {text}, id: {id}")
+    predictions = [{"entity_text": ent.text, "id": ent.kb_id_} for ent in doc.ents]
+    results.append(
+        {"Gold annotation": {"text": text, "id": id}, "predictions": predictions}
+    )
+
+with jsonlines.open("src/modeling/NEL/results_2.jsonl", "w") as f:
+    f.write_all(results)
