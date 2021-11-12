@@ -1,5 +1,4 @@
 from typing import Dict, Union, List
-from numpy import vectorize
 import pandas as pd
 from sklearn import metrics
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
