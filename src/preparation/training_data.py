@@ -1,12 +1,11 @@
 from typing import Union, Dict, List
+import json
 
 
 class TrainingData:
     """generates training data for classification"""
 
-    def __init__(
-        self, kldbs: Union[Dict, List], data: Union[Dict, List], kldb_level: int
-    ) -> None:
+    def __init__(self, kldbs_path: str, data_path: str, kldb_level: int) -> None:
         """init method
 
         Parameters
@@ -18,10 +17,27 @@ class TrainingData:
         kldb_level : int
             level of analysis (1-5)
         """
-        self.kldbs = kldbs
-        self.data = data
+        self.kldbs = self.load_json(kldbs_path)
+        self.data = self.load_json(data_path)
         self.kldb_level = kldb_level
         self.training_data = []
+
+    def load_json(self, path: str) -> Union[Dict, List]:
+        """read and load json data
+
+        Parameters
+        ----------
+        path : str
+            path with json data
+
+        Returns
+        -------
+        Union[Dict, List]
+            list with dictionaries
+        """
+        with open(file=path, mode="r", encoding="utf-8") as file:
+            json_dict = json.load(fp=file)
+        return json_dict
 
     def extract_kldbs_dkzs(self) -> List:
         """extract dkzs from kldbs
