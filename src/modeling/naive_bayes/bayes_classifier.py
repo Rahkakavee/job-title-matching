@@ -1,7 +1,7 @@
 from typing import Dict, Union, List
 import pandas as pd
 from sklearn import metrics
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
 from sklearn.model_selection import train_test_split
 
@@ -9,7 +9,7 @@ from sklearn.model_selection import train_test_split
 class BayesClassifier:
     """text classfication using Bayes Classification"""
 
-    def __init__(self, data: Union[List, Dict]) -> None:
+    def __init__(self, data: Union[List, Dict], vectorizer: str) -> None:
         """init
 
         Parameters
@@ -18,6 +18,7 @@ class BayesClassifier:
             data with text data and labels
         """
         self.dataset = data
+        self.vectorizer = vectorizer
 
     def vectorize_data(self):
         """vectorize text data
@@ -27,9 +28,13 @@ class BayesClassifier:
         [type]
             vectorized text data
         """
-        vectorizer = CountVectorizer()
         self.df = pd.DataFrame(data=self.dataset)
-        data = vectorizer.fit_transform(self.df["title"]).toarray()
+        if self.vectorizer == "CountVectorizer":
+            vectorizer = CountVectorizer()
+            data = vectorizer.fit_transform(self.df["title"]).toarray()
+        if self.vectorizer == "TfidfVectorizer":
+            vectorizer = TfidfVectorizer()
+            data = vectorizer.fit_transform(self.df["title"]).toarray()
         return data
 
     def extract_labels(self):
