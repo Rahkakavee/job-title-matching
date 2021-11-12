@@ -5,10 +5,6 @@ from src.processing.descriptive_analysis.descriptive_analysis_functions import (
     class_distribution,
 )
 
-# load data
-kldbs = load_json(path="data/raw/dictionary_occupations_complete_update.json")
-jobs = load_json(path="data/raw/2021-10-22_12-21-00_all_jobs_7.json")
-
 # # Level 1
 # # create training_data
 # kldb_level_1 = TrainingData(kldbs=kldbs, data=jobs, kldb_level=1)
@@ -40,7 +36,11 @@ jobs = load_json(path="data/raw/2021-10-22_12-21-00_all_jobs_7.json")
 
 # Level5
 # create training data
-kldb_level_5 = TrainingData(kldbs=kldbs, data=jobs, kldb_level=5)
+kldb_level_5 = TrainingData(
+    kldbs_path="data/raw/dictionary_occupations_complete_update.json",
+    data_path="data/raw/2021-10-22_12-21-00_all_jobs_7.json",
+    kldb_level=5,
+)
 kldb_level_5.create_training_data()
 
 # class distribution
