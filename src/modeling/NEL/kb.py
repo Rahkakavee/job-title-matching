@@ -1,7 +1,7 @@
-from src.preparation.json_load import load_json
 from typing import Union, List, Dict
 import jsonlines
 from tqdm import tqdm
+import json
 
 
 def load_entities(kldbs: Union[List, Dict]) -> Union[List, Dict]:
@@ -53,7 +53,12 @@ def to_jsonl(data: Union[List, Dict], filename: str) -> None:
 
 
 if __name__ == "__main__":
-    kldbs = load_json("data/raw/dictionary_occupations_complete_update.json")
+    with open(
+        "data/raw/dictionary_occupations_complete_update.json",
+        mode="r",
+        encoding="utf-8",
+    ) as fp:
+        kldbs = json.load(fp=fp)
     entities = load_entities(kldbs=kldbs)
     aliases = load_aliases(kldbs=kldbs)
 

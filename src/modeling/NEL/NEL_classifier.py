@@ -1,7 +1,6 @@
 # from spacy.training import Example
 from typing import List
 from src.preparation.training_data import TrainingData
-from src.preparation.json_load import load_json
 import spacy
 from spacy.kb import KnowledgeBase
 import random
@@ -10,13 +9,14 @@ from tqdm import tqdm
 from spacy.training import Example
 from spacy.ml.models import load_kb
 
-# load data
-kldbs = load_json("data/raw/dictionary_occupations_complete_update.json")
-jobs = load_json("data/raw/2021-10-22_12-21-00_all_jobs_7.json")
 
 ## Level 5
 # create data
-kldb_level_5 = TrainingData(kldbs=kldbs, data=jobs, kldb_level=5)
+kldb_level_5 = TrainingData(
+    kldbs_path="data/raw/dictionary_occupations_complete_update.json",
+    data_path="data/raw/2021-10-22_12-21-00_all_jobs_7.json",
+    kldb_level=5,
+)
 kldb_level_5.create_training_data()
 
 nlp = spacy.load("src/modeling/NEL/models/nlp")  # load trained nlp model

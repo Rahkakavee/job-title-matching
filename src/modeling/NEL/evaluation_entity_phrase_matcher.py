@@ -1,5 +1,4 @@
 from src.preparation.training_data import TrainingData
-from src.preparation.json_load import load_json
 import spacy
 from tqdm import tqdm
 from spacy.matcher import PhraseMatcher
@@ -60,13 +59,13 @@ class EntityPhraseMatcher(object):
         return doc
 
 
-# load data
-kldbs = load_json("data/raw/dictionary_occupations_complete_update.json")
-jobs = load_json("data/raw/2021-09-07_13-40-31_all_jobs (1).json")
-
 ## Level 1
 # create data
-kldb_level_5 = TrainingData(kldbs=kldbs, data=jobs, kldb_level=5)
+kldb_level_5 = TrainingData(
+    kldbs_path="data/raw/dictionary_occupations_complete_update.json",
+    data_path="data/raw/2021-09-07_13-40-31_all_jobs (1).json",
+    kldb_level=5,
+)
 kldb_level_5.create_training_data()
 
 dataset: list = []
@@ -81,7 +80,7 @@ for entry in kldb_level_5.training_data:
     dataset.append((text, {"links": {offset: links_dict}, "entities": entities}))
 
 terms = []
-for kldb in tqdm(kldbs):
+for kldb in tqdm(kldb_level_5.kldbs):
     if "searchwords" in kldb.keys():
         for searchword in kldb["searchwords"]:
             terms.append(searchword["name"])

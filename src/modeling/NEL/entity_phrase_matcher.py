@@ -2,17 +2,12 @@ import spacy
 from spacy.matcher import PhraseMatcher
 from spacy.tokens import Span
 from spacy.language import Language
-from src.preparation.json_load import load_json
 from tqdm import tqdm
 from src.preparation.training_data import TrainingData
 from typing import List
-from src.preparation.training_data import TrainingData
-from src.preparation.json_load import load_json
-import spacy
 from spacy.kb import KnowledgeBase
 import random
 from spacy.util import minibatch, compounding
-from tqdm import tqdm
 from spacy.training import Example
 from spacy.ml.models import load_kb
 import jsonlines
@@ -77,11 +72,15 @@ nlp = spacy.load("src/modeling/NEL/models/nlp", exclude="ner")  # load trained n
 
 ## add terms for PhraseMatcher
 # load data
-kldb_ontologies = load_json(path="data/raw/dictionary_occupations_complete_update.json")
+kldb_level_1 = TrainingData(
+    kldbs_path="data/raw/dictionary_occupations_complete_update.json",
+    data_path="data/raw/2021-10-22_12-21-00_all_jobs_7.json",
+    kldb_level=5,
+)
 
 # add terms
 terms = []
-for kldb in tqdm(kldb_ontologies):
+for kldb in tqdm(kldb_level_1.kldbs):
     if "searchwords" in kldb.keys():
         for searchword in kldb["searchwords"]:
             terms.append(searchword["name"])
@@ -100,8 +99,12 @@ nlp.add_pipe("phrase_entity_matcher")
 
 ## train PhraseMatcher
 # load data
-jobs = load_json(path="data/raw/2021-10-22_12-21-00_all_jobs_7.json")
-kldb_level_1 = TrainingData(kldbs=kldb_ontologies, data=jobs, kldb_level=5)
+
+kldb_level_1 = TrainingData(
+    kldbs_path="data/raw/dictionary_occupations_complete_update.json",
+    data_path="data/raw/2021-10-22_12-21-00_all_jobs_7.json",
+    kldb_level=5,
+)
 kldb_level_1.create_training_data()
 docs = []
 # apply data
