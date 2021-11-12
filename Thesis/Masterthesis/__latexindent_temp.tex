@@ -1,0 +1,90 @@
+%%%%%%%%%%%%%%%%%%%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[12pt, a4paper, titlepage]{article}
+
+\usepackage{placeins}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{appendix}
+\usepackage{setspace}
+\usepackage{dcolumn}
+\usepackage[printonlyused, withpage]{acronym}
+\usepackage{amsmath}
+\makeatletter
+\newcommand{\MSonehalfspacing}{%
+  \setstretch{1.44}%  default
+  \ifcase \@ptsize \relax % 10pt
+    \setstretch {1.448}%
+  \or % 11pt
+    \setstretch {1.399}%
+  \or % 12pt
+    \setstretch {1.433}%
+  \fi
+}
+\newcommand{\MSdoublespacing}{%
+  \setstretch {1.92}%  default
+  \ifcase \@ptsize \relax % 10pt
+    \setstretch {1.936}%
+  \or % 11pt
+    \setstretch {1.866}%
+  \or % 12pt
+    \setstretch {1.902}%
+  \fi
+}
+\makeatother
+\MSonehalfspacing
+
+
+%%%%%%%%%%%%%%DOCUMENT%%%%%%%%%%%%%%
+\begin{document}
+%%%%%%%%%%%%%%TITLEPAGE%%%%%%%%%%%%%%
+\begin{titlepage}
+    \begin{center}
+    {\LARGE \textbf{Classfication of Job Titles to German KLDB Taxonomy}}
+    \\[1cm]
+    {\Large \textbf{Masterthesis}}
+    \\[1cm]
+    {\Large submitted by}
+    \\[0.5cm]
+    {\LARGE \textbf{Rahkakavee Baskaran}}
+    \\[0.5cm]
+    {\Large at the}
+    \\[0.5cm]
+    \includegraphics[width=0.4\textwidth]{logo.jpg}
+    \\[1cm]
+    {\Large \textbf{Department of Politics and Public Administration}}
+    \\[1cm]
+    {\Large \textbf{Center for Data and Methods}}
+    \\[2cm]
+    \begin{minipage}[c]{0.8\textwidth}
+    \begin{description}
+     \item {\Large \textbf{1.Gutachter:} Prof. Dr. Susumu Shikano}
+     \item {\Large \textbf{2.Gutachter:} JunProf Juhi Kulshresthra}
+    \end{description}
+    \end{minipage}
+    \vfill
+    {\LARGE \textbf{Konstanz, \today}}
+    \end{center}
+    \end{titlepage}
+
+%%%%%%%%%%%%%%TableOfContents%%%%%%%%%%%%%%
+\tableofcontents
+\newpage
+
+
+%%%%%%%%%%%%%%Abbreviations%%%%%%%%%%%%%%
+\section*{Abbreviations}
+\begin{acronym}
+\end{acronym}
+\newpage
+
+%%%%%%%%%%%%%%SECTIONS%%%%%%%%%%%%%%
+\section{Introduction}
+\section{Related Work}
+\section{Theory}
+\section{Data}
+\subsection{Baseline Algorithms}
+\subsection{Approach}
+\section{Results}
+\section{Discussion and Limitations}
+\end{document}
