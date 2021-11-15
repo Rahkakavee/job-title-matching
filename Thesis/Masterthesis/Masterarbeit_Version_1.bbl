@@ -1,0 +1,85 @@
+\begin{thebibliography}{}
+
+\bibitem[Aiolli and Sperduti, 2005]{Aiolli2005}
+Aiolli, F. and Sperduti, A. (2005).
+\newblock Multiclass classification with multi-prototype support vector
+  machines.
+\newblock {\em Journal of Machine Learning Research}, 6:817--850.
+
+\bibitem[Angulo et~al., 2003]{Angulo2003}
+Angulo, C., Parra, X., and Català, A. (2003).
+\newblock K-svcr. a support vector machine for multi-class classification.
+\newblock {\em Neurocomputing}, 55:57--77.
+
+\bibitem[Benabdeslem and Bennani, 2006]{Benabdeslem2006}
+Benabdeslem, K. and Bennani, Y. (2006).
+\newblock Dendogram based svm for multi-class classification.
+\newblock {\em Proceedings of the International Conference on Information
+  Technology Interfaces, ITI}, pages 173--178.
+
+\bibitem[Chang and Lin, 2001]{Chang2001}
+Chang, C.-C. and Lin, C.-J. (2001).
+\newblock Libsvm: A library for support vector machines.
+\newblock {\em ACM transactions on intelligent systems and technology (TIST)},
+  2.3:1--27.
+
+\bibitem[Cortes et~al., 1995]{Cortes1995}
+Cortes, C., Vapnik, V., and Saitta, L. (1995).
+\newblock Support-vector networks editor.
+\newblock {\em Machine Leaming}, 20:273--297.
+
+\bibitem[Guo and Wang, 2015]{Guo2015}
+Guo, H. and Wang, W. (2015).
+\newblock An active learning-based svm multi-class classification model.
+\newblock {\em Pattern Recognition}, 48:1577--1597.
+
+\bibitem[Han et~al., 2012]{Han2012}
+Han, J., Kamber, M., and Pei, J. (2012).
+\newblock {\em Data Mining: Concepts and Techniques}.
+\newblock Elsevier Inc., 3 edition.
+
+\bibitem[Hsu and Lin, 2002]{Hsu2002}
+Hsu, C.~W. and Lin, C.~J. (2002).
+\newblock A comparison of methods for multiclass support vector machines.
+\newblock {\em IEEE Transactions on Neural Networks}, 13:415--425.
+
+\bibitem[Joachims, 1998]{Joachims1998}
+Joachims, T. (1998).
+\newblock Text categorization with support vector machines: Learning with many
+  relevant features.
+\newblock {\em European Conference on Machine Learning}, pages 137--142.
+
+\bibitem[Jordan et~al., 2006]{Jordan2006}
+Jordan, M., Kleinberg, J., and Schölkopf, B. (2006).
+\newblock {\em Pattern Recognition and Machine Learning}.
+\newblock Springer.
+
+\bibitem[Liu et~al., 2010]{Liu2010}
+Liu, Z., Lv, X., Liu, K., and Shi, S. (2010).
+\newblock Study on svm compared with the other text classification methods.
+\newblock {\em 2nd International Workshop on Education Technology and Computer
+  Science, ETCS 2010}, 1:219--222.
+
+\bibitem[Mayoraz and Alpaydm, 1999]{Mayoraz1999}
+Mayoraz, E. and Alpaydm, E. (1999).
+\newblock Support vector machines for multi-class classification.
+\newblock {\em Lecture Notes in Computer Science}, 1607:833--842.
+
+\bibitem[Tang et~al., 2019]{Tang2019}
+Tang, L., Tian, Y., and Pardalos, P.~M. (2019).
+\newblock A novel perspective on multiclass classification: Regular simplex
+  support vector machine.
+\newblock {\em Information Sciences}, 480:324--338.
+
+\bibitem[Tomar and Agarwal, 2015]{Tomar2015}
+Tomar, D. and Agarwal, S. (2015).
+\newblock A comparison on multi-class classification methods based on least
+  squares twin support vector machine.
+\newblock {\em Knowledge-Based Systems}, 81:131--147.
+
+\bibitem[Vapnik, 2000]{Vapnik2000}
+Vapnik, V.~N. (2000).
+\newblock {\em The nature of statistical learning theory}.
+\newblock Springer.
+
+\end{thebibliography}
