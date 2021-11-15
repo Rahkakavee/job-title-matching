@@ -4,6 +4,8 @@ from sklearn import metrics
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn import svm
+from sklearn.multiclass import OneVsRestClassifier
+from sklearn.svm import SVC
 
 
 class SVMClassifier:
@@ -63,7 +65,7 @@ class SVMClassifier:
             self.data_test,
             self.label_train,
             self.label_test,
-        ) = train_test_split(data, labels)
+        ) = train_test_split(data, labels, test_size=0.20, random_state=1000)
 
     def train_classifier(self):
         """trains classfier"""
@@ -75,8 +77,9 @@ class SVMClassifier:
         print("Split TrainingData...")
         self.split_data(data=data, labels=labels)
         print("Train the classfier")
-        self.svm_classifier = svm.SVC(C=1.0, kernel="linear", degree=3, gamma="auto")
-        self.svm_classifier.fit(self.data_train, self.label_train)
+        self.svm_classifier = OneVsRestClassifier(
+            SVC(C=1.0, kernel="linear", gamma="scale")
+        ).fit(self.data_train, self.label_train)
         print("END")
 
     def evaluate(self, output_dict: bool):
