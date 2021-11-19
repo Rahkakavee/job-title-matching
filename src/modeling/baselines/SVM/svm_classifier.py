@@ -6,10 +6,17 @@ from sklearn.model_selection import train_test_split
 from sklearn import svm
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import SVC
+import logging
+import sys
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+stdout_logger = logging.StreamHandler(sys.stdout)
+logger.addHandler(stdout_logger)
 
 
 class SVMClassifier:
-    def __init__(self, data: Union[List, Dict], vectorizer: str) -> None:
+    def __init__(self, data: List[Dict], vectorizer: str) -> None:
         """init
 
         Parameters
@@ -19,7 +26,9 @@ class SVMClassifier:
         """
         self.dataset = data
         self.vectorizer = vectorizer
+        self.df = pd.DataFrame()
 
+    # TODO: dimension CountVectorizer TF-IDF --> pruning?
     def vectorize_data(self):
         """vectorize text data
 
@@ -69,18 +78,16 @@ class SVMClassifier:
 
     def train_classifier(self):
         """trains classfier"""
-        print("BEGIN")
-        print("Vectorize Data...")
+        logging.debug("Vectorize Data")
         data = self.vectorize_data()
-        print("Extract Labels...")
+        logging.debug("Extract Labels")
         labels = self.extract_labels()
-        print("Split TrainingData...")
+        logging.debug("Split TrainingData")
         self.split_data(data=data, labels=labels)
-        print("Train the classfier")
+        logging.debug("Train the classfier")
         self.svm_classifier = OneVsRestClassifier(
             SVC(C=1.0, kernel="linear", gamma="scale")
         ).fit(self.data_train, self.label_train)
-        print("END")
 
     def evaluate(self, output_dict: bool):
         """evaluate data"""

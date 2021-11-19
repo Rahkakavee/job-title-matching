@@ -6,6 +6,7 @@ kldb_level_3 = TrainingData(
     kldbs_path="data/raw/dictionary_occupations_complete_update.json",
     data_path="data/raw/2021-10-22_12-21-00_all_jobs_7.json",
     kldb_level=3,
+    new_data=False,
 )
 kldb_level_3.create_training_data()
 
