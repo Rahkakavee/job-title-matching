@@ -1,11 +1,21 @@
 from typing import Union, Dict, List
 import json
+from tqdm import tqdm
+import logging
+import sys
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+stdout_logger = logging.StreamHandler(sys.stdout)
+logger.addHandler(stdout_logger)
 
 
 class TrainingData:
     """generates training data for classification"""
 
-    def __init__(self, kldbs_path: str, data_path: str, kldb_level: int) -> None:
+    def __init__(
+        self, kldbs_path: str, data_path: str, kldb_level: int, new_data: bool
+    ) -> None:
         """init method
 
         Parameters
@@ -20,6 +30,7 @@ class TrainingData:
         self.kldbs = self.load_json(kldbs_path)
         self.data = self.load_json(data_path)
         self.kldb_level = kldb_level
+        self.new_data = new_data
         self.training_data = []
 
     def load_json(self, path: str) -> Union[Dict, List]:
@@ -47,11 +58,17 @@ class TrainingData:
         List
             includes dictionaries with id of kldb and matching dkz
         """
-        kldbs_dkzs = []
+        kldbs_dkzs = {}
         kldb_level5 = [kldb for kldb in self.kldbs if kldb["level"] == 5]
-        for kldb in kldb_level5:
-            for dkz in kldb["dkzs"]:
-                kldbs_dkzs.append({"id": kldb["id"], "dkz": dkz["id"]})
+        if self.new_data == False:
+            for kldb in kldb_level5:
+                for dkz in kldb["dkzs"]:
+                    kldbs_dkzs.update({str(dkz["id"]): kldb["id"]})
+
+        if self.new_data == True:
+            for kldb in kldb_level5:
+                for dkz in kldb["dkzs"]:
+                    kldbs_dkzs.update({dkz["title"]: kldb["id"]})
         return kldbs_dkzs
 
     def extract_jobs_dkzs(self) -> List:
@@ -62,11 +79,19 @@ class TrainingData:
         List
             includes dictionaries with title of job and matching dkz
         """
-        job_dkzs = [
-            {"freieBezeichnung": job["freieBezeichnung"], "dkz": job["hauptDkz"]}
-            for job in self.data
-            if "freieBezeichnung" in job.keys()
-        ]
+        if self.new_data == False:
+            job_dkzs = [
+                {"freieBezeichnung": job["freieBezeichnung"], "dkz": job["hauptDkz"]}
+                for job in self.data
+                if "freieBezeichnung" in job.keys()
+            ]
+
+        if self.new_data == True:
+            job_dkzs = [
+                {"freieBezeichnung": job["titel"], "dkz": job["beruf"]}
+                for job in self.data
+                if "titel" in job.keys()
+            ]
 
         return job_dkzs
 
@@ -74,12 +99,17 @@ class TrainingData:
         """matches dkz with kldb and append id of kldb (depending on level) with job title based on dkz"""
         job_dkzs = self.extract_jobs_dkzs()
         kldbs_dkzs = self.extract_kldbs_dkzs()
-        for job_dkz in job_dkzs:
-            for kldb_dkz in kldbs_dkzs:
-                if job_dkz["dkz"] == str(kldb_dkz["dkz"]):
-                    self.training_data.append(
-                        {
-                            "id": kldb_dkz["id"][: self.kldb_level],
-                            "title": job_dkz["freieBezeichnung"],
-                        }
-                    )
+        for job_dkz in tqdm(job_dkzs):
+            dkz = job_dkz["dkz"]
+            try:
+                self.training_data.append(
+                    {
+                        "id": kldbs_dkzs[dkz][: self.kldb_level],
+                        "title": job_dkz["freieBezeichnung"],
+                    }
+                )
+            except KeyError as e:
+                continue
+        logging.debug(
+            f"{len(job_dkzs) - len(self.training_data)} cannot be assigned to any kldb class. Skipped!"
+        )
