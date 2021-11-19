@@ -12,7 +12,7 @@ import re
 ## Level 1
 # create data
 kldb_level_1 = TrainingData(
-    data_path="data/processed/data_old_format.json",
+    data_path="data/raw/2021-10-22_12-21-00_all_jobs_7.json",
     kldbs_path="data/raw/dictionary_occupations_complete_update.json",
     kldb_level=1,
     new_data=False,
@@ -71,14 +71,17 @@ X_train = sequence.pad_sequences(train_sequences, maxlen=MAX_SEQUENCE_LENGTH)
 X_test = sequence.pad_sequences(test_sequences, maxlen=MAX_SEQUENCE_LENGTH)
 
 EMBED_SIZE = 300
-EPOCHS = 2
 BATCH_SIZE = 128
 VOCAB_SIZE = len(t.word_index)
 
-model = Sequential()
-model.add(layers.Embedding(VOCAB_SIZE, EMBED_SIZE, input_length=MAX_SEQUENCE_LENGTH))
-model.add(layers.Flatten())
-model.add(layers.Dense(10, activation="relu"))
-model.add(layers.Dense(1, activation="sigmoid"))
-model.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
-model.summary()
+model_2 = Sequential()
+model_2.add(layers.Embedding(VOCAB_SIZE, EMBED_SIZE, input_length=MAX_SEQUENCE_LENGTH))
+model_2.add(layers.Flatten())
+model_2.add(layers.Dense(10, activation="relu"))
+model_2.add(layers.Dense(1, activation="sigmoid"))
+model_2.compile(optimizer="adam", loss="binary_crossentropy", metrics=["accuracy"])
+model_2.summary()
+
+history = model_2.fit(
+    X_train, y_train, epochs=100, validation_data=[X_test, y_test], batch_size=1000
+)
