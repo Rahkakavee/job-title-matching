@@ -1,52 +1,39 @@
-# import
-from src.preparation.json_load import load_json
 from src.preparation.training_data import TrainingData
 from src.processing.descriptive_analysis.descriptive_analysis_functions import (
-    class_distribution,
+    class_distribution, counting_per_job, counting_per_title
 )
-
-# # Level 1
-# # create training_data
-# kldb_level_1 = TrainingData(kldbs=kldbs, data=jobs, kldb_level=1)
-# kldb_level_1.create_training_data()
-
-# # # class distribution
-# class_distribution, plt = class_distribution(
-#     data=kldb_level_1.training_data, variable="id", level="1"
-# )
-
-# plt.savefig(
-#     "visualization/descriptive_analysis/2021-10-22_12-21-00_all_jobs_7_level1.png"
-# )
-
-# # Level3
-# # create training data
-# kldb_level_3 = TrainingData(kldbs=kldbs, data=jobs, kldb_level=3)
-# kldb_level_3.create_training_data()
-
-# # class distribution
-# class_distribution, plt = class_distribution(
-#     data=kldb_level_3.training_data, variable="id", level="3"
-# )
-
-# plt.savefig(
-#     "visualization/descriptive_analysis/2021-10-22_12-21-00_all_jobs_7_level3.png"
-# )
+import pandas as pd
+from re import search 
+from collections import Counter
 
 
-# Level5
-# create training data
-kldb_level_5 = TrainingData(
+# Level 5
+data_level_5_old = TrainingData(
     kldbs_path="data/raw/dictionary_occupations_complete_update.json",
-    data_path="data/raw/2021-10-22_12-21-00_all_jobs_7.json",
+    data_path="data/processed/data_old_format.json",
     kldb_level=5,
+    new_data=False,
 )
-kldb_level_5.create_training_data()
 
-# class distribution
-class_distribution, plt = class_distribution(
-    data=kldb_level_5.training_data, variable="id", level="5"
+data_level_5_new = TrainingData(
+    kldbs_path="data/raw/dictionary_occupations_complete_update.json",
+    data_path="data/processed/data_new_format.json",
+    kldb_level=5,
+    new_data=True,
 )
-plt.savefig(
-    "visualization/descriptive_analysis/2021-10-22_12-21-00_all_jobs_7_level5.png"
+
+data_level_5_old.create_training_data()
+data_level_5_new.create_training_data()
+
+training_data_level_5 = data_level_5_old.training_data + data_level_5_new.training_data
+
+training_data_level_5_cleaned = [dict(t) for t in {tuple(example.items()) for example in training_data_level_5}] #source: "https://stackoverflow.com/questions/9427163/remove-duplicate-dict-in-list-in-python"
+
+class_distribution_level_5, plt_level_5 = class_distribution(
+    data=training_data_level_5_cleaned, variable="id", level="5"
 )
+
+job_titles_count = counting_per_title(training_data_level_5_cleaned, 20)
+
+for job in job_titles_count:
+    

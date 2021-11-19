@@ -1,11 +1,13 @@
 # import modules
-from typing import Union, List, Dict
+from typing import Tuple, Union, List, Dict
 from pandas.core.series import Series
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import matplotlib.patches as mpatches
+from collections import Counter
+import re
 
 
 def class_distribution(data: Union[Dict, List], variable: str, level: str) -> Series:
@@ -78,3 +80,38 @@ def class_distribution(data: Union[Dict, List], variable: str, level: str) -> Se
     plt.ylabel("Frequency")
 
     return class_distribution, plt
+
+
+def counting_per_job(data: Union[List, Dict], job_terms: List, top: int) -> Dict:
+    """counts per job the corresponding kldbs
+
+    Parameters
+    ----------
+    data : Union[List, Dict]
+        data with job titles and kldbs
+
+    Returns
+    -------
+    Dict
+        frequency of kldb per job
+    """
+    search_string = ""
+
+    for term in job_terms:
+        search_string += term
+        search_string += "|"
+    search_string_re = re.compile(search_string[:-1])
+    print(search_string_re)
+    countings = [
+        example for example in data if re.search(search_string_re, example["title"])
+    ]
+    df = pd.DataFrame(countings)
+    data = df["title"]
+    # servicekraft = [example for example in training_data_level_5 if search(r"servicekraft|Servicekraft", example["title"])]
+    return dict(Counter(data).most_common(top))
+
+
+def counting_per_title(data: Union[List, Dict], top: int) -> Union[List, Tuple]:
+    df = pd.DataFrame(data=data)
+    titles = df["title"]
+    return Counter(titles).most_common(top)
