@@ -72,15 +72,33 @@ nlp = spacy.load("src/modeling/NEL/models/nlp", exclude="ner")  # load trained n
 
 ## add terms for PhraseMatcher
 # load data
-kldb_level_1 = TrainingData(
+# Level 5
+data_level_1_old = TrainingData(
     kldbs_path="data/raw/dictionary_occupations_complete_update.json",
-    data_path="data/raw/2021-10-22_12-21-00_all_jobs_7.json",
-    kldb_level=5,
+    data_path="data/processed/data_old_format.json",
+    kldb_level=1,
+    new_data=False,
 )
+
+data_level_1_new = TrainingData(
+    kldbs_path="data/raw/dictionary_occupations_complete_update.json",
+    data_path="data/processed/data_new_format.json",
+    kldb_level=1,
+    new_data=True,
+)
+
+data_level_1_old.create_training_data()
+data_level_1_new.create_training_data()
+
+training_data_ = data_level_1_old.training_data + data_level_1_new.training_data
+
+training_data = [
+    dict(t) for t in {tuple(example.items()) for example in training_data_}
+]  # source: "https://stackoverflow.com/questions/9427163/remove-duplicate-dict-in-list-in-python"
 
 # add terms
 terms = []
-for kldb in tqdm(kldb_level_1.kldbs):
+for kldb in tqdm(data_level_1_new.kldbs):
     if "searchwords" in kldb.keys():
         for searchword in kldb["searchwords"]:
             terms.append(searchword["name"])
@@ -97,18 +115,9 @@ def create_phrase_matcher(nlp, name):
 ## add to pipeline
 nlp.add_pipe("phrase_entity_matcher")
 
-## train PhraseMatcher
-# load data
-
-kldb_level_1 = TrainingData(
-    kldbs_path="data/raw/dictionary_occupations_complete_update.json",
-    data_path="data/raw/2021-10-22_12-21-00_all_jobs_7.json",
-    kldb_level=5,
-)
-kldb_level_1.create_training_data()
 docs = []
 # apply data
-for job in tqdm(kldb_level_1.training_data):
+for job in tqdm(training_data):
     try:
         docs.append(nlp(job["title"]))
     except:
@@ -125,7 +134,7 @@ for doc in tqdm(docs):
             text = doc.text
             offset = (ent.start_char, ent.end_char)
             entity_label = ent.label_
-            for entry in kldb_level_1.training_data:
+            for entry in training_data:
                 if entry["title"] == doc.text:
                     id = entry["id"]
                     links_dict = {id: 1.0}
@@ -170,7 +179,9 @@ for text, annotation in train:
     TRAIN_EXAMPLES.append(example)
 
 ## add entity linker
-entity_linker = nlp.add_pipe("entity_linker", config={"incl_prior": False}, last=True)
+entity_linker = nlp.add_pipe(
+    "entity_linker", config={"incl_prior": True, "incl_context": True}, last=True
+)
 entity_linker.initialize(
     get_examples=lambda: TRAIN_EXAMPLES, kb_loader=load_kb("src/modeling/NEL/models/kb")
 )
@@ -180,7 +191,7 @@ entity_linker.initialize(
 ## train entity linker
 with nlp.select_pipes(enable=["entity_linker"]):  # train only the entity_linker
     optimizer = nlp.resume_training()
-    for itn in tqdm(range(500)):
+    for itn in tqdm(range(800)):
         random.shuffle(TRAIN_EXAMPLES)
         batches = minibatch(
             TRAIN_EXAMPLES, size=compounding(4.0, 32.0, 1.001)
@@ -241,5 +252,5 @@ for text, true_annot in test:
         {"Gold annotation": {"text": text, "id": id}, "predictions": predictions}
     )
 
-with jsonlines.open("src/modeling/NEL/results_2.jsonl", "w") as f:
+with jsonlines.open("src/modeling/NEL/results_4.jsonl", "w") as f:
     f.write_all(results)
