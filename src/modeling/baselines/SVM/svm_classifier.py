@@ -8,6 +8,10 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import SVC
 import logging
 import sys
+from sklearn.ensemble import BaggingClassifier
+from sklearnex import patch_sklearn
+
+patch_sklearn()
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -85,9 +89,16 @@ class SVMClassifier:
         logging.debug("Split TrainingData")
         self.split_data(data=data, labels=labels)
         logging.debug("Train the classfier")
+        n_estimators = 10
         self.svm_classifier = OneVsRestClassifier(
-            SVC(C=1.0, kernel="linear", gamma="scale")
-        ).fit(self.data_train, self.label_train)
+            BaggingClassifier(
+                SVC(C=1.0, kernel="linear", gamma="scale", verbose=1),
+                max_samples=1.0,
+                n_estimators=n_estimators,
+                n_jobs=-1,
+            )
+        )
+        self.svm_classifier.fit(self.data_train, self.label_train)
 
     def evaluate(self, output_dict: bool):
         """evaluate data"""
