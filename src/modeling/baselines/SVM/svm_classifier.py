@@ -9,14 +9,8 @@ from sklearn.svm import SVC
 import logging
 import sys
 from sklearn.ensemble import BaggingClassifier
-from sklearnex import patch_sklearn
 
-patch_sklearn()
-
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-stdout_logger = logging.StreamHandler(sys.stdout)
-logger.addHandler(stdout_logger)
+from src.logger import logger
 
 
 class SVMClassifier:
@@ -45,7 +39,6 @@ class SVMClassifier:
         if self.vectorizer == "CountVectorizer":
             vectorizer = CountVectorizer()
             vectorizer.fit(self.df["title"])
-            # data = vectorizer.fit_transform(self.df["title"]).toarray()
             data = vectorizer.transform(self.df["title"])
         if self.vectorizer == "TfidfVectorizer":
             vectorizer = TfidfVectorizer()
@@ -82,17 +75,17 @@ class SVMClassifier:
 
     def train_classifier(self):
         """trains classfier"""
-        logging.debug("Vectorize Data")
+        logger.debug("Vectorize Data")
         data = self.vectorize_data()
-        logging.debug("Extract Labels")
+        logger.debug("Extract Labels")
         labels = self.extract_labels()
-        logging.debug("Split TrainingData")
+        logger.debug("Split TrainingData")
         self.split_data(data=data, labels=labels)
-        logging.debug("Train the classfier")
+        logger.debug("Train the classfier")
         n_estimators = 10
         self.svm_classifier = OneVsRestClassifier(
             BaggingClassifier(
-                SVC(C=1.0, kernel="linear", gamma="scale", verbose=1),
+                SVC(C=1.0, kernel="linear", gamma="scale"),
                 max_samples=1.0,
                 n_estimators=n_estimators,
                 n_jobs=-1,
