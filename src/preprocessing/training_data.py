@@ -1,13 +1,8 @@
 from typing import Union, Dict, List
 import json
 from tqdm import tqdm
-import logging
-import sys
 
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-stdout_logger = logging.StreamHandler(sys.stdout)
-logger.addHandler(stdout_logger)
+from src.logger import logger
 
 
 class TrainingData:
@@ -110,6 +105,6 @@ class TrainingData:
                 )
             except KeyError as e:
                 continue
-        logging.debug(
+        logger.debug(
             f"{len(job_dkzs) - len(self.training_data)} cannot be assigned to any kldb class. Skipped!"
         )
