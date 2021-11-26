@@ -1,6 +1,6 @@
-from src.preparation.training_data import TrainingData
-from src.processing.descriptive_analysis.descriptive_analysis_functions import *
-from src.preparation.preprocessing import *
+from src.preprocessing.training_data import TrainingData
+from src.descriptive.descriptive_analysis.descriptive_analysis_functions import *
+from src.preprocessing.preprocessing_functions import *
 import pandas as pd
 
 # Level 5
@@ -27,8 +27,7 @@ training_data_level_5_cleaned = [
     dict(t) for t in {tuple(example.items()) for example in training_data_level_5}
 ]  # source: "https://stackoverflow.com/questions/9427163/remove-duplicate-dict-in-list-in-python"
 
-data = clean_basic(training_data_level_5_cleaned)
-data = remove_mwd(data)
+data = remove_lc_ws(training_data_level_5_cleaned)
 data = remove_special_characters(data)
 
 searchterms_servicekraft = [

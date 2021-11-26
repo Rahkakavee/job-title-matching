@@ -108,9 +108,8 @@ def counting_per_job_with_kldb(
         unique_ids = list(set(ids))
         countings.append({key: value, "ids": unique_ids})
     if title == True:
-        kldbs_level_5 = [kldb for kldb in kldbs if kldb["level"] == 5]
         kldb_lookup = {}
-        for kldb in kldbs_level_5:
+        for kldb in kldbs:
             kldb_lookup.update({kldb["id"]: kldb["title"]})
         for example in countings:
             kldb_titles = []
@@ -151,9 +150,8 @@ def counting_per_kldb_ids(data: List, job_terms: List, top: int, kldbs) -> Dict:
         for job in data:
             if re.search(term, job["title"]):
                 jobs.append(job)
-    kldbs_level_5 = [kldb for kldb in kldbs if kldb["level"] == 5]
     kldb_lookup = {}
-    for kldb in kldbs_level_5:
+    for kldb in kldbs:
         kldb_lookup.update({kldb["id"]: kldb["title"]})
     jobs_with_kldbs = [
         {"id": job["id"], "kldb": kldb_lookup[job["id"]], "title": job["title"]}
