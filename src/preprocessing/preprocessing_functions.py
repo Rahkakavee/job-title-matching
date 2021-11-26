@@ -2,18 +2,11 @@ import re
 from typing import List, Literal
 import emoji
 import nltk
-
 from nltk.corpus import stopwords
 
 nltk.download("stopwords")
-
-import logging
-import sys
-
-logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
-stdout_logger = logging.StreamHandler(sys.stdout)
-logger.addHandler(stdout_logger)
+from src.logger import logger
+from tqdm import tqdm
 
 
 def remove_special_characters(data: List) -> List:
@@ -47,7 +40,7 @@ def remove_emojis(data: List) -> List:
     List
         training data cleaned
     """
-    for example in data:
+    for example in tqdm(data):
         example["title"] = re.sub(emoji.get_emoji_regexp(), "", example["title"])
     return data
 
@@ -123,7 +116,7 @@ def preprocess(
         logger.debug("Remove special words")
         data = remove_special_words(data=data)
     if special_words and len(special_words_ovr) > 0:
-        logger.debu("Remove special words")
+        logger.debug("Remove special words")
         data = remove_special_words(data=data, specialwords=special_words_ovr)
     if (
         special_characters == False
