@@ -2,7 +2,7 @@ from typing import Dict, Union, List
 import pandas as pd
 from sklearn import metrics
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import MultinomialNB, GaussianNB
 from sklearn.model_selection import train_test_split
 
 
@@ -20,35 +20,7 @@ class BayesClassifier:
         self.dataset = data
         self.vectorizer = vectorizer
 
-    def vectorize_data(self):
-        """vectorize text data
-
-        Returns
-        -------
-        [type]
-            vectorized text data
-        """
-        self.df = pd.DataFrame(data=self.dataset)
-        if self.vectorizer == "CountVectorizer":
-            vectorizer = CountVectorizer()
-            data = vectorizer.fit_transform(self.df["title"]).toarray()
-        if self.vectorizer == "TfidfVectorizer":
-            vectorizer = TfidfVectorizer()
-            data = vectorizer.fit_transform(self.df["title"]).toarray()
-        return data
-
-    def extract_labels(self):
-        """extract labels
-
-        Returns
-        -------
-        [type]
-            labels (classes)
-        """
-        labels = self.df.iloc[:, 0]
-        return labels
-
-    def split_data(self, data, labels):
+    def split_data(self):
         """split data into training and test data
 
         Parameters
@@ -58,19 +30,39 @@ class BayesClassifier:
         labels : [type]
             labels
         """
+        self.df = pd.DataFrame(data=self.dataset)
+        self.sentences = self.df["title"]
+        self.labels = self.df["id"]
         (
             self.data_train,
             self.data_test,
             self.label_train,
             self.label_test,
-        ) = train_test_split(data, labels)
+        ) = train_test_split(self.sentences, self.labels)
+
+    def vectorize_data(self):
+        """vectorize text data
+
+        Returns
+        -------
+        [type]
+            vectorized text data
+        """
+        if self.vectorizer == "CountVectorizer":
+            vectorizer = CountVectorizer()
+            vectorizer.fit(self.data_train)
+            self.data_train = vectorizer.transform(self.data_train).toarray()
+            self.data_test = vectorizer.transform(self.data_test).toarray()
+        if self.vectorizer == "TfidfVectorizer":
+            vectorizer = TfidfVectorizer()
+            self.data_train = vectorizer.fit_transform(self.data_train).toarray()
+            self.data_test = vectorizer.fit_transform(self.data_test).toarray()
 
     def train_classifier(self):
         """trains classfier"""
-        data = self.vectorize_data()
-        labels = self.extract_labels()
-        self.split_data(data=data, labels=labels)
-        self.bayes_classifier = GaussianNB()
+        self.split_data()
+        self.vectorize_data()
+        self.bayes_classifier = MultinomialNB()
         self.bayes_classifier.fit(self.data_train, self.label_train)
 
     def evaluate(self, output_dict: bool):
