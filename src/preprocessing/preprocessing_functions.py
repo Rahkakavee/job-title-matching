@@ -1,3 +1,4 @@
+from os import remove
 import re
 from typing import List, Literal
 import emoji
@@ -10,7 +11,7 @@ from tqdm import tqdm
 
 
 def remove_special_characters(data: List) -> List:
-    """removes special characters
+    """removes special characters and numbers
 
     Parameters
     ----------
@@ -24,6 +25,9 @@ def remove_special_characters(data: List) -> List:
     """
     for example in data:
         example["title"] = re.sub("\W+", " ", example["title"])
+        example["title"] = "".join(
+            [char for char in example["title"] if not char.isdigit()]
+        )
     return data
 
 
@@ -73,7 +77,7 @@ def remove_stopwords(data: List) -> List:
         title_tokens_cleaned = [
             title_token
             for title_token in title_tokens
-            if title_token not in german_stop_words
+            if title_token.lower() not in german_stop_words
         ]
         example["title"] = " ".join(title_tokens_cleaned)
     return data
@@ -85,7 +89,7 @@ def remove_special_words(data: List, specialwords: List = ["m", "w", "d", "f"]) 
         title_tokens_cleaned = [
             title_token
             for title_token in title_tokens
-            if title_token not in specialwords
+            if title_token.lower() not in specialwords
         ]
         example["title"] = " ".join(title_tokens_cleaned)
     return data
@@ -101,7 +105,7 @@ def preprocess(
     special_words_ovr: List = [],
 ) -> List:
     if special_characters:
-        logger.debug("Remove special characters")
+        logger.debug("Remove special characters and numbers")
         data = remove_special_characters(data=data)
     if emojis:
         logger.debug("Remove emojis")
@@ -118,12 +122,4 @@ def preprocess(
     if special_words and len(special_words_ovr) > 0:
         logger.debug("Remove special words")
         data = remove_special_words(data=data, specialwords=special_words_ovr)
-    if (
-        special_characters == False
-        and lowercase_whitespace == False
-        and (special_words | stopwords)
-    ):
-        logger.debug(
-            "Perhaps some stopwords and specialcharacters are not removed, since special characters were not removed and lowercase is False"
-        )
     return data
