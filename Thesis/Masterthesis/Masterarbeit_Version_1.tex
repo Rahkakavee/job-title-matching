@@ -78,6 +78,8 @@
 \section*{Abbreviations}
 \begin{acronym}
   \acro{SVM}[SVM]{Support Vector Machine}
+  \acro{NB}{NB}(Naive Bayes)
+  \acro{LR}{LR}{Logistic Regression}
   \acro{OA}[OA]{overall accuracy}
   \acro{ROC}[ROC]{receiver operating characteristics}
   \acro{TP}[TP]{True positives}
@@ -141,11 +143,14 @@ Apart from the trade-off between recall and precision, there is also a tradeoff 
 As shown above, there are several metrics for evaluating the performance of a classifier, with the metrics having different focuses. Since the job title classification involves multiclass classification and the descriptive analysis show that the data is clearly unbalanced, at least for some classes in level 5, it is not reasonable to base the evaluation solely on the \ac{OA}. Taking precision, recall and the harmonic mean into account would capture the performance of the minority classes as well. The \ac{ROC} curve does gives, due to its visualization a good impression for the performance, but it is not feasible for high number of classes. Following this argumentation the performance of the classifiers will be evaluated with accuracy, precision, recall, F-measure and Cohen's Kappa. 
 
 \section{Baseline Algorithms}
-The developed algorithm should be compared against the current state-of-the art methods in order to check the improvements 
+In order to compare different feature selection methods solid baselines are necessary. As pointed out in the literature review \ac{NB}, \ac{LR} and \ac{SVM} have several advantages for text classifcation tasks. In the following based on a theoretical discussion of each classifier, the exact modeling of the baseline classifiers is justified. 
 
-CNN-ALGORITHMUS 
+\subsection{Naive Bayes Classifier}
+The \ac{NB}, a family of probabilistic classifiers, uses Bayes' rule in order to determine the most likely class for each document \citep{Schneider2005}. All \ac{NB} classifiers rely on the conditional independence assumptions which means, that ``features are independent of each other, given the category variable'' \citep[48]{Xu2018}. Depending on whether the features are discrete or continous, different distributions, so-called event models are proposed. While for continous features Gaussian distribution is well-suited, for categorical features usually Bernoulli or multinomial distibutions are applied \citep{Xu2018}. 
 
-However, traditional methods like \ac{SVM} also performed well for text classification. Especially for multiclass tasks, as mentioned in the literature review, often different versions of the algorithm are used and showed good performance \citep{Aiolli2005,Angulo2003,Benabdeslem2006,Guo2015,Mayoraz1999,Tang2019,Tomar2015}. In general \ac{SVM} has several advantages for text classifcation. First, text classifcation usually has a high dimensional input space. \ac{SVM} can handle these large features since they are able to learn independently of the dimensionality of the feature space. In addition \ac{SVM}s are known to perform well for dense and sparse vectors, which is usually the case for text classification \citep{Joachims1998}. Empirical results, for example \citet{Joachims1998} or \cite{Liu2010} confirm the theoretical expectations. It is, therefore, a reasonable option to use a basic version of the \ac{SVM} algorithm as a baseline.
+
+\subsection{Support Vector Machines}
+However, \ac{SVM} also performed well for text classification. Especially for multiclass tasks, as mentioned in the literature review, often different versions of the algorithm are used and showed good performance \citep{Aiolli2005,Angulo2003,Benabdeslem2006,Guo2015,Mayoraz1999,Tang2019,Tomar2015}. In general \ac{SVM} has several advantages for text classifcation. First, text classifcation usually has a high dimensional input space. \ac{SVM} can handle these large features since they are able to learn independently of the dimensionality of the feature space. In addition \ac{SVM}s are known to perform well for dense and sparse vectors, which is usually the case for text classification \citep{Joachims1998}. Empirical results, for example \citet{Joachims1998} or \cite{Liu2010} confirm the theoretical expectations. It is, therefore, a reasonable option to use a basic version of the \ac{SVM} algorithm as a baseline.
 
 The general idea of a \ac{SVM} is to map ``the input vectors x into a high-dimensional feature space Z through some nonlinear mapping chosen a priori [...], where an optimal separating hyperplane is constructed'' \citep[138]{Vapnik2000}. In \ac{SVM} this optimal hyperplane maximizes the margin, which is simply put the distance from the hyperplane to the closest points, so called Support Vectors, across both classes \citep{Han2012}. Formally, given a training data set with n training vectors $x_i \in R^n, i = 1,....,n$ and the target classes $y_1,...y_i$ with $y_i \in \{-1, 1\}$, the following quadratic programming problem (primal) has to be solved in order to find the optimal hyperplane:
 \[\min_{w,b} \frac{1}{2}w^{T}w \] 
