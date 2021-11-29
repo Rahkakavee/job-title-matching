@@ -1,9 +1,11 @@
 from typing import Dict, Union, List
+from numpy import ndarray
 import pandas as pd
 from sklearn import metrics
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
+import numpy as np
 
 
 class LRClassifier:
@@ -16,39 +18,20 @@ class LRClassifier:
         ----------
         data : Union[List, Dict]
             data with text data and labels
+
+        vectorizer: feature selection method
+            CountVectorizer or TfidfVectorizer
         """
         self.dataset = data
         self.vectorizer = vectorizer
+        self.data_train = []
+        self.data_test = []
+        self.label_train = []
+        self.label_test = []
+        self.train = []
+        self.test = []
 
-    def vectorize_data(self):
-        """vectorize text data
-
-        Returns
-        -------
-        [type]
-            vectorized text data
-        """
-        self.df = pd.DataFrame(data=self.dataset)
-        if self.vectorizer == "CountVectorizer":
-            vectorizer = CountVectorizer(lowercase=False)
-            data = vectorizer.fit_transform(self.df["title"]).toarray()
-        if self.vectorizer == "TfidfVectorizer":
-            vectorizer = TfidfVectorizer()
-            data = vectorizer.fit_transform(self.df["title"]).toarray()
-        return data
-
-    def extract_labels(self):
-        """extract labels
-
-        Returns
-        -------
-        [type]
-            labels (classes)
-        """
-        labels = self.df.iloc[:, 0]
-        return labels
-
-    def split_data(self, data, labels):
+    def split_data(self) -> None:
         """split data into training and test data
 
         Parameters
@@ -58,26 +41,41 @@ class LRClassifier:
         labels : [type]
             labels
         """
+        df = pd.DataFrame(data=self.dataset)
+        sentences = df["title"]
+        labels = df["id"]
         (
             self.data_train,
             self.data_test,
             self.label_train,
             self.label_test,
-        ) = train_test_split(data, labels)
+        ) = train_test_split(sentences, labels)
 
-    def train_classifier(self):
+    def vectorize_data(self) -> None:
+        """Feature selection"""
+        if self.vectorizer == "CountVectorizer":
+            vectorizer = CountVectorizer()
+            vectorizer.fit(self.data_train)
+            self.train = vectorizer.transform(self.data_train).toarray()
+            self.test = vectorizer.transform(self.data_test).toarray()
+        if self.vectorizer == "TfidfVectorizer":
+            vectorizer = TfidfVectorizer()
+            vectorizer.fit(self.data_train)
+            self.train = vectorizer.transform(self.data_train).toarray()
+            self.test = vectorizer.transform(self.data_test).toarray()
+
+    def train_classifier(self) -> None:
         """trains classfier"""
-        data = self.vectorize_data()
-        labels = self.extract_labels()
-        self.split_data(data=data, labels=labels)
-        self.lr = LogisticRegression(penalty="l2", C=1.0, solver="lbfgs")
-        self.lr.fit(self.data_train, self.label_train)
+        self.split_data()
+        self.vectorize_data()
+        self.clf = LogisticRegression(penalty="l2", C=1.0, solver="lbfgs")
+        self.clf.fit(self.train, self.label_train)
 
-    def evaluate(self, output_dict: bool):
+    def evaluate(self, output_dict: bool) -> None:
         """evaluate data"""
-        self.accuracy = self.lr.score(self.data_test, self.label_test)
+        self.accuracy = self.clf.score(self.test, self.label_test)
         self.classfication_report = metrics.classification_report(
             self.label_test,
-            self.lr.predict(self.data_test),
+            self.clf.predict(self.test),
             output_dict=output_dict,
         )
