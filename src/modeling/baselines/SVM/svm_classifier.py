@@ -14,49 +14,27 @@ from src.logger import logger
 
 
 class SVMClassifier:
-    def __init__(self, data: List[Dict], vectorizer: str) -> None:
+    def __init__(self, data: Union[List, Dict], vectorizer: str) -> None:
         """init
 
         Parameters
         ----------
         data : Union[List, Dict]
             data with text data and labels
+
+        vectorizer: feature selection method
+            CountVectorizer or TfidfVectorizer
         """
         self.dataset = data
         self.vectorizer = vectorizer
-        self.df = pd.DataFrame()
+        self.data_train = []
+        self.data_test = []
+        self.label_train = []
+        self.label_test = []
+        self.train = []
+        self.test = []
 
-    # TODO: dimension CountVectorizer TF-IDF --> pruning?
-    def vectorize_data(self):
-        """vectorize text data
-
-        Returns
-        -------
-        [type]
-            vectorized text data
-        """
-        self.df = pd.DataFrame(data=self.dataset)
-        if self.vectorizer == "CountVectorizer":
-            vectorizer = CountVectorizer()
-            vectorizer.fit(self.df["title"])
-            data = vectorizer.transform(self.df["title"])
-        if self.vectorizer == "TfidfVectorizer":
-            vectorizer = TfidfVectorizer()
-            data = vectorizer.fit_transform(self.df["title"]).toarray()
-        return data
-
-    def extract_labels(self):
-        """extract labels
-
-        Returns
-        -------
-        [type]
-            labels (classes)
-        """
-        labels = self.df.iloc[:, 0]
-        return labels
-
-    def split_data(self, data, labels):
+    def split_data(self) -> None:
         """split data into training and test data
 
         Parameters
@@ -66,24 +44,38 @@ class SVMClassifier:
         labels : [type]
             labels
         """
+        df = pd.DataFrame(data=self.dataset)
+        sentences = df["title"]
+        labels = df["id"]
         (
             self.data_train,
             self.data_test,
             self.label_train,
             self.label_test,
-        ) = train_test_split(data, labels, test_size=0.20, random_state=1000)
+        ) = train_test_split(sentences, labels)
+
+    def vectorize_data(self) -> None:
+        """Feature selection"""
+        if self.vectorizer == "CountVectorizer":
+            vectorizer = CountVectorizer()
+            vectorizer.fit(self.data_train)
+            self.train = vectorizer.transform(self.data_train).toarray()
+            self.test = vectorizer.transform(self.data_test).toarray()
+        if self.vectorizer == "TfidfVectorizer":
+            vectorizer = TfidfVectorizer()
+            vectorizer.fit(self.data_train)
+            self.train = vectorizer.transform(self.data_train).toarray()
+            self.test = vectorizer.transform(self.data_test).toarray()
 
     def train_classifier(self):
         """trains classfier"""
-        logger.debug("Vectorize Data")
-        data = self.vectorize_data()
-        logger.debug("Extract Labels")
-        labels = self.extract_labels()
         logger.debug("Split TrainingData")
-        self.split_data(data=data, labels=labels)
+        self.split_data()
+        logger.debug("Vectorize Data")
+        self.vectorize_data()
         logger.debug("Train the classfier")
         n_estimators = 10
-        self.svm_classifier = OneVsRestClassifier(
+        self.clf = OneVsRestClassifier(
             BaggingClassifier(
                 SVC(C=1.0, kernel="linear", gamma="scale"),
                 max_samples=1.0,
@@ -91,13 +83,13 @@ class SVMClassifier:
                 n_jobs=-1,
             )
         )
-        self.svm_classifier.fit(self.data_train, self.label_train)
+        self.clf.fit(self.train, self.label_train)
 
     def evaluate(self, output_dict: bool):
         """evaluate data"""
-        self.accuracy = self.svm_classifier.score(self.data_test, self.label_test)
+        self.accuracy = self.clf.score(self.test, self.label_test)
         self.classfication_report = metrics.classification_report(
             self.label_test,
-            self.svm_classifier.predict(self.data_test),
+            self.clf.predict(self.test),
             output_dict=output_dict,
         )
