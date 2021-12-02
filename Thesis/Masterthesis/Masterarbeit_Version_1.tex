@@ -11,6 +11,7 @@
 \usepackage{dcolumn}
 \usepackage[printonlyused, withpage]{acronym}
 \usepackage{amsmath}
+\DeclareMathOperator*{\argmax}{arg\,max} 
 \usepackage{natbib}
 \makeatletter
 \newcommand{\MSonehalfspacing}{%
@@ -86,14 +87,91 @@
   \acro{TN}[TN]{True negatives}
   \acro{FN}[FN]{False negatives}
   \acro{FP}[FP]{False positives}
+  \acro{MAP}[MAP]{maximum a posteriori}
+  \acro{KldB}[KldB]{Klassifikation der Berufe 2010}
+  \acro{ISCO}[ISCO]{International Standard Clasification of Occupations}
 \end{acronym}
 \newpage
 
 %%%%%%%%%%%%%%SECTIONS%%%%%%%%%%%%%%
 \section{Introduction}
 \section{Related work}
-\subsection{Short text classifcation}
+\subsection{Textclassification}
+Text classification, a highly researched area, is the process of classifying text documents or text segments into a set of predefined classes. During the last decades, researches developed a various number of classifiers. As \cite{Kowsari2019} summarize in their survey of classifiers, we can group the approaches mainly into three groups. The first group contains traditional methods like Naive Bayes (NV), Support Vector Machines (SVM), K-nearest neighbors (KNN),  Logistic Regressions (LR) or Decision Trees (DT) \citep{Vijayan2017, Colas2006, Kowsari2019, Sebastiani2001}. Deep learning methods like Convolutional Neural Networks (CNN) or Recurrent Neural Networks (RNN), which are currently the most advanced algorithms for NLP, form the second group. The last group consists of ensemble learning techniques like Boosting and Bagging.
+
+\subsection{Short Text classification} 
+Another potential issue is the length of input documents for classification. Job titles are clearly short text with often not more than 50 characters. Short texts suffer from sparseness, few word co-occurrences, missing shared context, noisiness and ambiguity. Traditional methods, however, are based on word frequency, high word co-occurrence and context, which is why they often fail to achieve high accuracy for short texts \citep{Song2014, WangY2017, WangF2014}. In their overview, \cite{Song2014} present three approaches to solve this. First, since short text data often suffers from unlabeled data in the context of online text data, such as Twitter postings, they suggest using semi-supervised approaches. Second, they recommend to use ensemble learning methods, which focus on the sparseness of the data. Third, \cite{Song2014} propose feature dimensionality reduction and extraction of semantic relationship methods. Based on the latter more recent work on short text classification criticizes the use of the ``Bag of Word'' concept for feature representation as it only reflects the appearance of words in the text. Instead, they represent short texts with semantically similar and conceptual information \citep{Bouaziz2014, WangF2014, Chen2019}.
+Another question concerning the representation of short texts is whether to represent them as dense or sparse vectors. In their comparison between tf-idf/counter vectorizer and the dense vectorizer word2vec and doc2vec, \cite{WangY2017} conclude that among the classifiers Naive Bayes, Logisitic Regression and SVM, the sparse vectorizers achieve the highest accuracy. \cite{Chen2019}, conversely, see limitations in sparse representation as it cannot capture the context information. In their work, they integrate sparse and dense representation into a deep neural network with Knowledge powered Attention, which outperform state-of-art deep learning methods, like CNN, for Chinese short texts. 
+Concerning the classifiers, there is no consensus approach for short text classification. For traditional approaches \cite{WangY2017}'s results indicate that logistic regression and SVM perform best, while KNN seems to achieve best accuracy in \cite{Khamar2013}'s work. Similar to job title specific work, more recent work prefers deep learning methods, mostly CNN \citep{Chen2019}. 
+
+\subsection{Domain-specific}
+Each text classification task presents different challenges. One challenge is that domain-specific problems may arise. There is some work that deals with job classification in the English speaking job market. 
+In terms of classifiers, the corresponding work can be categorised into traditional classifiers or deep learning methods. \cite{Zhu2017} for example, use a KNN classifier in combination with document embedding as feature selection strategy. \cite{Javed2015} rely on traditional methods as well, by combining a SVM classifier and a KNN classifier for their job recommendation system. In contrast, the approaches of \cite{Decorte2021}, \cite{WangJ2019} and \cite{Neculoiu2016} are based on Deep Learning methods. From a higher perspective, there is another dividing line between the approaches. As mentioned earlier, job title normalization can be considered as a typical text classification task \citep{WangJ2019, Javed2015, Zhu2017}. \cite{Decorte2021} and \cite{Neculoiu2016}, however, formulate the task as a string representation approach of similar job titles.  
+
+\subsection{Multiclass}
+A last challenge of text classification tasks comes with the number of classes. As \cite{Li2004} show in their classification of tissue, multiclass classification is more difficult than binary classification problems. Partly, because most of classification algorithms were designed for binary problems \citep{Aly2005}. Approaches for multiclassification can be grouped into two types. Binary algorithms can handle multiclassification naturally. This is, for example, the case for Regression, DT, SVM, KNN and NV. The second type is the decomposition of the problem into binary classification tasks (for the different subtypes see \cite{Aly2005}). The literature so far does not have a clear answer to solve multiclassification problems. Different approaches, like Boosting \citep{Schapire2000} or CNN \citep{Farooq2017} are applied. It is noticeable, however, that many works use variations of SVM \citep{Guo2015,Tomar2015,Tang2019}. 
+
 \section{Data and taxonomy}
+
+\subsection{KldB 2010 Taxonomy}
+The ``\ac{KldB}" is structured hierarchically with 5 levels. On each level there is a different number of classes. On level 1 each class has an id of length one with a number from 0 to 9. Table \ref{tab: T3} shows the 10 classes of level 1 with their class names. On level 2, then, each of the 10 classes are divided into one or more subclasses having a class id of length 2 with the first digit indicating the class of level 1 and the second digit the class of level 2. An overview of the all 5 levels with an example of classes is given in table \ref{tab: T2}. Note that the example in table \ref{tab: T2} does not show on level 2 to level 5 all classes. Thus on level 2 there exists also, e.g. the class id 41 with ``Mathematik-, Biologie- Chemie- und Physikberufe", which in turn is divided into other classes on level 3 etc..  With this procedure this ultimatley leads to class ids of length 5 on level 5. An occupation can be classified on every level in the Taxonomy. Considering the classes of the example in table \ref{tab: T2}, the job title ``Java Developer" could  be classified on level 5 to the class 43412. From this id, it is also derivable that the jobtitle belongs, for example, on level 3 to the class ``Sofwareentwicklung" \citep{Bundesagentur2011a, Bundesagentur2011b, Paulus2013}
+
+The \ac{KldB} contains of two dimension. The first dimension, the so-called "Berufsfachlichkeit" structures jobs according to their similarity in knowledge, activties and jobs. This is reflected in the first 4 levels. Considering the again the example from above and the job title "Fullstack PHP-Entwickler" it is reasonable to classify both on level 1 to "Naturwissenschaft, Geografie and Information", because both of them are related to computer science. It also make sense to classifiy them for example to 4341, because both are about sofware development. On level 5, then, a second dimension is introduced. the "Anforderungsniveau". This dimension gives information on the level of requirement for a job and 4 possible requirements. In table \ref{tab: T4} they are summarized. From the class id of job title ``Java Developer", we can see that the job has been assigned to the second requirement level, since the last digit is a 2 \citep{Bundesagentur2011a,Bundesagentur2011b,Paulus2013}
+
+
+\begin{table}[]
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{cl}
+  \hline
+  \multicolumn{1}{l}{\textbf{IDs KldB 2010}} & \textbf{Berufsbereich (Level 1)}                                           \\ \hline
+  1                                          & Land-, Forst- und Tierwirtschaft und Gartenbau                             \\
+  2                                          & Rohstoffgewinnung, Produktion und Fertigung                                \\
+  3                                          & Bau, Architektur, Vermessung und Gebäudetechnik                            \\
+  4                                          & Naturwissenschaft, Geografie und Informatik                                \\
+  5                                          & Verkehr, Logistik, Schutz und Sicherhe                                     \\
+  6                                          & Kaufmännische Dienstleistungen, Warenhandel, Vertrieb, Hotel und Tourismus \\
+  7                                          & Unternehmensorganisation, Buchhaltung, Recht und Verwaltung                \\
+  8                                          & Gesundheit, Soziales, Lehre und Erziehung                                  \\
+  9 & Sprach-, Literatur-, Geistes-, Gesellschafts- und Wirtschaftswissenschaften, Medien, Kunst, Kultur und Gestaltung \\
+  0                                          & Militär                                                                    \\ \hline
+  \end{tabular}%
+  }
+  \caption{\label{tab: T3} Overview of classes Level 1 - Berufsbereiche (edited after \citep{Bundesagentur2011b})}
+  \end{table}
+
+\begin{table}[hb!]
+  \center
+  \resizebox{\textwidth}{!}{
+  \begin{tabular}{llll}
+  \hline
+  \textbf{Name}      & \textbf{Level} & \textbf{Number of classes} & \textbf{Example}                               \\ \hline
+  Berufsbereiche     & 1              & 10                         & 4: Naturwissenschaft, Geografie und Informatik \\
+  Berufshauptgruppen & 2 & 37   & 43: Informatik-, Informations- und Kommunikationstechnologieberufe            \\
+  Berufsgruppen      & 3              & 144                        & 434: Sofwareentwicklung                        \\
+  Berufsuntergruppen & 4              & 700                        & 4341: Berufe in der Sofwareentwicklung         \\
+  Berufsgattungen    & 5 & 1286 & 43412: Berufe in der Sofwareenetwicklung - fachlich ausgerichtete Tätigkeiten \\ \hline
+  \end{tabular}%
+  }
+  \caption{\label{tab: T2} Overview of \ac{KldB} (edited after \citep{Bundesagentur2011b})}
+  \end{table}
+
+
+\begin{table}[]
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{clll}
+  \hline
+  \multicolumn{1}{l}{\textbf{Level of requirement}} & \textbf{Class ID} & \textbf{Name long} & \textbf{Name short} \\ \hline
+  1 & xxxx1 & Helfer- und Anlerntätigkeit        & Helfer     \\
+  2 & xxxx2 & fachlich ausgerichtete Tätigkeiten & Fachkraft  \\
+  3 & xxxx3 & komplexe Spezialstentätigkeiten    & Spezialist \\
+  4 & xxxx4 & hoch komplexe Tätigkeiten          & Experte    \\ \hline
+  \end{tabular}%
+  }
+  \caption{\label{tab: T4} Overview of Level of requirements on Level 5} (edited after \citep{Bundesagentur2011b})
+  \end{table}
+
+With the KldB 2010, an useful and information-rich occupational classification was created for Germany that reflects the current trends in the labor market \citep{Paulus2013}. One strength relies in the construction of the \ac{KldB}. Instead of just including expert knowledge into the Taxonomy the developement process is based on systematical consideration of information about occupations, as well as statistical procedures for taxonomy developement. Furthermore, the taxonomy was reviewed qualitatively several times in relation to professions and revised. Considering the expressiveness, the \ac{KldB} has some more benefits. Since the taxonmy is quite recent, it reflects new job classes and market trends very adequately. Further, by including the second dimension, the taxonomy provides a powerful tool to organize job titles into simple requirement classes.  In addition, the taxonomy also distinguishes between managerial, supervisory, and professional employees, which is also valuable information. Finally, the taxonomy also convinces with the possibility to switch to ``\ac{ISCO}" through its IDS and thus to normalize jobs to a global standard \citep{Bundesagentur2011b}
+
 \section{Pipeline}
 \section{Preprocessing}
 \section{Evaluation metrics}
@@ -146,8 +224,17 @@ As shown above, there are several metrics for evaluating the performance of a cl
 In order to compare different feature selection methods solid baselines are necessary. As pointed out in the literature review \ac{NB}, \ac{LR} and \ac{SVM} have several advantages for text classifcation tasks. In the following based on a theoretical discussion of each classifier, the exact modeling of the baseline classifiers is justified. 
 
 \subsection{Naive Bayes Classifier}
-The \ac{NB}, a family of probabilistic classifiers, uses Bayes' rule in order to determine the most likely class for each document \citep{Schneider2005}. All \ac{NB} classifiers rely on the conditional independence assumptions which means, that ``features are independent of each other, given the category variable'' \citep[48]{Xu2018}. Depending on whether the features are discrete or continous, different distributions, so-called event models are proposed. While for continous features Gaussian distribution is well-suited, for categorical features usually Bernoulli or multinomial distibutions are applied \citep{Xu2018}. 
+The \ac{NB}, a family of probabilistic classifiers, uses Bayes' rule in order to determine the most likely class for each document \citep{Schneider2005}. All \ac{NB} classifiers rely on the conditional independence assumptions which means, that ``features are independent of each other, given the category variable'' \citep[48]{Xu2018}. Depending on whether the features are discrete or continous, different distributions, so-called event models are proposed. While from a theoretical perspective for continous features Gaussian distribution is well-suited, for discrete features usually Bernoulli or multinomial distibutions are applied \citep{Xu2018}. Although, popular practical implementations, like the one from sklearn, allow as well fractional counts for multinomial distributions \citep{scikit-learn}. Trying different event models, the multinomial \ac{NB} shows indeed for both Count Vectorizer and for TFIDF the best results, which is why I choose it as event model for the baseline. 
 
+The multinomial \ac{NB} classifies according to the most likely class. Given that a document d has $t = 1, ...., k$ terms and can be assigned to $c = 1,...,j$ classes, the probability of a term in a document given a class is calculated as \citep{Manning2008}:
+\[ P(t_k, c_j) = \frac{occurence(t_k, c_j) + 1}{\sum occurence(t, c_j) + |V|} \]
+
+where $|V|$ is the cardinality of the vocabulary. In the denominator 1 is added, so-called Laplace smoothing, in order to avoid zeros, which is the case if the number of terms in a document for one class is zero. \citep{Manning2008}. Further given that $N_c = count(c_j)$ is the number of documents belonging to class $c_j$ and N is number of documents the probability of $c_j$ is defined as $\frac{N_c}{N}$. The probability of a document d belonging to a class $c_j$ can then formulated as follows \citep[258]{Manning2008}:
+\[ P(c_j|d) \propto P(c_j) \prod_{i = 1}^k P(t_i|c_j) \]
+Then the most likely classes can be determined by \citep{Manning2008}: 
+\[\argmax_{c \in C} P(c_j) \prod_{i = 1}^k P(t_i|c_j) \] 
+
+\subsection{Logistic Regression}
 
 \subsection{Support Vector Machines}
 However, \ac{SVM} also performed well for text classification. Especially for multiclass tasks, as mentioned in the literature review, often different versions of the algorithm are used and showed good performance \citep{Aiolli2005,Angulo2003,Benabdeslem2006,Guo2015,Mayoraz1999,Tang2019,Tomar2015}. In general \ac{SVM} has several advantages for text classifcation. First, text classifcation usually has a high dimensional input space. \ac{SVM} can handle these large features since they are able to learn independently of the dimensionality of the feature space. In addition \ac{SVM}s are known to perform well for dense and sparse vectors, which is usually the case for text classification \citep{Joachims1998}. Empirical results, for example \citet{Joachims1998} or \cite{Liu2010} confirm the theoretical expectations. It is, therefore, a reasonable option to use a basic version of the \ac{SVM} algorithm as a baseline.
