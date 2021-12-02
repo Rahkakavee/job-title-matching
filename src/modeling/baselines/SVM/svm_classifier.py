@@ -3,11 +3,8 @@ import pandas as pd
 from sklearn import metrics
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.model_selection import train_test_split
-from sklearn import svm
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import SVC
-import logging
-import sys
 from sklearn.ensemble import BaggingClassifier
 
 from src.logger import logger

@@ -1,15 +1,14 @@
 from src.preprocessing.preprocessing_functions import *
 from src.preprocessing.training_data import TrainingData
-from src.modeling.baselines.SVM.svm_classifier import SVMClassifier
-from src.modeling.baselines.naive_bayes.bayes_classifier import BayesClassifier
-from src.modeling.baselines.LR.lr_classifier import LRClassifier
-import pandas as pd
 from src.logger import logger
 import pickle
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-import pandas as pd
+import random
+from nltk.tokenize import word_tokenize
+from gensim.models import Word2Vec
 from sklearn.model_selection import train_test_split
+import numpy as np
 from sklearn.linear_model import LogisticRegression
+from sklearn import metrics
 
 logger.debug("#######TRAINING DATA#######")
 # Training Data
@@ -43,22 +42,80 @@ logger.debug("#######Preprocessing#######")
 training_data = preprocess(
     data=data, lowercase_whitespace=False, special_words_ovr=specialwords
 )
-vectorizer = CountVectorizer(lowercase=False)
-df = pd.DataFrame(training_data[5000])
-training_data = vectorizer.fit_transform(df["title"]).toarray()
-labels = df["id"]
-train, test, y_train, y_test = train_test_split(training_data, labels)
 
-# clf = LogisticRegression(n_jobs=1, penalty = "l2", solver="lbfgs")
-#  accuracy                           0.64      1250
-#    macro avg       0.69      0.54      0.59      1250
-# weighted avg       0.67      0.64      0.63      1250
+training_data_short = random.sample(training_data, 15000)
 
-# #    accuracy                           0.49      1250
-#    macro avg       0.50      0.56      0.46      1250
-# weighted avg       0.64      0.49      0.52      1250
+sentences = [job["title"] for job in training_data_short]
+labels = [job["id"] for job in training_data_short]
+
+sentences_tokenized = [word_tokenize(sentence) for sentence in sentences]
+
+model = Word2Vec(sentences_tokenized, vector_size=100, window=5, min_count=1, workers=4)
+
+sentences_train, sentences_test, y_train, y_test = train_test_split(sentences, labels)
 
 
-#    accuracy                           0.65      1250
-#    macro avg       0.73      0.53      0.56      1250
-# weighted avg       0.67      0.65      0.64      1250
+train = []
+for sent in sentences_train:
+    sent_vec = np.zeros(100)
+    cnt_words = 0
+    for word in sent:
+        if word in model.wv.key_to_index:
+            vec = model.wv[word]
+            sent_vec += vec
+            cnt_words += 1
+    if cnt_words != 0:
+        sent_vec /= cnt_words
+    train.append(sent_vec)
+
+
+test = []
+for sent in sentences_test:
+    sent_vec = np.zeros(100)
+    cnt_words = 0
+    for word in sent:
+        if word in model.wv.key_to_index:
+            vec = model.wv[word]
+            sent_vec += vec
+            cnt_words += 1
+    if cnt_words != 0:
+        sent_vec /= cnt_words
+    test.append(sent_vec)
+
+tfidf_sent_vectors = []
+row = 0
+for sent in sentences_train:
+    sent_vec = np.zeros(100)
+    weight_sum = 0
+    for word in sent:
+        if word in model.wv.key_to_index and word in tfidf_feat:
+            vec = model.wv[word]
+            tf_idf = dictionary[word] * (sent.count(word) / len(sent))
+            sent_vec += vec * tf_idf
+            weight_sum += tf_idf
+    if weight_sum != 0:
+        sent_vec /= weight_sum
+    tfidf_sent_vectors.append(sent_vec)
+    row += 1
+
+tfidf_sent_vectors_test = []
+row = 0
+for sent in sentences_test:
+    sent_vec = np.zeros(100)
+    weight_sum = 0
+    for word in sent:
+        if word in model.wv.key_to_index and word in tfidf_feat:
+            vec = model.wv[word]
+            tf_idf = dictionary[word] * (sent.count(word) / len(sent))
+            sent_vec += vec * tf_idf
+            weight_sum += tf_idf
+    if weight_sum != 0:
+        sent_vec /= weight_sum
+    tfidf_sent_vectors_test.append(sent_vec)
+    row += 1
+
+
+clf = LogisticRegression(penalty="l2", C=1.0, solver="lbfgs")
+clf.fit(train, y_train)
+
+metrics.classification_report(y_test, clf.predict(test), output_dict=True)
