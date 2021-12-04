@@ -2,6 +2,7 @@ from src.preprocessing.training_data import TrainingData
 from src.descriptive.descriptive_analysis.descriptive_analysis_functions import *
 from src.preprocessing.preprocessing_functions import *
 import pandas as pd
+import pickle
 
 # Level 5
 data_level_5_old = TrainingData(
@@ -27,8 +28,10 @@ training_data_level_5_cleaned = [
     dict(t) for t in {tuple(example.items()) for example in training_data_level_5}
 ]  # source: "https://stackoverflow.com/questions/9427163/remove-duplicate-dict-in-list-in-python"
 
-data = remove_lc_ws(training_data_level_5_cleaned)
-data = remove_special_characters(data)
+# preprocess data
+with open(file="src/preprocessing/specialwords.tex", mode="rb") as fp:
+    specialwords = pickle.load(fp)
+data = preprocess(data=training_data_level_5_cleaned, special_words_ovr=specialwords)
 
 searchterms_servicekraft = [
     "servicekraft",

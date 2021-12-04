@@ -1,7 +1,5 @@
 # import modules
-from enum import unique
-from typing import Tuple, Union, List, Dict, Any, Literal
-from matplotlib import axes
+from typing import Union, List, Dict, Any, Literal
 from pandas.core.series import Series
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -10,6 +8,8 @@ import numpy as np
 import matplotlib.patches as mpatches
 from collections import Counter
 import re
+from matplotlib import pyplot
+import itertools
 
 
 def class_distribution(data: Union[Dict, List], variable: str, level: str) -> Series:
@@ -144,20 +144,91 @@ def visualize_counting_per_job_with_kldb(data: Dict, title: str):
     return plot
 
 
-def counting_per_kldb_ids(data: List, job_terms: List, top: int, kldbs) -> Dict:
-    jobs = []
-    for term in job_terms:
-        for job in data:
-            if re.search(term, job["title"]):
-                jobs.append(job)
-    kldb_lookup = {}
-    for kldb in kldbs:
-        kldb_lookup.update({kldb["id"]: kldb["title"]})
-    jobs_with_kldbs = [
-        {"id": job["id"], "kldb": kldb_lookup[job["id"]], "title": job["title"]}
-        for job in jobs
-    ]
-    df = pd.DataFrame(jobs_with_kldbs)
-    kldbs_for_count = df["id"]
-    kldbs_count = dict(Counter(kldbs_for_count).most_common(top))
-    return kldbs_count
+def co_occurence_with_kldbs(data: List, kldbs_dkzs: List, title: str):
+    training_data_alternatives = []
+    for job in data:
+        alternative_kldbs = []
+        for alternative_dkz in job["alternativeDkzs"]:
+            try:
+                alternative_dkz = kldbs_dkzs[alternative_dkz]
+                alternative_kldbs.append(alternative_dkz)
+            except:
+                pass
+        training_data_alternatives.append(
+            {
+                "title": job["title"],
+                "hauptKldB": job["hauptKldB"],
+                "alternativeKldB": list(set(alternative_kldbs)),
+            }
+        )
+
+    training_data_per_alternatives = []
+    for job in training_data_alternatives:
+        for alternative_kldb in job["alternativeKldB"]:
+            training_data_per_alternatives.append(
+                {
+                    "title": job["title"],
+                    "hauptKldB": job["hauptKldB"],
+                    "alternativeKldB": alternative_kldb,
+                }
+            )
+
+    kldb_ids = []
+    for example in training_data_per_alternatives:
+        kldb_ids.append(example["hauptKldB"])
+        kldb_ids.append(example["alternativeKldB"])
+    kldb_ids = list(set(kldb_ids))
+
+    kldb_alternatives = {}
+    for kldb_id in kldb_ids:
+        kldb_alternatives.update({kldb_id: []})
+
+    for job in training_data_per_alternatives:
+        kldb_alternatives[job["hauptKldB"]].append(job["alternativeKldB"])
+
+    kldb_alternatives_countings = []
+    for key, value in kldb_alternatives.items():
+        values = dict(Counter(value))
+        kldb_alternatives_countings.append({"kldb": key, "countings": values})
+
+    kldb_alternatives_with_counts = []
+    for example in kldb_alternatives_countings:
+        for key, value in example["countings"].items():
+            kldb_alternatives_with_counts.append(
+                {"kldb": example["kldb"], "alternativeKldB": key, "countings": value}
+            )
+
+    combinations = []
+    for kldb_id in kldb_ids:
+        combinations.append(
+            {"kldb": kldb_id, "alternativeKldB": kldb_id, "countings": float("nan")}
+        )
+
+    for pair in itertools.permutations(kldb_ids, 2):
+        combinations.append(
+            {"kldb": pair[0], "alternativeKldB": pair[1], "countings": float("nan")}
+        )
+
+    for combination in combinations:
+        for example in kldb_alternatives_with_counts:
+            if (
+                combination["kldb"] == example["kldb"]
+                and combination["alternativeKldB"] == example["alternativeKldB"]
+            ):
+                combination["countings"] = example["countings"]
+
+    df = pd.DataFrame(combinations)
+    df_sorted = df.sort_values(by=["alternativeKldB", "kldb"], ascending=False)
+    df_pivot_ = df_sorted.pivot(
+        index="alternativeKldB", columns="kldb", values="countings"
+    )
+
+    pyplot.figure(figsize=(13, 13))
+    ax = sns.heatmap(
+        df_pivot_, cmap="mako_r", annot=True, annot_kws={"size": 8}, fmt="g"
+    )
+    ax.invert_xaxis()
+    ax.set_title("Co-occurence of KldBs")
+    ax.set_xlabel("Hauptkldbs")
+    ax.set_ylabel("Alternativekldbs")
+    return ax
