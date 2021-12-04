@@ -1,121 +1,120 @@
-from src.preprocessing.preprocessing_functions import *
-from src.preprocessing.training_data import TrainingData
-from src.logger import logger
 import pickle
-import random
 from nltk.tokenize import word_tokenize
-from gensim.models import Word2Vec
 from sklearn.model_selection import train_test_split
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn import metrics
+import json
+import gensim
+from sklearn.model_selection import train_test_split
 
-logger.debug("#######TRAINING DATA#######")
-# Training Data
-data_level_1_old = TrainingData(
-    kldbs_path="data/raw/dictionary_occupations_complete_update.json",
-    data_path="data/processed/data_old_format.json",
-    kldb_level=1,
-    new_data=False,
+with open(file="data/processed/training_data_long.json") as fp:
+    training_data_long = json.load(fp=fp)
+
+with open(file="data/processed/training_data_short.json") as fp:
+    training_data_short = json.load(fp=fp)
+
+
+class Sequencer:
+    def __init__(self, all_words, max_words, seq_len, embedding_matrix):
+
+        self.seq_len = seq_len
+        self.embed_matrix = embedding_matrix
+        """
+        temp_vocab = Vocab which has all the unique words
+        self.vocab = Our last vocab which has only most used N words.
+    
+        """
+        temp_vocab = list(set(all_words))
+        self.vocab = []
+        self.word_cnts = {}
+        """
+        Now we'll create a hash map (dict) which includes words and their occurencies
+        """
+        for word in tqdm(temp_vocab):
+            # 0 does not have a meaning, you can add the word to the list
+            # or something different.
+            count = len([0 for w in all_words if w == word])
+            self.word_cnts[word] = count
+            counts = list(self.word_cnts.values())
+            indexes = list(range(len(counts)))
+
+        # Now we'll sort counts and while sorting them also will sort indexes.
+        # We'll use those indexes to find most used N word.
+        cnt = 0
+        while cnt + 1 != len(counts):
+            cnt = 0
+            for i in range(len(counts) - 1):
+                if counts[i] < counts[i + 1]:
+                    counts[i + 1], counts[i] = counts[i], counts[i + 1]
+                    indexes[i], indexes[i + 1] = indexes[i + 1], indexes[i]
+                else:
+                    cnt += 1
+
+        for ind in indexes[:max_words]:
+            self.vocab.append(temp_vocab[ind])
+
+    def textToVector(self, text):
+        # First we need to split the text into its tokens and learn the length
+        # If length is shorter than the max len we'll add some spaces (100D vectors which has only zero values)
+        # If it's longer than the max len we'll trim from the end.
+        tokens = text.split()
+        len_v = len(tokens) - 1 if len(tokens) < self.seq_len else self.seq_len - 1
+        vec = []
+        for tok in tokens[:len_v]:
+            try:
+                vec.append(self.embed_matrix[tok])
+            except Exception as E:
+                pass
+
+        last_pieces = self.seq_len - len(vec)
+        for i in range(last_pieces):
+            vec.append(
+                np.zeros(
+                    100,
+                )
+            )
+
+        return np.asarray(vec, dtype=object).flatten()
+
+
+sentences_short = [job["title"] for job in training_data_short]
+labels_short = [job["id"] for job in training_data_short]
+sentences_long = [job["title"] for job in training_data_long]
+labels_long = [job["id"] for job in training_data_long]
+
+sentences_short_tokens = [word_tokenize(sentence) for sentence in sentences_short]
+sentences_long_tokens = [word_tokenize(sentence) for sentence in sentences_long]
+
+custom_model = gensim.models.Word2Vec(sentences_long_tokens, vector_size=300)
+
+with open("src/modeling/vectorizer/word2vec/sequencer_all_sentences.pkl", "rb") as fp:
+    sequencer = pickle.load(fp)
+
+train, test, y_train, y_test = train_test_split(sentences_short_tokens, labels_short)
+
+train_vecs = np.asarray([sequencer.textToVector(" ".join(seq)) for seq in train])
+test_vecs = np.asarray([sequencer.textToVector(" ".join(seq)) for seq in test])
+
+custom_model.wv.vectors_lockf = np.ones(len(custom_model.wv))
+
+custom_model.wv.intersect_word2vec_format(
+    "model/GoogleNews-vectors-negative300.bin.gz", binary=True, lockf=0.0
 )
-data_level_1_new = TrainingData(
-    kldbs_path="data/raw/dictionary_occupations_complete_update.json",
-    data_path="data/processed/data_new_format.json",
-    kldb_level=1,
-    new_data=True,
-)
 
-data_level_1_old.create_training_data()
-data_level_1_new.create_training_data()
+custom_model.train(sentences_long_tokens, total_examples=3, epochs=100)
 
-training_data_level_1 = data_level_1_old.training_data + data_level_1_new.training_data
+# clf = LogisticRegression(penalty="l2", C=1.0, solver="lbfgs")
+# clf.fit(train, y_train)
 
-data = [
-    dict(t) for t in {tuple(example.items()) for example in training_data_level_1}
-]  # source: "https://stackoverflow.com/questions/9427163/remove-duplicate-dict-in-list-in-python"
-
-with open("src/preprocessing/specialwords.tex", "rb") as fp:
-    specialwords = pickle.load(fp)
-
-logger.debug("#######Preprocessing#######")
-# Preprocess
-training_data = preprocess(
-    data=data, lowercase_whitespace=False, special_words_ovr=specialwords
-)
-
-training_data_short = random.sample(training_data, 15000)
-
-sentences = [job["title"] for job in training_data_short]
-labels = [job["id"] for job in training_data_short]
-
-sentences_tokenized = [word_tokenize(sentence) for sentence in sentences]
-
-model = Word2Vec(sentences_tokenized, vector_size=100, window=5, min_count=1, workers=4)
-
-sentences_train, sentences_test, y_train, y_test = train_test_split(sentences, labels)
+# metrics.classification_report(y_test, clf.predict(test), output_dict=True)
 
 
-train = []
-for sent in sentences_train:
-    sent_vec = np.zeros(100)
-    cnt_words = 0
-    for word in sent:
-        if word in model.wv.key_to_index:
-            vec = model.wv[word]
-            sent_vec += vec
-            cnt_words += 1
-    if cnt_words != 0:
-        sent_vec /= cnt_words
-    train.append(sent_vec)
+# from sentence_transformers import SentenceTransformer
+
+# sbert_model = SentenceTransformer("bert-base-nli-mean-tokens")
 
 
-test = []
-for sent in sentences_test:
-    sent_vec = np.zeros(100)
-    cnt_words = 0
-    for word in sent:
-        if word in model.wv.key_to_index:
-            vec = model.wv[word]
-            sent_vec += vec
-            cnt_words += 1
-    if cnt_words != 0:
-        sent_vec /= cnt_words
-    test.append(sent_vec)
+# sentence_embeddings = sbert_model.encode(sentences)
 
-tfidf_sent_vectors = []
-row = 0
-for sent in sentences_train:
-    sent_vec = np.zeros(100)
-    weight_sum = 0
-    for word in sent:
-        if word in model.wv.key_to_index and word in tfidf_feat:
-            vec = model.wv[word]
-            tf_idf = dictionary[word] * (sent.count(word) / len(sent))
-            sent_vec += vec * tf_idf
-            weight_sum += tf_idf
-    if weight_sum != 0:
-        sent_vec /= weight_sum
-    tfidf_sent_vectors.append(sent_vec)
-    row += 1
-
-tfidf_sent_vectors_test = []
-row = 0
-for sent in sentences_test:
-    sent_vec = np.zeros(100)
-    weight_sum = 0
-    for word in sent:
-        if word in model.wv.key_to_index and word in tfidf_feat:
-            vec = model.wv[word]
-            tf_idf = dictionary[word] * (sent.count(word) / len(sent))
-            sent_vec += vec * tf_idf
-            weight_sum += tf_idf
-    if weight_sum != 0:
-        sent_vec /= weight_sum
-    tfidf_sent_vectors_test.append(sent_vec)
-    row += 1
-
-
-clf = LogisticRegression(penalty="l2", C=1.0, solver="lbfgs")
-clf.fit(train, y_train)
-
-metrics.classification_report(y_test, clf.predict(test), output_dict=True)
+# print(sentence_embeddings[0])
