@@ -1,5 +1,7 @@
 import pickle
 
+"""List of special words"""
+
 specialwords = [
     "mitarbeiter",
     "gesucht",
@@ -31,5 +33,5 @@ specialwords = [
     "bzw",
 ]
 
-with open("src/preprocessing/specialwords.tex", "wb") as fp:
+with open("src/preprocessing/specialwords.txt", "wb") as fp:
     specialwords = pickle.dump(specialwords, fp)

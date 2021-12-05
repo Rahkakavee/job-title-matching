@@ -1,6 +1,5 @@
-from os import remove
 import re
-from typing import List, Literal
+from typing import List
 import emoji
 import nltk
 from nltk.corpus import stopwords
@@ -8,6 +7,8 @@ from nltk.corpus import stopwords
 nltk.download("stopwords")
 from src.logger import logger
 from tqdm import tqdm
+
+"""Functions for preprocessing"""
 
 
 def remove_special_characters(data: List) -> List:
@@ -71,6 +72,18 @@ def remove_lc_ws(data: List) -> List:
 
 
 def remove_stopwords(data: List) -> List:
+    """remove stopwords (all stopwords from nltk german stopfword list)
+
+    Parameters
+    ----------
+    data : List
+        training data
+
+    Returns
+    -------
+    List
+        training data cleaned
+    """
     german_stop_words = stopwords.words("german")
     for example in data:
         title_tokens = example["title"].split()
@@ -84,6 +97,20 @@ def remove_stopwords(data: List) -> List:
 
 
 def remove_special_words(data: List, specialwords: List = ["m", "w", "d", "f"]) -> List:
+    """removes a default list of special words or a custom list of special words
+
+    Parameters
+    ----------
+    data : List
+        training data
+    specialwords : List, optional
+        List with own special word, by default ["m", "w", "d", "f"]
+
+    Returns
+    -------
+    List
+        training data cleaned
+    """
     for example in data:
         title_tokens = example["title"].split()
         title_tokens_cleaned = [
@@ -104,6 +131,30 @@ def preprocess(
     special_words: bool = True,
     special_words_ovr: List = [],
 ) -> List:
+    """preprocess the training data
+
+    Parameters
+    ----------
+    data : List
+        training data
+    special_characters : bool, optional
+        if set to False special characters are not removed, by default True
+    emojis : bool, optional
+        if set to False emojis are not removed, by default True
+    lowercase_whitespace : bool, optional
+        if set to False no lowercase and whitespace are applied, by default True
+    stopwords : bool, optional
+        if set to False stopwords are not removed, by default True
+    special_words : bool, optional
+        if set to False special words are not removed, by default True
+    special_words_ovr : List, optional
+        list with custom words, by default []
+
+    Returns
+    -------
+    List
+        cleaned training data
+    """
     if special_characters:
         logger.debug("Remove special characters and numbers")
         data = remove_special_characters(data=data)
