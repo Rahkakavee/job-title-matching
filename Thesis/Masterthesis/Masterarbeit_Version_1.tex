@@ -266,6 +266,24 @@ In order to find a strong baseline I checked \ac{SVM}'s with different parameter
 
 \section{Experimental results}
 \section{Discussion and Limitations}
+\begin{tabular}{|l|r|r}
+  \hline
+  {} &    LR &   SVM \\
+  \hline
+  CountVectorizer &  0.71 &  0.69 \\
+  TFIDF           &  0.71 &  0.68 \\
+  \hline
+  \end{tabular}
+
+
+  \begin{tabular}{l|l|l|}
+    \hline
+  {} &                          LR &                         SVM \\
+  \hline
+  CountVectorizer\_ &  p: 0.77, r: 0.61, F1: 0.66 &  p: 0.75, r: 0.59, F1: 0.64 \\
+  TFIDF            &  p: 0.77, r: 0.59, F1: 0.64 &  p: 0.77, r: 0.58, F1: 0.63 \\
+  \hline
+  \end{tabular}
 
 \clearpage
 
