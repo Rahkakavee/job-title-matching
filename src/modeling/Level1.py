@@ -88,23 +88,31 @@ tfidf_clf_SVM.fit_classifier()
 # EVALUATE CLASSIFIERS
 logger.debug("EVALUATE CLASSIFIERS")
 logger.debug("LR")
-count_clf_LR_report = count_clf_LR.evaluate(output_dict=False)
-tfidf_clf_LR_report = tfidf_clf_LR.evaluate(output_dict=False)
+count_clf_LR_report = count_clf_LR.evaluate(output_dict=True)
+tfidf_clf_LR_report = tfidf_clf_LR.evaluate(output_dict=True)
 
 logger.debug("SVM")
-count_clf_SVM_report = count_clf_SVM.evaluate(output_dict=False)
-tfidf_clf_SVM_report = tfidf_clf_SVM.evaluate(output_dict=False)
+count_clf_SVM_report = count_clf_SVM.evaluate(output_dict=True)
+tfidf_clf_SVM_report = tfidf_clf_SVM.evaluate(output_dict=True)
 
 # TO_LATEX
 logger.debug("LATEX")
 logger.debug("Accuracy")
 df_accuracy = pd.DataFrame(
     {
-        "LR": [count_clf_LR_report["accuracy"], tfidf_clf_LR_report["accuracy"]],
-        "SVM": [tfidf_clf_SVM_report["accuracy"], tfidf_clf_LR_report["accuracy"]],
+        "LR": [
+            round(count_clf_LR_report["accuracy"], 2),
+            round(tfidf_clf_LR_report["accuracy"], 2),
+        ],
+        "SVM": [
+            round(count_clf_SVM_report["accuracy"], 2),
+            round(tfidf_clf_SVM_report["accuracy"], 2),
+        ],
     },
     index=["CountVectorizer", "TFIDF"],
 )
+
+print(df_accuracy.to_latex())
 
 logger.debug("Precision, Recall, F1-score")
 df_prf = pd.DataFrame(
@@ -120,3 +128,5 @@ df_prf = pd.DataFrame(
     },
     index=["CountVectorizer_", "TFIDF"],
 )
+
+print(df_prf.to_latex())
