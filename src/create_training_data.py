@@ -13,13 +13,13 @@ logger.debug("#######TRAINING DATA#######")
 data_level_1_old = TrainingData(
     kldbs_path="data/raw/dictionary_occupations_complete_update.json",
     data_path="data/processed/data_old_format.json",
-    kldb_level=1,
+    kldb_level=5,
     new_data=False,
 )
 data_level_1_new = TrainingData(
     kldbs_path="data/raw/dictionary_occupations_complete_update.json",
     data_path="data/processed/data_new_format.json",
-    kldb_level=1,
+    kldb_level=5,
     new_data=True,
 )
 
@@ -37,14 +37,12 @@ with open("src/preprocessing/specialwords.txt", "rb") as fp:
 
 logger.debug("#######Preprocessing#######")
 # Preprocess
-training_data = preprocess(
-    data=data, lowercase_whitespace=False, special_words_ovr=specialwords
-)
+training_data = preprocess(data=data, special_words_ovr=specialwords)
 
 training_data_short = random.sample(training_data, 15000)
 
-with open(file="data/processed/training_data_long.json", mode="w") as fp:
+with open(file="data/processed/training_data_long_l5.json", mode="w") as fp:
     json.dump(obj=training_data, fp=fp)
 
-with open(file="data/processed/training_data_short.json", mode="w") as fp:
+with open(file="data/processed/training_data_short_l5.json", mode="w") as fp:
     json.dump(obj=training_data_short, fp=fp)
