@@ -265,25 +265,148 @@ In order to find a strong baseline I checked \ac{SVM}'s with different parameter
 \section{Implementation of ...}
 
 \section{Experimental results}
-\section{Discussion and Limitations}
-\begin{tabular}{|l|r|r}
+
+\begin{table}[]
+  \centering
+\begin{tabular}{lrrr}
   \hline
-  {} &    LR &   SVM \\
+  {} &    \textbf{LR} &   \textbf{SVM} &    \textbf{RF} \\
   \hline
-  CountVectorizer &  0.71 &  0.69 \\
-  TFIDF           &  0.71 &  0.68 \\
+  \textbf{CountVectorizer} &  0.71 &  0.68 &  0.64 \\
+  \textbf{TFIDF}           &  0.71 &  0.69 &  0.64 \\
+  \textbf{Word2Vec}        &  0.55 &  0.53 &  0.62 \\
+  \textbf{Doc2Vec}         &  0.48 &  0.46 &  0.56 \\
+  \textbf{BERT}         &  0.65 &  0.65 &  0.58 \\
   \hline
   \end{tabular}
+  \caption{\label{tab: T5} Evaluation of Level 1 classification - Accuracy}
+\end{table}
 
-
-  \begin{tabular}{l|l|l|}
+  \begin{table}[]
+    \resizebox{\textwidth}{!}{%
+  \begin{tabular}{llll}
     \hline
-  {} &                          LR &                         SVM \\
+    {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
+    \hline
+    \textbf{CountVectorizer} &   p: 0.74, r: 0.60, F1: 0.64 &   p: 0.73, r: 0.56, F1: 0.60 &  p: 0.67, r: 0.54, F1: 0.57 \\
+    \textbf{TFIDF}           &   p: 0.75, r: 0.60, F1: 0.63 &  p: 0.74, r: 0.57, F1: 0.62 &  p: 0.65, r: 0.53, F1: 0.55 \\
+    \textbf{Word2Vec}        &   p: 0.52, r: 0.40, F1: 0.42 &  p: 0.46, r: 0.41, F1: 0.41 &  p: 0.62, r: 0.54, F1: 0.56 \\
+    \textbf{Doc2Vec}         &  p: 0.43, r: 0.34, F1: 0.35 &  p: 0.39, r: 0.33, F1: 0.33 &   p: 0.60, r: 0.41, F1: 0.43 \\
+    \textbf{BERT}         &  p: 0.67, r: 0.57, F1: 0.60 &  p: 0.63, r: 0.56, F1: 0.58 &  p: 0.70, r: 0.46, F1: 0.50 \\
+    \hline
+    \end{tabular}%
+    }
+    \caption{\label{tab: T6} Evaluation of Level 1 classification - Macro}
+  \end{table}
+
+  \begin{table}[]
+  \begin{tabular}{lrrr}
+    \hline
+    {} &    \textbf{LR}  &   \textbf{SVM}  &    \textbf{RF}  \\
+    \hline
+    \textbf{CountVectorizer}  &  0.48 &  0.50 &  0.43 \\
+    \textbf{TFIDF}            &  0.47 &  0.51 &  0.43 \\
+    \textbf{Word2Vec}         &  0.28 &  0.14 &  0.35 \\
+    \textbf{Doc2Vec}          &  0.19 &  0.20 &  0.31 \\
+    \hline
+    \end{tabular}
+    \caption{\label{tab: T7} Evaluation of Level 3 classification - Accuracy}
+  \end{table}
+    
+    \begin{table}[]
+      \resizebox{\textwidth}{!}{%
+    \begin{tabular}{llll}
+    \hline
+    {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
+    \hline
+    \textbf{CountVectorizer} &   p: 0.42, r: 0.27, F1: 0.3 &  p: 0.41, r: 0.35, F1: 0.36 &  p: 0.37, r: 0.25, F1: 0.28 \\
+    \textbf{TFIDF}           &  p: 0.38, r: 0.23, F1: 0.26 &  p: 0.41, r: 0.35, F1: 0.36 &  p: 0.36, r: 0.25, F1: 0.27 \\
+    \textbf{Word2Vec}        &  p: 0.15, r: 0.11, F1: 0.12 &  p: 0.07, r: 0.05, F1: 0.04 &  p: 0.23, r: 0.18, F1: 0.19 \\
+    \textbf{Doc2Vec}         &   p: 0.1, r: 0.05, F1: 0.05 &  p: 0.13, r: 0.08, F1: 0.09 &  p: 0.23, r: 0.13, F1: 0.14 \\
+    \hline
+    \end{tabular}%
+    }
+    \caption{\label{tab: T8} Evaluation of Level 3 classification - Macro}
+  \end{table}
+
+
+  %Level 3 mit Kürzung 
+  \begin{table}[]
+  \begin{tabular}{lrrr}
+    \hline
+    {} &    \textbf{LR} &   \textbf{SVM} &    \textbf{RF} \\
+    \hline
+    \textbf{CountVectorizer} &  0.54 &  0.52 &  0.47 \\
+    \textbf{TFIDF}           &  0.53 &  0.54 &  0.49 \\
+    \textbf{Word2Vec}        &  0.34 &  0.28 &  0.39 \\
+    \textbf{Doc2Vec}         &  0.24 &  0.28 &  0.36 \\
+    \textbf{BERT}            &  0.51 &  0.49 &  0.45 \\
+    \hline
+    \end{tabular}
+  \end{table}
+
+    \begin{table}[]
+      \resizebox{\textwidth}{!}{%
+    \begin{tabular}{llll}
+      \hline
+      {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
+      \hline
+      \textbf{CountVectorizer} &  p: 0.63, r: 0.49, F1: 0.53 &  p: 0.57, r: 0.48, F1: 0.51 &  p: 0.55, r: 0.42, F1: 0.46 \\
+      \textbf{TFIDF}           &  p: 0.66, r: 0.47, F1: 0.52 &  p: 0.59, r: 0.49, F1: 0.51 &  p: 0.58, r: 0.44, F1: 0.48 \\
+      \textbf{Word2Vec}        &  p: 0.38, r: 0.26, F1: 0.28 &  p: 0.31, r: 0.23, F1: 0.24 &  p: 0.39, r: 0.34, F1: 0.35 \\
+      \textbf{Doc2Vec}         &  p: 0.36, r: 0.14, F1: 0.15 &  p: 0.33, r: 0.23, F1: 0.25 &  p: 0.42, r: 0.29, F1: 0.31 \\
+      \textbf{BERT}            &  p: 0.53, r: 0.44, F1: 0.46 &  p: 0.44, r: 0.45, F1: 0.44 &  p: 0.56, r: 0.38, F1: 0.42 \\
+      \hline
+      \end{tabular}%
+      }
+    \end{table}
+
+    \begin{table}[]
+    \begin{tabular}{lrrr}
+      \hline
+      {} &    \textbf{LR} &   \textbf{SVM} &    \textbf{RF} \\
+      \hline
+      \textbf{CountVectorizer} &  0.63 &  0.65 &  0.57 \\
+      \textbf{TFIDF}           &  0.61 &  0.65 &  0.59 \\
+      \textbf{Word2Vec}        &  0.44 &  0.38 &  0.49 \\
+      \textbf{Doc2Vec}         &  0.27 &  0.35 &  0.45 \\
+      \textbf{BERT}            &  0.62 &  0.63 &  0.55 \\
+      \hline
+      \end{tabular}
+    \end{table}
+
+      \begin{table}[]
+        \resizebox{\textwidth}{!}{%
+      \begin{tabular}{llll}
+        \hline
+        {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
+        \hline
+        \textbf{CountVectorizer} &  p: 0.71, r: 0.59, F1: 0.63 &  p: 0.67, r: 0.62, F1: 0.63 &  p: 0.63, r: 0.55, F1: 0.57 \\
+        \textbf{TFIDF}           &  p: 0.72, r: 0.57, F1: 0.61 &  p: 0.67, r: 0.63, F1: 0.63 &  p: 0.63, r: 0.56, F1: 0.58 \\
+        \textbf{Word2Vec}        &  p: 0.53, r: 0.38, F1: 0.42 &  p: 0.38, r: 0.32, F1: 0.31 &  p: 0.49, r: 0.46, F1: 0.46 \\
+        \textbf{Doc2Vec}         &  p: 0.41, r: 0.15, F1: 0.17 &   p: 0.36, r: 0.3, F1: 0.31 &  p: 0.53, r: 0.37, F1: 0.41 \\
+        \textbf{BERT}            &   p: 0.66, r: 0.58, F1: 0.60 &   p: 0.61, r: 0.62, F1: 0.60 &  p: 0.64, r: 0.49, F1: 0.53 \\
+        \hline
+        \end{tabular}%
+        }
+      \end{table}
+
+
+
+      % Please add the following required packages to your document preamble:
+% \usepackage{graphicx}
+\begin{table}[]
+  \begin{tabular}{lllll}
   \hline
-  CountVectorizer\_ &  p: 0.77, r: 0.61, F1: 0.66 &  p: 0.75, r: 0.59, F1: 0.64 \\
-  TFIDF            &  p: 0.77, r: 0.59, F1: 0.64 &  p: 0.77, r: 0.58, F1: 0.63 \\
-  \hline
+                   & Accuracy & Precision & Recall & F1   \\ \hline
+  BERT CLF Level 1 & 0.76     & 0.73      & 0.70   & 0.71 \\v
+  BERT CLF Level 3 & 0.53     & 0.56      & 0.46   & 0.46 \\
+  BERT CLF Level 5 & 0.60     & 0.59      & 0.54   & 0.53 \\ \hline
   \end{tabular}
+  \end{table}
+
+\section{Discussion and Limitations}
+
 
 \clearpage
 
