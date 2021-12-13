@@ -7,7 +7,7 @@ class LRClassifier:
 
     def __init__(self, train, test, y_train, y_test) -> None:
         self.clf = LogisticRegression(
-            penalty="l2", C=1.0, solver="lbfgs", max_iter=1000
+            penalty="l2", C=1.0, solver="lbfgs", max_iter=2000
         )
         self.train = train
         self.test = test
