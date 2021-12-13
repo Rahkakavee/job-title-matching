@@ -51,3 +51,23 @@ train_examples = [
     InputExample(texts=["Another pair", "Unrelated sentence"], label=0.3),
 ]
 train_dataloader = DataLoader(train_examples, shuffle=True, batch_size=16)
+train_loss = losses.CosineSimilarityLoss(model)
+
+
+model.fit(
+    train_objectives=[(train_dataloader, train_loss)],
+    epochs=1,
+    warmup_steps=100,
+    show_progress_bar=True,
+)
+
+sentences = [el["title"] for el in training_data_short]
+labels = [el["id"] for el in training_data_short]
+
+from sklearn.model_selection import train_test_split
+
+train, test, y_train, y_test = train_test_split(sentences, labels)
+
+
+train_vecs = [model.encode(sent) for sent in train]
+test_vecs = [model.encode(sent) for sent in test]
