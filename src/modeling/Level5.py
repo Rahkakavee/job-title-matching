@@ -15,14 +15,28 @@ import pandas as pd
 
 # LOAD TRAINING DATA
 logger.debug("LOAD TRAINING DATA")
-with open(file="data/processed/training_data_long_l1.json") as fp:
+with open(file="data/processed/training_data_long_l5.json") as fp:
     training_data_long = json.load(fp=fp)
 
-with open(file="data/processed/training_data_short_l1.json") as fp:
+with open(file="data/processed/training_data_short_l5.json") as fp:
     training_data_short = json.load(fp=fp)
 
-sentences_short = [job["title"] for job in training_data_short]
-labels_short = [job["id"] for job in training_data_short]
+
+df = pd.DataFrame(training_data_short)
+df_count = df.groupby("id").count()
+df_count["id"] = df_count.index
+df_count = df_count.sort_values("title", ascending=False)
+data_remove = df_count[df_count["title"] > 100]
+ids_to_remove = data_remove["id"].to_list()
+
+training_data_short_cleaned = []
+
+for el in training_data_short:
+    if el["id"] in ids_to_remove:
+        training_data_short_cleaned.append(el)
+
+sentences_short = [job["title"] for job in training_data_short_cleaned]
+labels_short = [job["id"] for job in training_data_short_cleaned]
 sentences_long = [job["title"] for job in training_data_long]
 labels_long = [job["id"] for job in training_data_long]
 
