@@ -12,12 +12,15 @@ class SVMClassifier:
         self.clf = OneVsRestClassifier(
             BaggingClassifier(
                 SVC(C=1.0, kernel="linear", gamma="scale"),
-                max_samples=1.0 / n_estimators,
+                max_samples=1.0,
                 n_estimators=n_estimators,
                 n_jobs=-1,
                 verbose=True,
             )
         )
+
+        # self.clf = OneVsRestClassifier(SVC(C=1.0, kernel="linear", gamma="scale"))
+
         self.train = train
         self.test = test
         self.y_train = y_train
