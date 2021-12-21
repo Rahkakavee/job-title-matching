@@ -31,7 +31,7 @@ class Word2VecVectorizer:
         """
         return Word2Vec.load(self.modelname)
 
-    def transform_data(self) -> Tuple[List[Any], List[Any], List[Any], List[Any]]:
+    def transform_data(self):
         """transforms text inputs to vectors
 
         Returns
@@ -41,25 +41,37 @@ class Word2VecVectorizer:
         """
         model = self.load_model()
         avgr = AverageWord2Vec(model.wv)
-        train_vecs = avgr.vectorize_all(self.train_sentences)
-        test_vecs = avgr.vectorize_all(self.test_sentences)
-        full_training_vecs_train = []
-        full_labels_train = []
-        for i in range(0, len(train_vecs)):
-            if train_vecs[i].shape == (300,):
-                full_training_vecs_train.append(train_vecs[i])
-                full_labels_train.append(self.y_train[i])
 
-        full_training_vecs_test = []
-        full_labels_test = []
-        for i in range(0, len(test_vecs)):
-            if test_vecs[i].shape == (300,):
-                full_training_vecs_test.append(test_vecs[i])
-                full_labels_test.append(self.y_test[i])
+        if len(self.test_sentences) > 0:
+            train_vecs = avgr.vectorize_all(self.train_sentences)
+            test_vecs = avgr.vectorize_all(self.test_sentences)
+            full_training_vecs_train = []
+            full_labels_train = []
+            for i in range(0, len(train_vecs)):
+                if train_vecs[i].shape == (300,):
+                    full_training_vecs_train.append(train_vecs[i])
+                    full_labels_train.append(self.y_train[i])
 
-        return (
-            full_training_vecs_train,
-            full_training_vecs_test,
-            full_labels_train,
-            full_labels_test,
-        )
+            full_training_vecs_test = []
+            full_labels_test = []
+            for i in range(0, len(test_vecs)):
+                if test_vecs[i].shape == (300,):
+                    full_training_vecs_test.append(test_vecs[i])
+                    full_labels_test.append(self.y_test[i])
+
+            return (
+                full_training_vecs_train,
+                full_training_vecs_test,
+                full_labels_train,
+                full_labels_test,
+            )
+
+        if len(self.test_sentences) == 0:
+            train_vecs = avgr.vectorize_all(self.train_sentences)
+            full_training_vecs_train = []
+            full_labels_train = []
+            for i in range(0, len(train_vecs)):
+                if train_vecs[i].shape == (300,):
+                    full_training_vecs_train.append(train_vecs[i])
+                    full_labels_train.append(self.y_train[i])
+            return full_training_vecs_train, full_labels_train
