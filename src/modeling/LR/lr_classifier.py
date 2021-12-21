@@ -1,13 +1,6 @@
 from numpy import result_type
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import (
-    make_scorer,
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
-)
 from sklearn.model_selection import RepeatedKFold, cross_validate
 from scipy import stats
 import numpy as np
