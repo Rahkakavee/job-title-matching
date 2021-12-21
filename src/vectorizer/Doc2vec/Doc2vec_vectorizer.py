@@ -23,7 +23,7 @@ class Doc2VecVectorizer:
         """
         return Doc2Vec.load(self.modelname)
 
-    def transform_data(self) -> Tuple[List[Any], List[Any]]:
+    def transform_data(self):
         """transforms text inputs to vectors
 
         Returns
@@ -32,6 +32,10 @@ class Doc2VecVectorizer:
             list with embedded sentences
         """
         model = self.load_model()
-        train_vecs = [model.infer_vector(sent) for sent in self.train_sentences]
-        test_vecs = [model.infer_vector(sent) for sent in self.test_sentences]
-        return train_vecs, test_vecs
+        if len(self.test_sentences) > 0:
+            train_vecs = [model.infer_vector(sent) for sent in self.train_sentences]
+            test_vecs = [model.infer_vector(sent) for sent in self.test_sentences]
+            return train_vecs, test_vecs
+        if len(self.test_sentences) == 0:
+            train_vecs = [model.infer_vector(sent) for sent in self.train_sentences]
+            return train_vecs
