@@ -1,5 +1,16 @@
+from numpy import result_type
 from sklearn import metrics
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    make_scorer,
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+)
+from sklearn.model_selection import RepeatedKFold, cross_validate
+from scipy import stats
+import numpy as np
 
 
 class LRClassifier:
@@ -7,8 +18,14 @@ class LRClassifier:
 
     def __init__(self, train, test, y_train, y_test) -> None:
         self.clf = LogisticRegression(
-            penalty="l2", C=1.0, solver="lbfgs", max_iter=2000
+            penalty="l2",
+            C=1.0,
+            solver="lbfgs",
+            multi_class="multinomial",
+            max_iter=10000,
+            n_jobs=-1,
         )
+
         self.train = train
         self.test = test
         self.y_train = y_train
@@ -25,3 +42,53 @@ class LRClassifier:
             output_dict=output_dict,
         )
         return classfication_report
+
+    def mean_cfi(self, result, metric):
+        alpha = 0.05
+        metric = result[metric]
+        df = len(metric) - 1  # degree of freedom
+        t_value = stats.t.ppf(1 - alpha / 2, df)
+        std_ = np.std(metric, ddof=1)
+        n = len(metric)
+
+        lower = np.mean(metric) - (t_value * std_ / np.sqrt(n))
+        upper = np.mean(metric) + (t_value * std_ / np.sqrt(n))
+
+        return lower, upper
+
+    def cross_validate(self):
+        self.clf = LogisticRegression(
+            penalty="l2",
+            C=1.0,
+            solver="lbfgs",
+            multi_class="multinomial",
+            max_iter=10000,
+            n_jobs=-1,
+        )
+
+        scorings = [
+            "accuracy",
+            "precision_macro",
+            "recall_macro",
+            "f1_macro",
+            "precision_micro",
+            "recall_micro",
+            "f1_micro",
+        ]
+
+        kfold = RepeatedKFold(n_splits=5, n_repeats=20)
+        scores = cross_validate(
+            estimator=self.clf, X=self.train, y=self.y_train, cv=kfold, scoring=scorings
+        )
+        results = []
+        for scoring in scorings:
+            metric = "test_" + scoring
+            lower, upper = self.mean_cfi(scores, metric)
+            results.append(
+                {
+                    "metric": scoring,
+                    "mean": np.mean(scores[metric]),
+                    "cfi": f"[{lower}, {upper}]",
+                }
+            )
+        return results
