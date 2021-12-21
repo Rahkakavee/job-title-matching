@@ -12,6 +12,10 @@ class CountVectorizer_:
 
     def transform_data(self):
         self.fit_vectorizer()
-        train = self.vectorizer.transform(self.train_sentences).toarray()
-        test = self.vectorizer.transform(self.test_sentences).toarray()
-        return train, test
+        if len(self.test_sentences) > 0:
+            train = self.vectorizer.transform(self.train_sentences).toarray()
+            test = self.vectorizer.transform(self.test_sentences).toarray()
+            return train, test
+        if len(self.test_sentences) == 0:
+            train = self.vectorizer.transform(self.train_sentences).toarray()
+            return train
