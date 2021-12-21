@@ -23,7 +23,7 @@ class BertVectorizer:
         """
         return SentenceTransformer(self.modelname)
 
-    def transform_data(self) -> Tuple[List[Any], List[Any]]:
+    def transform_data(self):
         """transforms text inputs to vectors
 
         Returns
@@ -32,7 +32,10 @@ class BertVectorizer:
             list with embedded sentences
         """
         model = self.load_model()
-        model.save("src/vectorizer/BERT/roberta")
-        train_vecs = model.encode(self.train_sentences)
-        test_vecs = model.encode(self.test_sentences)
-        return train_vecs, test_vecs
+        if len(self.test_sentences) > 0:
+            train_vecs = model.encode(self.train_sentences)
+            test_vecs = model.encode(self.test_sentences)
+            return train_vecs, test_vecs
+        if len(self.test_sentences) == 0:
+            train_vecs = model.encode(self.train_sentences)
+            return train_vecs
