@@ -17,6 +17,10 @@ class dimension_reduction:
         logger.debug(f"Explained variance ratio: {self.variance_ratio}")
 
     def transform_data(self):
-        train = self.model.transform(self.train_vecs)
-        test = self.model.transform(self.test_vecs)
-        return train, test
+        if len(self.test_vecs) > 0:
+            train = self.model.transform(self.train_vecs)
+            test = self.model.transform(self.test_vecs)
+            return train, test
+        if len(self.test_vecs) == 0:
+            train = self.model.transform(self.train_vecs)
+            return train
