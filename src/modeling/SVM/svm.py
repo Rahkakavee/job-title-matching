@@ -52,7 +52,7 @@ class SVMClassifier:
         lower = np.mean(metric) - (t_value * std_ / np.sqrt(n))
         upper = np.mean(metric) + (t_value * std_ / np.sqrt(n))
 
-        return lower, upper
+        return round(lower, 2), round(upper, 2)
 
     def cross_validate(self):
         n_estimators = 10
@@ -80,15 +80,10 @@ class SVMClassifier:
         scores = cross_validate(
             estimator=self.clf, X=self.train, y=self.y_train, cv=kfold, scoring=scorings
         )
-        results = []
+
+        results = {}
         for scoring in scorings:
             metric = "test_" + scoring
             lower, upper = self.mean_cfi(scores, metric)
-            results.append(
-                {
-                    "metric": scoring,
-                    "mean": np.mean(scores[metric]),
-                    "cfi": f"[{lower}, {upper}]",
-                }
-            )
+            results.update({scoring: [np.mean(scores[metric]), f"[{lower}, {upper}]"]})
         return results
