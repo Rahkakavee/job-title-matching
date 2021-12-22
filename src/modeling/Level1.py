@@ -175,6 +175,7 @@ pca_bert.fit_model()
 pca_bert.evalute_reduction()
 train_bert, test_bert = pca_bert.transform_data()
 
+
 # TRAIN CLASSIFIERS
 logger.debug("TRAIN CLASSIFIERS")
 # LR
@@ -391,25 +392,39 @@ df_accuracy = pd.DataFrame(
             round(count_clf_LR_report["accuracy"], 2),
             round(tfidf_clf_LR_report["accuracy"], 2),
             round(word2vec_without_clf_LR_report["accuracy"], 2),
+            round(word2vec_with_clf_LR_report["accuracy"], 2),
             round(doc2vec_without_clf_LR_report["accuracy"], 2),
+            round(doc2vec_with_clf_LR_report["accuracy"], 2),
             round(bert_clf_LR_report["accuracy"], 2),
         ],
         "SVM": [
             round(count_clf_SVM_report["accuracy"], 2),
             round(tfidf_clf_SVM_report["accuracy"], 2),
             round(word2vec_without_clf_SVM_report["accuracy"], 2),
+            round(word2vec_with_clf_SVM_report["accuracy"], 2),
             round(doc2vec_without_clf_SVM_report["accuracy"], 2),
+            round(doc2vec_with_clf_SVM_report["accuracy"], 2),
             round(bert_clf_SVM_report["accuracy"], 2),
         ],
         "RF": [
             round(count_clf_RF_report["accuracy"], 2),
             round(tfidf_clf_RF_report["accuracy"], 2),
             round(word2vec_without_clf_RF_report["accuracy"], 2),
+            round(word2vec_with_clf_RF_report["accuracy"], 2),
             round(doc2vec_without_clf_RF_report["accuracy"], 2),
+            round(doc2vec_with_clf_RF_report["accuracy"], 2),
             round(bert_clf_RF_report["accuracy"], 2),
         ],
     },
-    index=["CountVectorizer", "TFIDF", "Word2Vec", "Doc2Vec", "BERT"],
+    index=[
+        "CountVectorizer",
+        "TFIDF",
+        "Word2Vec_I",
+        "Word2Vec_II",
+        "Doc2Vec_I",
+        "Doc2Vec_II",
+        "BERT",
+    ],
 )
 
 print(df_accuracy.to_latex())
@@ -421,25 +436,39 @@ df_prf = pd.DataFrame(
             f"p: {round(count_clf_LR_report['macro avg']['precision'], 2)}, r: {round(count_clf_LR_report['macro avg']['recall'], 2)}, F1: {round(count_clf_LR_report['macro avg']['f1-score'], 2)}",
             f"p: {round(tfidf_clf_LR_report['macro avg']['precision'], 2)}, r: {round(tfidf_clf_LR_report['macro avg']['recall'], 2)}, F1: {round(tfidf_clf_LR_report['macro avg']['f1-score'], 2)}",
             f"p: {round(word2vec_without_clf_LR_report['macro avg']['precision'], 2)}, r: {round(word2vec_without_clf_LR_report['macro avg']['recall'], 2)}, F1: {round(word2vec_without_clf_LR_report['macro avg']['f1-score'], 2)}",
+            f"p: {round(word2vec_with_clf_LR_report['macro avg']['precision'], 2)}, r: {round(word2vec_with_clf_LR_report['macro avg']['recall'], 2)}, F1: {round(word2vec_with_clf_LR_report['macro avg']['f1-score'], 2)}",
             f"p: {round(doc2vec_without_clf_LR_report['macro avg']['precision'], 2)}, r: {round(doc2vec_without_clf_LR_report['macro avg']['recall'], 2)}, F1: {round(doc2vec_without_clf_LR_report['macro avg']['f1-score'], 2)}",
+            f"p: {round(doc2vec_with_clf_LR_report['macro avg']['precision'], 2)}, r: {round(doc2vec_with_clf_LR_report['macro avg']['recall'], 2)}, F1: {round(doc2vec_with_clf_LR_report['macro avg']['f1-score'], 2)}",
             f"p: {round(bert_clf_LR_report['macro avg']['precision'], 2)}, r: {round(bert_clf_LR_report['macro avg']['recall'], 2)}, F1: {round(bert_clf_LR_report['macro avg']['f1-score'], 2)}",
         ],
         "SVM": [
             f"p: {round(count_clf_SVM_report['macro avg']['precision'], 2)}, r: {round(count_clf_SVM_report['macro avg']['recall'], 2)}, F1: {round(count_clf_SVM_report['macro avg']['f1-score'], 2)}",
             f"p: {round(tfidf_clf_SVM_report['macro avg']['precision'], 2)}, r: {round(tfidf_clf_SVM_report['macro avg']['recall'], 2)}, F1: {round(tfidf_clf_SVM_report['macro avg']['f1-score'], 2)}",
             f"p: {round(word2vec_without_clf_SVM_report['macro avg']['precision'], 2)}, r: {round(word2vec_without_clf_SVM_report['macro avg']['recall'], 2)}, F1: {round(word2vec_without_clf_SVM_report['macro avg']['f1-score'], 2)}",
+            f"p: {round(word2vec_with_clf_SVM_report['macro avg']['precision'], 2)}, r: {round(word2vec_with_clf_SVM_report['macro avg']['recall'], 2)}, F1: {round(word2vec_with_clf_SVM_report['macro avg']['f1-score'], 2)}",
             f"p: {round(doc2vec_without_clf_SVM_report['macro avg']['precision'], 2)}, r: {round(doc2vec_without_clf_SVM_report['macro avg']['recall'], 2)}, F1: {round(doc2vec_without_clf_SVM_report['macro avg']['f1-score'], 2)}",
+            f"p: {round(doc2vec_with_clf_SVM_report['macro avg']['precision'], 2)}, r: {round(doc2vec_with_clf_SVM_report['macro avg']['recall'], 2)}, F1: {round(doc2vec_with_clf_SVM_report['macro avg']['f1-score'], 2)}",
             f"p: {round(bert_clf_SVM_report['macro avg']['precision'], 2)}, r: {round(bert_clf_SVM_report['macro avg']['recall'], 2)}, F1: {round(bert_clf_SVM_report['macro avg']['f1-score'], 2)}",
         ],
         "RF": [
             f"p: {round(count_clf_RF_report['macro avg']['precision'], 2)}, r: {round(count_clf_RF_report['macro avg']['recall'], 2)}, F1: {round(count_clf_RF_report['macro avg']['f1-score'], 2)}",
             f"p: {round(tfidf_clf_RF_report['macro avg']['precision'], 2)}, r: {round(tfidf_clf_RF_report['macro avg']['recall'], 2)}, F1: {round(tfidf_clf_RF_report['macro avg']['f1-score'], 2)}",
             f"p: {round(word2vec_without_clf_RF_report['macro avg']['precision'], 2)}, r: {round(word2vec_without_clf_RF_report['macro avg']['recall'], 2)}, F1: {round(word2vec_without_clf_RF_report['macro avg']['f1-score'], 2)}",
+            f"p: {round(word2vec_with_clf_RF_report['macro avg']['precision'], 2)}, r: {round(word2vec_with_clf_RF_report['macro avg']['recall'], 2)}, F1: {round(word2vec_with_clf_RF_report['macro avg']['f1-score'], 2)}",
             f"p: {round(doc2vec_without_clf_RF_report['macro avg']['precision'], 2)}, r: {round(doc2vec_without_clf_RF_report['macro avg']['recall'], 2)}, F1: {round(doc2vec_without_clf_RF_report['macro avg']['f1-score'], 2)}",
+            f"p: {round(doc2vec_with_clf_RF_report['macro avg']['precision'], 2)}, r: {round(doc2vec_with_clf_RF_report['macro avg']['recall'], 2)}, F1: {round(doc2vec_with_clf_RF_report['macro avg']['f1-score'], 2)}",
             f"p: {round(bert_clf_RF_report['macro avg']['precision'], 2)}, r: {round(bert_clf_RF_report['macro avg']['recall'], 2)}, F1: {round(bert_clf_RF_report['macro avg']['f1-score'], 2)}",
         ],
     },
-    index=["CountVectorizer", "TFIDF", "Word2Vec", "Doc2Vec", "BERT"],
+    index=[
+        "CountVectorizer",
+        "TFIDF",
+        "Word2Vec_I",
+        "Word2vec_II",
+        "Doc2Vec_I",
+        "Doc2Vec_II",
+        "BERT",
+    ],
 )
 
 print(df_prf.to_latex())
