@@ -3,7 +3,8 @@ from spacy.matcher import PhraseMatcher
 from spacy.tokens import Span
 from spacy.language import Language
 from tqdm import tqdm
-from src.preparation.training_data import TrainingData
+from src.preprocessing.training_data import TrainingData
+from src.preprocessing.preprocessing_functions import *
 from typing import List
 from spacy.kb import KnowledgeBase
 import random
@@ -11,6 +12,7 @@ from spacy.util import minibatch, compounding
 from spacy.training import Example
 from spacy.ml.models import load_kb
 import jsonlines
+import pickle
 
 
 ## define Phrase Matcher
