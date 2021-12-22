@@ -37,3 +37,11 @@ ipython_config.py
 *.cb
 *.cb2
 .*.lb
+*.bbl
+*.blg
+*fdb_latexmk
+*synctex.gz
+__latexindent_temp.tex
+
+#models 
+*.gz
