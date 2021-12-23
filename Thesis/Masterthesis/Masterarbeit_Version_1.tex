@@ -95,6 +95,7 @@
   \acro{TF}[TF]{Term Frequency}
   \acro{IDF}[IDF]{Inverse Document Frequency}
   \acro{DF}[DF]{Document Frequency}
+  \acro{CBOW}[CBOW]{continous bag of words}
 \end{acronym}
 \newpage
 
@@ -207,7 +208,7 @@ While being one of the most simple techniques, count vectorizer has several limi
 
 \[idf(t) = log \frac{N}{df} \]
 
-where N is the set of documents. The log is used to attenuate high frequencies. If a term occurs in every document, so $df = N$ the \ac{IDF} takes a value of 0 ($log (\frac{N}{N})$) and if a term is occuring only one time over all documents, thus distinguish perfectly the document from other documents, $idf(t) = log (\frac{N}{1}) = 1$. \citep{sidorov2019} Note that there are slight adjustments to calculate the \ac{IDF}. The implementation of sklearn package, which is used in this work uses an adapted calculation \citep{scikit-learn}:
+where N is the set of documents. The log is used to attenuate high frequencies. If a term occurs in every document, so $df = N$ the \ac{IDF} takes a value of 0 ($log (\frac{N}{N})$) and if a term is occuring only one time over all documents, thus distinguish perfectly the document from other documents, $idf(t) = log (\frac{N}{1}) = 1$. \citep{sidorov2019} Note that there are slight adjustments to calculate the \ac{IDF}. \citep{robertson2004} The implementation of sklearn package, which is used in this work uses an adapted calculation \citep{scikit-learn}:
 
 \[idf(t) = log \frac{1+n}{1+df(t)} + 1 \] 
 
@@ -217,7 +218,30 @@ Given the $idf(t)$ and $tf$ the \ac{TF-IDF} can be obtained by multiplying both 
 
 Although \ac{TF-IDF} considers the importance of words compared to count vectorizer, as a \ac{BOW} model it suffers from the same limitation as count vectorizer of not taking semantic, grammatic, sequences and context into account \citep{sarkar2016}. 
 
-\subsubsection{Word2vec}
+\subsubsection{Word2Vec}
+In contrast to the sparse techqniques method mentioned above, word embedding techniques are another popular approach for vectorization. Word embedding vectors are characterised by low dimensions, dense representation and a continous space. They are usually trained with neural networks \citep{li2015, jin2016}. 
+
+Word2Vec, introduced by \citet{mikolov2013}, is one computionally efficient word embedding implemenation. The main idea of Word2Vec is based on the distributional hypothesis, which states that similar words appear often in similar context \citep{sahlgren2008}. Thus, Word2Vec learns with the help of the context representations of words, which includes the semantic meaning and the context and in such a way that words which are similar are encoded similarily \citep{sarkar2016}. There exists two variants of Word2Vec. The first variant is based on \ac{BOW}, the so-called \ac{CBOW}, which predicts a word based on surrounding words. In contrast, the second variant, Skip-Gram, predicts the context words from a word \citep{ajose2020, sarkar2016}. Since in this work a pretrained model from Google is used, which is trained with CBOW, in the following the focus is on \ac{CBOW}. 
+
+\ac{CBOW} Word2vec is a 2-layer neural network with a hidden layer and a output softmax layer, which is visualized in figure \ref{fig: F1}. The goal is to predict a word, the so-called target word, by using context words. The number of context word is defined by a certain window size. If the window size is 2, the 2 words before and the 2 two words after the target word are considered. Given a vocabulary V, which is a the unqiue set of the words from the corpus, each context word c is fed into the neural network, encoded with one-hot encoding of the length of V, building vector $x_c$. Thus in figure \ref*{fig: F1} $x_{1k}$, for example, could be a one-hot encoded vector of the word before the target word. 
+
+\begin{figure}[hb!]
+  \center
+  \includegraphics[scale=0.5]{word2vecCBOW.png}
+  \caption{\label{fig: F1} \ac{CBOW} \citep[6]{rong2014}}
+\end{figure}
+
+The weights between the input layer and the hidden layer are shown in figure \ref{fig: F1}. Taking the dimension of V and N results in the $V \times N$. matrix W. Given that each row $v_w$ in W represents the weights of the associated word from the input and C equals to the number of context words, the hidden layer h is calculated as follows \citep{rong2014}:
+
+\[ \frac{1}{C} W^T(x_1 + x_2 + ... +x_c) = \frac{1}{C}(v_{w_1} + v_{w_2} + ... + v_{w_C}) \]
+
+Since the context words are encoded with one hot vector encoding, all except of the respective word value in the vector, which is 1, will be zero. Thus calculating h is just copying the k-th row of matrix W, thus a n-dimensional vector, which explains the second part of the equation. The hidden-layer matrix builds later the word embedding, which is why the decision of the size of the hidden layer defines the dimensions later for the word embedding vector \citep{rong2014}
+
+From the hidden to the output layer a $N \times V$
+weight matrix is used to calculate scores for each word in V. A softmax function is used to get the word representation. Caluculating the error and using backpropagation the weights are updated respectivley resulting then in a trained neural network. \footnote{Since the focus is relying here on the word embeddings from the hidden layer and not the trained neural network itself, no further mathematical details will be given concerning the updating, for a detailed derivation see \citep{rong2014}}. \citep{rong2014}
+
+
+
 
 \subsubsection{Doc2vec}
 
