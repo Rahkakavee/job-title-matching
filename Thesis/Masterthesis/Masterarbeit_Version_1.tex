@@ -218,32 +218,53 @@ Given the $idf(t)$ and $tf$ the \ac{TF-IDF} can be obtained by multiplying both 
 
 Although \ac{TF-IDF} considers the importance of words compared to count vectorizer, as a \ac{BOW} model it suffers from the same limitation as count vectorizer of not taking semantic, grammatic, sequences and context into account \citep{sarkar2016}. 
 
+
+\newpage
 \subsubsection{Word2Vec}
-In contrast to the sparse techqniques method mentioned above, word embedding techniques are another popular approach for vectorization. Word embedding vectors are characterised by low dimensions, dense representation and a continous space. They are usually trained with neural networks \citep{li2015, jin2016}. 
+In contrast to the sparse techniques method mentioned above, word embedding techniques are another popular approach for vectorization. Word embedding vectors are characterised by low dimensions, dense representation and a continous space. They are usually trained with neural networks \citep{li2015, jin2016}. 
 
-Word2Vec, introduced by \citet{mikolov2013}, is one computionally efficient word embedding implemenation. The main idea of Word2Vec is based on the distributional hypothesis, which states that similar words appear often in similar context \citep{sahlgren2008}. Thus, Word2Vec learns with the help of the context representations of words, which includes the semantic meaning and the context and in such a way that words which are similar are encoded similarily \citep{sarkar2016}. There exists two variants of Word2Vec. The first variant is based on \ac{BOW}, the so-called \ac{CBOW}, which predicts a word based on surrounding words. In contrast, the second variant, Skip-Gram, predicts the context words from a word \citep{ajose2020, sarkar2016}. Since in this work a pretrained model from Google is used, which is trained with CBOW, in the following the focus is on \ac{CBOW}. 
+Word2Vec, introduced by \citet{mikolov2013}, is one computionally efficient word embedding implementation. The main idea of Word2Vec is based on the distributional hypothesis, which states that similar words appear often in similar context \citep{sahlgren2008}. Thus, Word2Vec learns with the help of the context representations of words, which includes the semantic meaning and the context. In such a way it words which are similar are encoded similarily \citep{sarkar2016}. 
 
-\ac{CBOW} Word2vec is a 2-layer neural network with a hidden layer and a output softmax layer, which is visualized in figure \ref{fig: F1}. The goal is to predict a word, the so-called target word, by using context words. The number of context word is defined by a certain window size. If the window size is 2, the 2 words before and the 2 two words after the target word are considered. Given a vocabulary V, which is a the unqiue set of the words from the corpus, each context word c is fed into the neural network, encoded with one-hot encoding of the length of V, building vector $x_c$. Thus in figure \ref*{fig: F1} $x_{1k}$, for example, could be a one-hot encoded vector of the word before the target word. 
+There exists two variants of Word2Vec. The first variant is based on \ac{BOW}, the so-called \ac{CBOW}, which predicts a word based on surrounding words. In contrast, the second variant, Skip-Gram, predicts the context words from a word \citep{ajose2020, sarkar2016}. Since in this work a pretrained model from Google is used, which is trained with CBOW, in the following the focus is on \ac{CBOW}. 
 
-\begin{figure}[hb!]
+\ac{CBOW} Word2vec is a 2-layer neural network with a hidden layer and a output softmax layer, which is visualized in figure \ref{fig: F1}. The goal is to predict a word, the so-called target word, by using the target word's context words. The number of context words is defined by a certain window size. If the window size is 2, the 2 words before and the 2 two words after the target word are considered. Given a vocabulary V, which is a the unqiue set of the words from the corpus, each context word c is fed into the neural network, encoded with one-hot encoding of the length of V, building vector $x_c$. Thus in figure \ref*{fig: F1} $x_{1k}$, for example, could be a one-hot encoded vector of the word before the target word. 
+
+\begin{figure}[]
   \center
   \includegraphics[scale=0.5]{word2vecCBOW.png}
   \caption{\label{fig: F1} \ac{CBOW} \citep[6]{rong2014}}
 \end{figure}
 
-The weights between the input layer and the hidden layer are shown in figure \ref{fig: F1}. Taking the dimension of V and N results in the $V \times N$. matrix W. Given that each row $v_w$ in W represents the weights of the associated word from the input and C equals to the number of context words, the hidden layer h is calculated as follows \citep{rong2014}:
+The weights between the input layer and the hidden layer are shown in figure \ref{fig: F1}. Taking the dimension of V and N results in the $V \times N$ matrix W. Given that each row $v_w$ in W represents the weights of the associated word from the input and C equals to the number of context words, the hidden layer h is calculated as follows \citep{rong2014}:
 
-\[ \frac{1}{C} W^T(x_1 + x_2 + ... +x_c) = \frac{1}{C}(v_{w_1} + v_{w_2} + ... + v_{w_C}) \]
+\[ h = \frac{1}{C} W^T(x_1 + x_2 + ... +x_c) = \frac{1}{C}(v_{w_1} + v_{w_2} + ... + v_{w_C}) \]
 
 Since the context words are encoded with one hot vector encoding, all except of the respective word value in the vector, which is 1, will be zero. Thus calculating h is just copying the k-th row of matrix W, thus a n-dimensional vector, which explains the second part of the equation. The hidden-layer matrix builds later the word embedding, which is why the decision of the size of the hidden layer defines the dimensions later for the word embedding vector \citep{rong2014}
 
-From the hidden to the output layer a $N \times V$
-weight matrix is used to calculate scores for each word in V. A softmax function is used to get the word representation. Caluculating the error and using backpropagation the weights are updated respectivley resulting then in a trained neural network. \footnote{Since the focus is relying here on the word embeddings from the hidden layer and not the trained neural network itself, no further mathematical details will be given concerning the updating, for a detailed derivation see \citep{rong2014}}. \citep{rong2014}
+From the hidden to the output layer a $N \times V$ weight matrix is used to calculate scores for each word in V. A softmax function is used to get the word representation. Caluculating the error and using backpropagation the weights are updated respectivley resulting then in a trained neural network. In practice, due to computional efficiency, instead of the softmax function Word2Vec is trained with hierarchical softmax or negative sampling. Both methods are efficient in the sense that they reduce the amount of weight matrix updates. \footnote{Since the focus is relying here on the word embeddings from the hidden layer and not the trained neural network itself, no further mathematical details will be given concerning the updating. For a detailed derivation see \citep{rong2014}}. \citep{rong2014, simonton2017}. 
 
+Based on the given theoretical insights, I train two Word2vec models. Both models use a pretrained model from Google and are fine tuned with different data. The first model is fine tuned with the complete dataset. The second model includes the additional knowledge. The model setting is as follows: I use \ac{CBOW} Word2Vec models with negative sampling technique. The hidden layer size and thus the word embedding vectors is 300, since the vectors have to have the same size as the pretrained Google vectors, which have a size of 300. The minimal count of words is set to 1. The number of times the training data set is iterated, the epoch number, is set to 10. Lastly, the window size for the context is set to 5. 
 
-
+As last step the resulting word embeddings need to be processd in some way to get sentence embeddings for each job title. As the name already indicates Word2Vec cannot output sentence embeddings directly. In order to get the sentence embeddings the word vector embeddings of each job title are averaged. 
 
 \subsubsection{Doc2vec}
+Doc2vec, also known as paragraph vectors or Distributed Memory Model of Paragraph Vectors is an extension method of Word2Vec, which outputs directly embeddings for each document \citep{lau2016} It was proposed by \cite{le2014}. Doc2Vec can be used for a variable length of paragraphs, thus it is applicable for bigger documents, but also for short sentences like job titles \citep{le2014}. 
+
+The main idea is, like for Word2Vec, to predict words in a paragraph. To do so, a paragraph vector and word vectors, like in Word2Vec, for that paragraph are concatenated. The paragraph vector `"acts as memory that remembers what is missing from the current contest - or the topic of the paragraph" \citep[3]{le2014}. Therby the paragraph vectors are trained as well with stochastic gradient descent and backpropagation. Similar to Word2Vec practical implementation use hierarchical softmax or negative sampling to fast up training time \citep{lau2016}. 
+
+\begin{figure}[hb!]
+  \center
+  \includegraphics[scale=0.5]{doc2vec.png}
+  \caption{\label{fig: F2} Doc2vec - Distributed Memory Model of Paragraph Vectors \citep[3]{le2014}}
+\end{figure}
+
+In figure \ref{fig: F2} the algorithm is visualized. As an input the neural networks takes word vectors and a paragraph vector. While the word vectors are shared over all paragraphs, the paragprah vectors are unique for each paragraph. Those paragraphs are represented as unique vectors in a column of a matrix D. The word vectors are respresented in the matrix W as before. In order to predict the word both vectors are combined for example by averaging or concatenating. The Doc2vec implementation described by \citet{le2014} and also used in this work here concatenate the vectors. Formally this only changes the calculation of h. \citep{lau2016}
+
+Since Doc2vec is a word embedding method it has the same advantages mentioned above in the Word2Vec part. In addition Doc2Vec takes the word order into account. At least in the same way of a large n-gram \citep{le2014}. 
+
+Besides the model explained above, Doc2Vec comes also in a second variant, the so-called Distributed Bag of Words of Paragraph model, which ignores the word order. It is not clear which model performs better, although the inventor of Doc2vec propose the first version \citep{lau2016}
+
+Based on this disussion, I created two Distributed Memory Models of Paragraph Vectors. Instead of fine tuning a pretrained model, I trained two custom models, one with the training data and one including the additional knowledge. I set the vector size to 300 with a window size of 5, a minimal count of 1 and trained 10 epochs. Like Word2vec, the models are trained with negative sampling.  
 
 \subsubsection{BERT}
 
