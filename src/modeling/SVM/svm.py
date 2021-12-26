@@ -1,7 +1,7 @@
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import BaggingClassifier
-from sklearn import metrics
+from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.model_selection import RepeatedKFold, cross_validate
 from scipy import stats
 import numpy as np
@@ -12,16 +12,17 @@ class SVMClassifier:
 
     def __init__(self, train, test, y_train, y_test) -> None:
         n_estimators = 10
-        self.clf = OneVsRestClassifier(
-            BaggingClassifier(
-                SVC(C=1.0, kernel="linear", gamma="scale"),
-                max_samples=1.0,
-                n_estimators=n_estimators,
-                n_jobs=-1,
-                verbose=True,
-            )
-        )
+        # self.clf = OneVsRestClassifier(
+        #     BaggingClassifier(
+        #         SVC(C=1.0, kernel="linear", gamma="scale"),
+        #         max_samples=1.0,
+        #         n_estimators=n_estimators,
+        #         n_jobs=-1,
+        #         verbose=True,
+        #     )
+        # )
 
+        self.clf = SVC(C=1.0, kernel="linear", gamma="scale")
         # self.clf = OneVsRestClassifier(SVC(C=1.0, kernel="linear", gamma="scale"))
 
         self.train = train
@@ -34,12 +35,47 @@ class SVMClassifier:
 
     def evaluate(self, output_dict: bool) -> None:
         """evaluate data"""
-        classfication_report = metrics.classification_report(
-            self.y_test,
-            self.clf.predict(self.test),
-            output_dict=output_dict,
+        accuracy = self.clf.score(X=self.test, y=self.y_test)
+
+        precision_score_macro = precision_score(
+            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
         )
-        return classfication_report
+
+        precision_score_micro = precision_score(
+            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="micro"
+        )
+
+        recall_score_macro = recall_score(
+            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
+        )
+
+        recall_score_micro = recall_score(
+            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="micro"
+        )
+
+        f1_score_macro = f1_score(
+            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
+        )
+
+        f1_score_micro = f1_score(
+            y_pred=self.clf.predict(self.test),
+            y_true=self.y_test,
+            average="micro",
+        )
+
+        classification_report = {
+            "accuracy": accuracy,
+            "macro": {
+                "precision": precision_score_macro,
+                "recall": recall_score_macro,
+                "f1-score": f1_score_macro,
+            },
+            "micro": {
+                "precision": precision_score_micro,
+                "recall": recall_score_micro,
+                "f1-score": f1_score_micro,
+            },
+        }
 
     def mean_cfi(self, result, metric):
         alpha = 0.05
