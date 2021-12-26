@@ -96,6 +96,8 @@
   \acro{IDF}[IDF]{Inverse Document Frequency}
   \acro{DF}[DF]{Document Frequency}
   \acro{CBOW}[CBOW]{continous bag of words}
+  \acro{BERT}[BERT]{Bidirectional Encoder  Representations from Transformers}
+  \acro{NLP}[NLP]{Nature Language Processing}
 \end{acronym}
 \newpage
 
@@ -219,7 +221,7 @@ Given the $idf(t)$ and $tf$ the \ac{TF-IDF} can be obtained by multiplying both 
 Although \ac{TF-IDF} considers the importance of words compared to count vectorizer, as a \ac{BOW} model it suffers from the same limitation as count vectorizer of not taking semantic, grammatic, sequences and context into account \citep{sarkar2016}. 
 
 
-\newpage
+
 \subsubsection{Word2Vec}
 In contrast to the sparse techniques method mentioned above, word embedding techniques are another popular approach for vectorization. Word embedding vectors are characterised by low dimensions, dense representation and a continous space. They are usually trained with neural networks \citep{li2015, jin2016}. 
 
@@ -252,7 +254,7 @@ Doc2vec, also known as paragraph vectors or Distributed Memory Model of Paragrap
 
 The main idea is, like for Word2Vec, to predict words in a paragraph. To do so, a paragraph vector and word vectors, like in Word2Vec, for that paragraph are concatenated. The paragraph vector `"acts as memory that remembers what is missing from the current contest - or the topic of the paragraph" \citep[3]{le2014}. Therby the paragraph vectors are trained as well with stochastic gradient descent and backpropagation. Similar to Word2Vec practical implementation use hierarchical softmax or negative sampling to fast up training time \citep{lau2016}. 
 
-\begin{figure}[hb!]
+\begin{figure}[]
   \center
   \includegraphics[scale=0.5]{doc2vec.png}
   \caption{\label{fig: F2} Doc2vec - Distributed Memory Model of Paragraph Vectors \citep[3]{le2014}}
@@ -267,8 +269,39 @@ Besides the model explained above, Doc2Vec comes also in a second variant, the s
 Based on this disussion, I created two Distributed Memory Models of Paragraph Vectors. Instead of fine tuning a pretrained model, I trained two custom models, one with the training data and one including the additional knowledge. I set the vector size to 300 with a window size of 5, a minimal count of 1 and trained 10 epochs. Like Word2vec, the models are trained with negative sampling.  
 
 \subsubsection{BERT}
+The last vectorization technique, \ac{BERT}, is the state-of-art language modeling technique developed by \citep{devlin2018} at Google. \ac{BERT} stands out from other langugage models in several ways and outperforms other models for many \ac{NLP} tasks. First, \ac{BERT} uses bidirectional pretraining. Thus is does not only process from left-to-right or right-to-left, but it merge both of them. Second, it is possible to fine tune the model for specific task without heavily-engineered and computionally costly architectures. Third compared to word2vec it is a context-dependent model. Thus, while word2vec would produce only one word embedding for "'Python" \ac{BERT} can give based on the context different embeddings. Here '"Python" as a snake or as a programming language. 
 
-\subsection{Dimensionality reduction}
+\ac{BERT} uses a multi-layer bidirectional Transformer encoder as the architecture. This transformer architecture was introduced by \citet{vaswani2017}. It consists of encoder and a decoder and make use of self-attention. Both, encoder and decoder stack include a number of identical layer, each of them including two sub-layers: a Multi-head attention and a feedforward network layer \footnote{A simplified visualization with a two layer encoder, as well the architecture of a  can be found in the Appendix.} It is out of the scope to elaborate the technical details and implementation of the attention mechanism, which is why in the following a simplified explanation of the attention mechanism is given. 
+
+The self-attention mechanism improves the representation of a word, represented by a matrix X, by relating it to all other words in the sentence. In the sentence '"A dog ate the food because it was hungry"' \citep[10]{ravichandiran2021} the self-attention mechanism, for example, could identify by relating the word to all other words, that '"it" belongs to '"dog" and not to '"food". 
+In order to compute the self attention of a word three additional matrices, the query matrix Q, the key matrix K and a value matrix V are introduced. Those matrices are created by introducing weights for each of them and multiplying those weights with X. Based on those matrices, the dot product between the Q and the K matrix, a normalization and a softmax function are applied in order to calculate an attention matrix Z  \footnote{For a step-by-step calculating see \citep{ravichandiran2021}}. \ac{BERT} uses a multi-head-attention, which simply means that multiple Z attention matrices instead of a single one are used.
+
+
+\citet{devlin2018} developed different sizes of \ac{BERT} like \ac{BERT}-base and \ac{BERT}-large. In this work the used BERT models are based on \ac{BERT}-base model. The model consists of 12 encoder layers, denoted by L, 12 attention heads, denoted by A and 768 hidden units, which results in total in 110 million parameters. 
+
+Bert takes a pair of sentences as input. To do so it uses WordPiece tokenizer and three special embedding layers, the token, the segement and the position embedding layer for each token, which is visualized in \ref{fig: F4}. A WordPiece tokenizes each word which exits in the vocabulary. If a word does not exists words are splitas long a subword matches the vocabulary or a individual character is reached. Subwords are indicated by hashes. For the token embeddings the sentence is tokenized first, then a [CLS] is added at the beginning of the sentence and [SEP] token at the end. For example the job title `"java developer" and `" python developer"' becomes to tokens as shown in the second row of \ref{fig: F4}. In order to distinguish between the two titles a segment embedding is added, indicating the sentences. Last the \ac{BERT} model takes a position embedding layer, which indicates the order of the words. For each token those layers are summed up to get the representation for each token \citep{devlin2018,ravichandiran2021}.
+
+\begin{figure}[hb!]
+  \center
+  \includegraphics[scale=0.5]{BERTInput_own.png}
+  \caption{\label{fig: F4} Input \ac{BERT} \citep[5]{devlin2018}}
+\end{figure}
+
+\begin{figure}[hb!]
+  \center
+  \includegraphics[scale=0.5]{BERTOverview.png}
+  \caption{\label{fig: F3} Overview \ac{BERT} \citep[3]{devlin2018}}
+\end{figure}
+
+The \ac{BERT} algorithm can be described in two steps. First the pretraining phase, which is illustrated on the left-hand side of the figure \ref{fig: F3} and the fine-tuning phase, visualized on the right-hand side of figure \ref{fig: F3}. The pretraining phase consists of two jobs: Masked language modeling and next sentence prediction. 
+
+Masked language modeling means that a percentage of the input tokens are masked at random. For example the job title `"python developer" could be masked as follows: [[CLS] python [MASK] [SEP]]. Since in fine tuning tokens are not masked a mismatch would occur between fine tuning and pretraining, which is why not all of the masked tokens are actually matched with a [mask] token, but also with random token or the real tokens \footnote{There are specific rules of how to mask. See \citet{devlin2018} for detailed implementation}. Instead of predicting the complete sentence, BERT trains to predict the masked tokens. The prediction is performed with a feed forward network and a softmax activation \citep{devlin2018,ravichandiran2021}. 
+
+The second task takes again two sentences, but predict whether the second sentence follows the first one. This helps to understand the relationship between the sentences. Each sentence pair is labelled with either isNext or NotNext. By using the [CLS] token, which has the aggregating representation of all tokens, a classification task of whether a sentence pair is isNext or NotNext can be carried out \citep{ravichandiran2021,devlin2018}
+
+
+
+\subsection{Dimensionality reduction}.
 
 \subsection{Classifier}
 As pointed out in the literature review \ac{NB}, \ac{LR} and \ac{SVM} have several advantages for text classifcation tasks. In the following based on a theoretical discussion of each classifier, the exact modeling of the classifiers is justified. 
