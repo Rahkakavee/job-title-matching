@@ -1,5 +1,5 @@
 from numpy import result_type
-from sklearn import metrics
+from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import RepeatedKFold, cross_validate
 from scipy import stats
@@ -28,12 +28,48 @@ class LRClassifier:
 
     def evaluate(self, output_dict: bool) -> None:
         """evaluate data"""
-        classfication_report = metrics.classification_report(
-            self.y_test,
-            self.clf.predict(self.test),
-            output_dict=output_dict,
+        accuracy = self.clf.score(X=self.test, y=self.y_test)
+
+        precision_score_macro = precision_score(
+            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
         )
-        return classfication_report
+
+        precision_score_micro = precision_score(
+            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="micro"
+        )
+
+        recall_score_macro = recall_score(
+            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
+        )
+
+        recall_score_micro = recall_score(
+            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="micro"
+        )
+
+        f1_score_macro = f1_score(
+            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
+        )
+
+        f1_score_micro = f1_score(
+            y_pred=self.clf.predict(self.test),
+            y_true=self.y_test,
+            average="micro",
+        )
+
+        classification_report = {
+            "accuracy": accuracy,
+            "macro": {
+                "precision": precision_score_macro,
+                "recall": recall_score_macro,
+                "f1-score": f1_score_macro,
+            },
+            "micro": {
+                "precision": precision_score_micro,
+                "recall": recall_score_micro,
+                "f1-score": f1_score_micro,
+            },
+        }
+        return classification_report
 
     def mean_cfi(self, result, metric):
         alpha = 0.05
