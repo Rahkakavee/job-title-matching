@@ -26,7 +26,7 @@ class LRClassifier:
     def fit_classifier(self):
         self.clf.fit(self.train, self.y_train)
 
-    def evaluate(self, output_dict: bool) -> None:
+    def evaluate(self, output_dict: bool) -> dict:
         """evaluate data"""
         accuracy = self.clf.score(X=self.test, y=self.y_test)
 

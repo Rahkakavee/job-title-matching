@@ -86,3 +86,6 @@ y = np.concatenate([y for x, y in val_ds], axis=0)
 precision = metrics.precision_score(y, predictions, average="weighted")
 recall = metrics.recall_score(y, predictions, average="weighted")
 f1 = metrics.f1_score(y, predictions, average="weighted")
+
+
+# Source: https://towardsdatascience.com/news-category-classification-fine-tuning-roberta-on-tpus-with-tensorflow-f057c37b093

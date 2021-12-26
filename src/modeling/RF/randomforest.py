@@ -18,7 +18,7 @@ class RFClassifier:
     def fit_classifier(self):
         self.clf.fit(self.train, self.y_train)
 
-    def evaluate(self, output_dict: bool) -> None:
+    def evaluate(self, output_dict: bool) -> dict:
         """evaluate data"""
         accuracy = self.clf.score(X=self.test, y=self.y_test)
 
@@ -61,6 +61,8 @@ class RFClassifier:
                 "f1-score": f1_score_micro,
             },
         }
+
+        return classification_report
 
     def mean_cfi(self, result, metric):
         alpha = 0.05
