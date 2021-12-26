@@ -1,5 +1,6 @@
 from sklearn.decomposition import PCA
 from src.logger import logger
+from sklearn.decomposition import PCA
 
 
 class dimension_reduction:
