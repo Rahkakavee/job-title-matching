@@ -5,7 +5,7 @@ import transformers
 from transformers import AutoTokenizer, TFAutoModelForSequenceClassification
 import json
 
-"""BERT Model with one Fine tuning layer and classification"""
+"""BERT Model with one Fine tuning layer and classification. This model uses TPU for training. Run in Google Colab"""
 
 tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
 tf.config.experimental_connect_to_cluster(tpu)
@@ -48,7 +48,7 @@ dataset = tf.data.Dataset.from_tensor_slices(
     (dict(inputs), indices)
 )  # Create a tensorflow dataset
 # train test split, we use 10% of the data for validation
-val_data_size = int(0.1 * len(sentences))
+val_data_size = int(0.25 * len(sentences))
 val_ds = dataset.take(val_data_size).batch(batch_size, drop_remainder=True)
 train_ds = dataset.skip(val_data_size).batch(batch_size, drop_remainder=True)
 train_ds = train_ds.prefetch(buffer_size=AUTOTUNE)
