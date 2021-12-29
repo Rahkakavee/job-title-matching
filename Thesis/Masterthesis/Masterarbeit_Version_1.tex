@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[12pt, a4paper, titlepage]{article}
-\usepackage[a4paper,left=2.54cm,right=2.54cm,top=2.54cm,bottom=2.54cm]{geometry}
+\usepackage[a4paper,left=3.0cm,right=3.0cm,top=2.54cm,bottom=2.54cm]{geometry}
 
 \usepackage{placeins}
 \usepackage{float}
@@ -98,6 +98,7 @@
   \acro{CBOW}[CBOW]{continous bag of words}
   \acro{BERT}[BERT]{Bidirectional Encoder  Representations from Transformers}
   \acro{NLP}[NLP]{Nature Language Processing}
+  \acro{PCA}[PCA]{Principal Component Analysis}
 \end{acronym}
 \newpage
 
@@ -183,6 +184,7 @@ With the KldB 2010, an useful and information-rich occupational classification w
 \section{Method}
 \subsection{Conceptual overview}
 \subsection{Preprocessing}
+\newpage
 \subsection{Vectorization Techniques}
 \subsubsection{Count vectorizer}
 The count vectorizer is one of most simple techniques of converting texts to vectors. It belongs to the family of \ac{BOW} models. \ac{BOW} models are based on vectors, where each dimension is a word from a vocabulary or corpus. The corpus is built by all words across all documents. \ac{BOW} models have two important properties. First, they do not consider the order of the words, sequences or the grammar, which is why they also called \ac{BOW}. Second, each word in the corpus is represented by it's own dimension. Thus the vectors contains a lot of zeros, especially for short texts, which is why they belong to the family of sparse vectors \citep{ajose2020}.  Assuming, for example, a corpus contains of 1000 words, meaning each text is built only with these 1000 words, the vector for each text has a length of 1000, thus, producing sparse, high-dimensional vectors \citep{kulkarni2021, sarkar2016}
@@ -300,16 +302,16 @@ Masked language modeling means that a percentage of the input tokens are masked 
 
 The second task takes again two sentences, but predict whether the second sentence follows the first one. This helps to understand the relationship between the sentences. Each sentence pair is labelled with either isNext or NotNext. By using the [CLS] token, which has the aggregating representation of all tokens, a classification task of whether a sentence pair is isNext or NotNext can be carried out \citep{ravichandiran2021,devlin2018}
 
-The pretraining of \ac{BERT} is in contrast to the fine tuning process computionally expensive. Therefore, \citet{devlin2018} developed different sizes of \ac{BERT} like \ac{BERT}-base and \ac{BERT}-large. In this work the used BERT models are based on \ac{BERT}-base model. The model consists of 12 encoder layers, denoted by L, 12 attention heads, denoted by A and 768 hidden units, which results in total in 110 million parameters. 
+The pretraining of \ac{BERT} is in contrast to the fine tuning process computionally expensive. Therefore, \citet{devlin2018} initially developed different sizes of \ac{BERT} like \ac{BERT}-base and \ac{BERT}-large. Besides those two models, there are plenty of pretrained \ac{BERT} models for the German case, like \ac{BERT}-base-german-cased or distilbert-base-german-cased \footnote{All german \ac{BERT} are open source and are accessible through the transformers library \citep{wolf2020}}. In an evaluation of German pre-trained language models, \citep{assenmacher2021} conclude that the bert-base-german-dbmd-uncased algorithm works quite well. Following their results and own tests on different mode bert-base-german-dbmd-uncased seems to have the best result, which is why I use it for the fine tuning process. The model consists of 12 encoder layers, denoted by L, 12 attention heads, denoted by A and 768 hidden units, which results in total in 110 million parameters. It was trained with 16GB of German texts. 
 
 \subsubsection*{Fine-Tuning}
 The second phase, the fine-tuning, can be performed in different ways, also depending on the task. For text classifcation there are two main strategies. Either the weights of the pretraind model are updated during the classifcation process. Or the pretrained model is first fine-tuned and then used as a feature extractor.  Such it can be then in turn used for, for example, calculating similarities or as an input for classification algorithms. 
 
 I train two models with \ac{BERT}. While the first model includes a classifcation layer, in the following named as \ac{BERT} classifier, the second model applies \ac{BERT} as a feature extraction method, in the following named \ac{BERT} vectorizer. 
 
-The \ac{BERT} classifier is fine tuned with the complete training data set. Practically this is done by converting the sentences of the dataset to the appropriate data format as described above and train it with the supervised dataset on some epochs, which then outputs then the labels. From a theoretical point of view the last hidden state of the [CLS] token with the aggregation of the whole sentence is used for the classifcation. In order to get the labels \ac{BERT} uses a softmax function \footnote{The explanation of the softmax function follows in the chapter of the classifiers} \citep{sun2019}. In the literature it is not well-understood so far, what exactly happens during the fine-tuning. An analysis of \citet{merchant2020} indicates that the fine tuning process is relatively conservative in the sense that they affect only few layers are specific for examples for domain. Note that this analysis focussed on other nature language processing task than text classifcation. The set-up of the training is as follows: Testing different epoch numbers indicates that lower epoch size have better results for the model, which is why I fine tunes in 6 epochs. For the optimization an adam algorithm, a gradient based optimizer \citep{kingma2014}, with a learning rate of $1e^{-5}$ is used. 
+The \ac{BERT} classifier is fine tuned with the complete training data set. Practically this is done by converting the sentences of the dataset to the appropriate data format as described above and train it with the supervised dataset on some epochs, which then outputs  the labels. From a theoretical point of view the last hidden state of the [CLS] token with the aggregation of the whole sentence is used for the classifcation. In order to get the labels \ac{BERT} uses a softmax function \footnote{The explanation of the softmax function follows in the chapter of the classifiers} \citep{sun2019}. In the literature it is not well-understood so far, what exactly happens during the fine-tuning. An analysis of \citet{merchant2020} indicates that the fine tuning process is relatively conservative in the sense that they affect only few layers and are specific for examples of a domain. Note that this analysis focussed on other nature language processing task than text classifcation. The set-up of the training is as follows: Testing different epoch numbers indicates that lower epoch size have better results for the model, which is why I fine tune in 6 epochs. For the optimization an adam algorithm, a gradient based optimizer \citep{kingma2014}, with a learning rate of $1e^{-5}$ is used. 
 
-In order to get sentence embeddings different strategies, like averaging the output layer of \ac{BERT} or using the [CLS] token, are applied. Another method, developed by \citet{reimers2019} is Sentence-\ac{BERT}, which is computionally efficient and practicable to implement. Thus it faciliate to encode sentences directly into embeddings, which is why I use it for the \ac{BERT} vectorizer. The model is constructed with the bert-base-german-case model and a pooling layer. The pooling layer is added to output the sentence embeddings. The fine tuning process uses a siamese network architecture to update the weights. \ref{fig: F5} shows the architecture. The network takes pairs of sentences with a score as an input. Those scores indicate the similarity between the sentences. The network update the weights by passing the sentences through the network, calculating the cosine similarity and comparing to the similarity score \citep{reimers2019}.
+In order to get sentence embeddings different strategies, like averaging the output layer of \ac{BERT} or using the [CLS] token, are applied. Another method, developed by \citet{reimers2019} is Sentence-\ac{BERT}, which is computionally efficient and practicable to implement. Thus, it faciliate to encode sentences directly into embeddings, which is why I use it for the \ac{BERT} vectorizer. The model is constructed with the bert-base-german-case model and a pooling layer. The pooling layer is added to output the sentence embeddings. The fine tuning process uses a siamese network architecture to update the weights. \ref{fig: F5} shows the architecture. The network takes pairs of sentences with a score as an input. Those scores indicate the similarity between the sentences. The network update the weights by passing the sentences through the network, calculating the cosine similarity and comparing to the similarity score \citep{reimers2019}.
 I create from the training data set and from the kldb taxonomy pairs of similar and dissimilar job titles or searchwords. Similar pairs are pairs from the same kldb class. As a score I choose 0.8. Dissimilar pairs are defined as pairs which are not from the same class. The score is 0.2. Building all combinations of titles and the searchwords for each class would results in a huge dataset. For example class 1 of the training data set has 2755 job titles. Thus we would have already have ${2755 \choose 2} = 3793635$ examples. Since this is computionally to expensive I randomly choose pairs of job titles. For the similar ones I choosed for job titles and for searchwords 3250 pairs. For the dissimilar pairs I choosed respectivley 1750 pairs. Thus, in total, I fine tuned the model with 10000 examples in 3 epochs.
 
 \begin{figure}[hb!]
@@ -318,21 +320,32 @@ I create from the training data set and from the kldb taxonomy pairs of similar 
   \caption{\label{fig: F5} Sentence-\ac{BERT} siamese architecture \citep[3]{reimers2019}}
 \end{figure}
 
-\subsection{Dimensionality reduction}.
+\subsection{Dimensionality reduction}
+Dimensionality reduction techniques like \ac{PCA} play an important role in reducing computation time and saving computing resources \citep{ayesha2020}. Figure \ref{fig: F6} shows the running time of all three classifiers with different data sizes and with and without \ac{PCA} dimensionality reducation. 
+
+
+\begin{figure}[hb!]
+  \center
+  \includegraphics[scale=0.5]{running_time_PCA.jpeg}
+  \caption{\label{fig: F6} Running time of word2vec with different data sizes}
+\end{figure}
+
+The input of the classifiers are the word2vec word embeddings without the additional information. The bright lines show the running times without dimensionality reduction, while the dark colored lines report the running time with \ac{PCA} transformation. It becomes clear that the runtime for the transformed embeddings are generally lower. While the magnitude of the differences is almost irrelevant for a data set of 500, the runtime of the non-transformed embeddings increases considerably with the size of the data set for all classifiers. This is most evident with RF. Although the runtime of the transfomized embeddings also increases for all classifiers, it does so at a much slower pace. Therefore, it can be concluded that the transformation clearly contributes to keeping the runtime lower for large data sets.  As already described in chapter x, the training data set is fairly large, which is why it is reasonable to reduce the dimensions. 
+
+\ac{PCA}, one of the most popular technique for dimensionality reduction, aims to reduce a high-dimensional feature space to a lower subspace while capturing the most important information \citep{tipping1999, bisong2019}. The main idea is to use linear combinations of the original dimensions to reduce the dimensional space \citep{bro2014}. 
+
+\ac{PCA} is computet in 
+
+covariance matrix 
+
+eigenvectors 
+
+reduction 
+
+
 
 \subsection{Classifier}
 As pointed out in the literature review \ac{NB}, \ac{LR} and \ac{SVM} have several advantages for text classifcation tasks. In the following based on a theoretical discussion of each classifier, the exact modeling of the classifiers is justified. 
-
-\subsubsection{Naive Bayes Classifier}
-The \ac{NB}, a family of probabilistic classifiers, uses Bayes' rule in order to determine the most likely class for each document \citep{Schneider2005}. All \ac{NB} classifiers rely on the conditional independence assumptions which means, that ``features are independent of each other, given the category variable'' \citep[48]{Xu2018}. Depending on whether the features are discrete or continous, different distributions, so-called event models are proposed. While from a theoretical perspective for continous features Gaussian distribution is well-suited, for discrete features usually Bernoulli or multinomial distibutions are applied \citep{Xu2018}. Although, popular practical implementations, like the one from sklearn, allow as well fractional counts for multinomial distributions \citep{scikit-learn}. Trying different event models, the multinomial \ac{NB} shows indeed for both Count Vectorizer and for TFIDF the best results, which is why I choose it as event model for the baseline. 
-
-The multinomial \ac{NB} classifies according to the most likely class. Given that a document d has $t = 1, ...., k$ terms and can be assigned to $c = 1,...,j$ classes, the probability of a term in a document given a class is calculated as \citep{Manning2008}:
-\[ P(t_k, c_j) = \frac{occurence(t_k, c_j) + 1}{\sum occurence(t, c_j) + |V|} \]
-
-where $|V|$ is the cardinality of the vocabulary. In the denominator 1 is added, so-called Laplace smoothing, in order to avoid zeros, which is the case if the number of terms in a document for one class is zero. \citep{Manning2008}. Further given that $N_c = count(c_j)$ is the number of documents belonging to class $c_j$ and N is number of documents the probability of $c_j$ is defined as $\frac{N_c}{N}$. The probability of a document d belonging to a class $c_j$ can then formulated as follows \citep[258]{Manning2008}:
-\[ P(c_j|d) \propto P(c_j) \prod_{i = 1}^k P(t_i|c_j) \]
-Then the most likely classes can be determined by \citep{Manning2008}: 
-\[\argmax_{c \in C} P(c_j) \prod_{i = 1}^k P(t_i|c_j) \] 
 
 \subsubsection{Logistic Regression}
 
@@ -562,5 +575,21 @@ As shown above, there are several metrics for evaluating the performance of a cl
 
 \bibliographystyle{apalike}
 \bibliography{export}
-    
+
+
+\appendix
+\section{Naive Bayes Classifier}
+\subsection{Theory}
+The \ac{NB}, a family of probabilistic classifiers, uses Bayes' rule in order to determine the most likely class for each document \citep{Schneider2005}. All \ac{NB} classifiers rely on the conditional independence assumptions which means, that ``features are independent of each other, given the category variable'' \citep[48]{Xu2018}. Depending on whether the features are discrete or continous, different distributions, so-called event models are proposed. While from a theoretical perspective for continous features Gaussian distribution is well-suited, for discrete features usually Bernoulli or multinomial distibutions are applied \citep{Xu2018}. Although, popular practical implementations, like the one from sklearn, allow as well fractional counts for multinomial distributions \citep{scikit-learn}. Trying different event models, the multinomial \ac{NB} shows indeed for both Count Vectorizer and for TFIDF the best results, which is why I choose it as event model for the baseline. 
+
+The multinomial \ac{NB} classifies according to the most likely class. Given that a document d has $t = 1, ...., k$ terms and can be assigned to $c = 1,...,j$ classes, the probability of a term in a document given a class is calculated as \citep{Manning2008}:
+\[ P(t_k, c_j) = \frac{occurence(t_k, c_j) + 1}{\sum occurence(t, c_j) + |V|} \]
+
+where $|V|$ is the cardinality of the vocabulary. In the denominator 1 is added, so-called Laplace smoothing, in order to avoid zeros, which is the case if the number of terms in a document for one class is zero. \citep{Manning2008}. Further given that $N_c = count(c_j)$ is the number of documents belonging to class $c_j$ and N is number of documents the probability of $c_j$ is defined as $\frac{N_c}{N}$. The probability of a document d belonging to a class $c_j$ can then formulated as follows \citep[258]{Manning2008}:
+\[ P(c_j|d) \propto P(c_j) \prod_{i = 1}^k P(t_i|c_j) \]
+Then the most likely classes can be determined by \citep{Manning2008}: 
+\[\argmax_{c \in C} P(c_j) \prod_{i = 1}^k P(t_i|c_j) \] 
+
+\subsection{Results}
+
 \end{document}
