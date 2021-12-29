@@ -6,8 +6,7 @@ from src.vectorizer.countVectorizer.countvectorizer import CountVectorizer_
 from src.vectorizer.TFIDF.tfidf import TFIDF
 from src.vectorizer.word2vec.word2vec_vectorizer import Word2VecVectorizer
 from src.vectorizer.Doc2vec.Doc2vec_vectorizer import Doc2VecVectorizer
-
-# from src.vectorizer.BERT.bert_vectorizer import BertVectorizer
+from src.vectorizer.BERT.bert_vectorizer import BertVectorizer
 from src.reduction.PCA import dimension_reduction
 from src.modeling.LR.lr_classifier import LRClassifier
 from src.modeling.SVM.svm import SVMClassifier
@@ -28,7 +27,7 @@ sentences_long = [job["title"] for job in training_data_long]
 labels_long = [job["id"] for job in training_data_long]
 
 train_sentences, test_sentences, y_train, y_test = train_test_split(
-    sentences_short[:500], labels_short[:500]
+    sentences_long, labels_long
 )
 
 # TRANSFORM I - VECTORIZING
@@ -98,14 +97,14 @@ doc2vec_vectorizer_with = Doc2VecVectorizer(
 ) = doc2vec_vectorizer_with.transform_data()
 
 # BERT
-# logger.debug("BERT")
-# bert_vectorizer = BertVectorizer(
-#     train_sentences=train_sentences,
-#     test_sentences=test_sentences,
-#     modelname="all-distilroberta-v1",
-# )
+logger.debug("BERT")
+bert_vectorizer = BertVectorizer(
+    train_sentences=train_sentences,
+    test_sentences=test_sentences,
+    modelname="all-distilroberta-v1",
+)
 
-# train_vecs_bert, test_vecs_bert = bert_vectorizer.transform_data()
+train_vecs_bert, test_vecs_bert = bert_vectorizer.transform_data()
 
 # # TRANSFORM II - REDUCTION"
 logger.debug("TRANSFORM II - REDUCTION")
@@ -168,13 +167,13 @@ pca_doc2vec_with.evalute_reduction()
 train_doc2vec_with, test_doc2vec_with = pca_doc2vec_with.transform_data()
 
 # # BERT
-# logger.debug("BERT")
-# pca_bert = dimension_reduction(
-#     train_vecs=train_vecs_bert, test_vecs=test_vecs_bert, components=0.95
-# )
-# pca_bert.fit_model()
-# pca_bert.evalute_reduction()
-# train_bert, test_bert = pca_bert.transform_data()
+logger.debug("BERT")
+pca_bert = dimension_reduction(
+    train_vecs=train_vecs_bert, test_vecs=test_vecs_bert, components=0.95
+)
+pca_bert.fit_model()
+pca_bert.evalute_reduction()
+train_bert, test_bert = pca_bert.transform_data()
 
 
 # TRAIN CLASSIFIERS
@@ -230,12 +229,12 @@ doc2vec_with_clf_LR = LRClassifier(
 doc2vec_with_clf_LR.fit_classifier()
 
 # BERT
-# logger.debug("BERT")
-# bert_clf_LR = LRClassifier(
-#     train=train_bert, test=test_bert, y_train=y_train, y_test=y_test
-# )
+logger.debug("BERT")
+bert_clf_LR = LRClassifier(
+    train=train_bert, test=test_bert, y_train=y_train, y_test=y_test
+)
 
-# bert_clf_LR.fit_classifier()
+bert_clf_LR.fit_classifier()
 
 # SVM
 logger.debug("SVM")
@@ -288,12 +287,12 @@ doc2vec_with_clf_SVM = SVMClassifier(
 doc2vec_with_clf_SVM.fit_classifier()
 
 # BERT
-# logger.debug("BERT")
-# bert_clf_SVM = SVMClassifier(
-#     train=train_bert, test=test_bert, y_train=y_train, y_test=y_test
-# )
+logger.debug("BERT")
+bert_clf_SVM = SVMClassifier(
+    train=train_bert, test=test_bert, y_train=y_train, y_test=y_test
+)
 
-# bert_clf_SVM.fit_classifier()
+bert_clf_SVM.fit_classifier()
 
 # RF
 logger.debug("RF")
@@ -347,12 +346,12 @@ doc2vec_with_clf_RF = RFClassifier(
 doc2vec_with_clf_RF.fit_classifier()
 
 # BERT
-# logger.debug("BERT")
-# bert_clf_RF = RFClassifier(
-#     train=train_bert, test=test_bert, y_train=y_train, y_test=y_test
-# )
+logger.debug("BERT")
+bert_clf_RF = RFClassifier(
+    train=train_bert, test=test_bert, y_train=y_train, y_test=y_test
+)
 
-# bert_clf_RF.fit_classifier()
+bert_clf_RF.fit_classifier()
 
 # EVALUATE CLASSIFIERS
 logger.debug("EVALUATE CLASSIFIERS")
@@ -363,7 +362,7 @@ word2vec_without_clf_LR_report = word2vec_without_clf_LR.evaluate(output_dict=Tr
 word2vec_with_clf_LR_report = word2vec_with_clf_LR.evaluate(output_dict=True)
 doc2vec_without_clf_LR_report = doc2vec_without_clf_LR.evaluate(output_dict=True)
 doc2vec_with_clf_LR_report = doc2vec_with_clf_LR.evaluate(output_dict=True)
-# bert_clf_LR_report = bert_clf_LR.evaluate(output_dict=True)
+bert_clf_LR_report = bert_clf_LR.evaluate(output_dict=True)
 
 logger.debug("SVM")
 count_clf_SVM_report = count_clf_SVM.evaluate(output_dict=True)
@@ -372,7 +371,7 @@ word2vec_without_clf_SVM_report = word2vec_without_clf_SVM.evaluate(output_dict=
 word2vec_with_clf_SVM_report = word2vec_with_clf_SVM.evaluate(output_dict=True)
 doc2vec_without_clf_SVM_report = doc2vec_without_clf_SVM.evaluate(output_dict=True)
 doc2vec_with_clf_SVM_report = doc2vec_with_clf_SVM.evaluate(output_dict=True)
-# bert_clf_SVM_report = bert_clf_SVM.evaluate(output_dict=True)
+bert_clf_SVM_report = bert_clf_SVM.evaluate(output_dict=True)
 
 logger.debug("RF")
 count_clf_RF_report = count_clf_RF.evaluate(output_dict=True)
@@ -381,7 +380,7 @@ word2vec_without_clf_RF_report = word2vec_without_clf_RF.evaluate(output_dict=Tr
 word2vec_with_clf_RF_report = word2vec_with_clf_RF.evaluate(output_dict=True)
 doc2vec_without_clf_RF_report = doc2vec_without_clf_RF.evaluate(output_dict=True)
 doc2vec_with_clf_RF_report = doc2vec_with_clf_RF.evaluate(output_dict=True)
-# bert_clf_RF_report = bert_clf_RF.evaluate(output_dict=True)
+bert_clf_RF_report = bert_clf_RF.evaluate(output_dict=True)
 
 
 # TO_LATEX
@@ -396,7 +395,7 @@ df_accuracy = pd.DataFrame(
             round(word2vec_with_clf_LR_report["accuracy"], 2),
             round(doc2vec_without_clf_LR_report["accuracy"], 2),
             round(doc2vec_with_clf_LR_report["accuracy"], 2),
-            # round(bert_clf_LR_report["accuracy"], 2),
+            round(bert_clf_LR_report["accuracy"], 2),
         ],
         "SVM": [
             round(count_clf_SVM_report["accuracy"], 2),
@@ -405,7 +404,7 @@ df_accuracy = pd.DataFrame(
             round(word2vec_with_clf_SVM_report["accuracy"], 2),
             round(doc2vec_without_clf_SVM_report["accuracy"], 2),
             round(doc2vec_with_clf_SVM_report["accuracy"], 2),
-            # round(bert_clf_SVM_report["accuracy"], 2),
+            round(bert_clf_SVM_report["accuracy"], 2),
         ],
         "RF": [
             round(count_clf_RF_report["accuracy"], 2),
@@ -414,7 +413,7 @@ df_accuracy = pd.DataFrame(
             round(word2vec_with_clf_RF_report["accuracy"], 2),
             round(doc2vec_without_clf_RF_report["accuracy"], 2),
             round(doc2vec_with_clf_RF_report["accuracy"], 2),
-            # round(bert_clf_RF_report["accuracy"], 2),
+            round(bert_clf_RF_report["accuracy"], 2),
         ],
     },
     index=[
@@ -424,7 +423,7 @@ df_accuracy = pd.DataFrame(
         "Word2Vec_II",
         "Doc2Vec_I",
         "Doc2Vec_II",
-        # "BERT",
+        "BERT",
     ],
 )
 
@@ -440,7 +439,7 @@ df_prf = pd.DataFrame(
             f"p: {round(word2vec_with_clf_LR_report['macro']['precision'], 2)}, r: {round(word2vec_with_clf_LR_report['macro']['recall'], 2)}, F1: {round(word2vec_with_clf_LR_report['macro']['f1-score'], 2)}",
             f"p: {round(doc2vec_without_clf_LR_report['macro']['precision'], 2)}, r: {round(doc2vec_without_clf_LR_report['macro']['recall'], 2)}, F1: {round(doc2vec_without_clf_LR_report['macro']['f1-score'], 2)}",
             f"p: {round(doc2vec_with_clf_LR_report['macro']['precision'], 2)}, r: {round(doc2vec_with_clf_LR_report['macro']['recall'], 2)}, F1: {round(doc2vec_with_clf_LR_report['macro']['f1-score'], 2)}",
-            # f"p: {round(bert_clf_LR_report['macro']['precision'], 2)}, r: {round(bert_clf_LR_report['macro']['recall'], 2)}, F1: {round(bert_clf_LR_report['macro']['f1-score'], 2)}",
+            f"p: {round(bert_clf_LR_report['macro']['precision'], 2)}, r: {round(bert_clf_LR_report['macro']['recall'], 2)}, F1: {round(bert_clf_LR_report['macro']['f1-score'], 2)}",
         ],
         "SVM": [
             f"p: {round(count_clf_SVM_report['macro']['precision'], 2)}, r: {round(count_clf_SVM_report['macro']['recall'], 2)}, F1: {round(count_clf_SVM_report['macro']['f1-score'], 2)}",
@@ -449,7 +448,7 @@ df_prf = pd.DataFrame(
             f"p: {round(word2vec_with_clf_SVM_report['macro']['precision'], 2)}, r: {round(word2vec_with_clf_SVM_report['macro']['recall'], 2)}, F1: {round(word2vec_with_clf_SVM_report['macro']['f1-score'], 2)}",
             f"p: {round(doc2vec_without_clf_SVM_report['macro']['precision'], 2)}, r: {round(doc2vec_without_clf_SVM_report['macro']['recall'], 2)}, F1: {round(doc2vec_without_clf_SVM_report['macro']['f1-score'], 2)}",
             f"p: {round(doc2vec_with_clf_SVM_report['macro']['precision'], 2)}, r: {round(doc2vec_with_clf_SVM_report['macro']['recall'], 2)}, F1: {round(doc2vec_with_clf_SVM_report['macro']['f1-score'], 2)}",
-            # f"p: {round(bert_clf_SVM_report['macro']['precision'], 2)}, r: {round(bert_clf_SVM_report['macro']['recall'], 2)}, F1: {round(bert_clf_SVM_report['macro']['f1-score'], 2)}",
+            f"p: {round(bert_clf_SVM_report['macro']['precision'], 2)}, r: {round(bert_clf_SVM_report['macro']['recall'], 2)}, F1: {round(bert_clf_SVM_report['macro']['f1-score'], 2)}",
         ],
         "RF": [
             f"p: {round(count_clf_RF_report['macro']['precision'], 2)}, r: {round(count_clf_RF_report['macro']['recall'], 2)}, F1: {round(count_clf_RF_report['macro']['f1-score'], 2)}",
@@ -458,7 +457,7 @@ df_prf = pd.DataFrame(
             f"p: {round(word2vec_with_clf_RF_report['macro']['precision'], 2)}, r: {round(word2vec_with_clf_RF_report['macro']['recall'], 2)}, F1: {round(word2vec_with_clf_RF_report['macro']['f1-score'], 2)}",
             f"p: {round(doc2vec_without_clf_RF_report['macro']['precision'], 2)}, r: {round(doc2vec_without_clf_RF_report['macro']['recall'], 2)}, F1: {round(doc2vec_without_clf_RF_report['macro']['f1-score'], 2)}",
             f"p: {round(doc2vec_with_clf_RF_report['macro']['precision'], 2)}, r: {round(doc2vec_with_clf_RF_report['macro']['recall'], 2)}, F1: {round(doc2vec_with_clf_RF_report['macro']['f1-score'], 2)}",
-            # f"p: {round(bert_clf_RF_report['macro']['precision'], 2)}, r: {round(bert_clf_RF_report['macro']['recall'], 2)}, F1: {round(bert_clf_RF_report['macro avg']['f1-score'], 2)}",
+            f"p: {round(bert_clf_RF_report['macro']['precision'], 2)}, r: {round(bert_clf_RF_report['macro']['recall'], 2)}, F1: {round(bert_clf_RF_report['macro avg']['f1-score'], 2)}",
         ],
     },
     index=[
@@ -468,7 +467,7 @@ df_prf = pd.DataFrame(
         "Word2vec_II",
         "Doc2Vec_I",
         "Doc2Vec_II",
-        # "BERT",
+        "BERT",
     ],
 )
 
@@ -484,7 +483,7 @@ df_prf = pd.DataFrame(
             f"p: {round(word2vec_with_clf_LR_report['micro']['precision'], 2)}, r: {round(word2vec_with_clf_LR_report['micro']['recall'], 2)}, F1: {round(word2vec_with_clf_LR_report['micro']['f1-score'], 2)}",
             f"p: {round(doc2vec_without_clf_LR_report['micro']['precision'], 2)}, r: {round(doc2vec_without_clf_LR_report['micro']['recall'], 2)}, F1: {round(doc2vec_without_clf_LR_report['micro']['f1-score'], 2)}",
             f"p: {round(doc2vec_with_clf_LR_report['micro']['precision'], 2)}, r: {round(doc2vec_with_clf_LR_report['micro']['recall'], 2)}, F1: {round(doc2vec_with_clf_LR_report['micro']['f1-score'], 2)}",
-            # f"p: {round(bert_clf_LR_report['micro']['precision'], 2)}, r: {round(bert_clf_LR_report['micro']['recall'], 2)}, F1: {round(bert_clf_LR_report['micro']['f1-score'], 2)}",
+            f"p: {round(bert_clf_LR_report['micro']['precision'], 2)}, r: {round(bert_clf_LR_report['micro']['recall'], 2)}, F1: {round(bert_clf_LR_report['micro']['f1-score'], 2)}",
         ],
         "SVM": [
             f"p: {round(count_clf_SVM_report['micro']['precision'], 2)}, r: {round(count_clf_SVM_report['micro']['recall'], 2)}, F1: {round(count_clf_SVM_report['micro']['f1-score'], 2)}",
@@ -493,7 +492,7 @@ df_prf = pd.DataFrame(
             f"p: {round(word2vec_with_clf_SVM_report['micro']['precision'], 2)}, r: {round(word2vec_with_clf_SVM_report['micro']['recall'], 2)}, F1: {round(word2vec_with_clf_SVM_report['micro']['f1-score'], 2)}",
             f"p: {round(doc2vec_without_clf_SVM_report['micro']['precision'], 2)}, r: {round(doc2vec_without_clf_SVM_report['micro']['recall'], 2)}, F1: {round(doc2vec_without_clf_SVM_report['micro']['f1-score'], 2)}",
             f"p: {round(doc2vec_with_clf_SVM_report['micro']['precision'], 2)}, r: {round(doc2vec_with_clf_SVM_report['micro']['recall'], 2)}, F1: {round(doc2vec_with_clf_SVM_report['micro']['f1-score'], 2)}",
-            # f"p: {round(bert_clf_SVM_report['micro']['precision'], 2)}, r: {round(bert_clf_SVM_report['micro']['recall'], 2)}, F1: {round(bert_clf_SVM_report['micro']['f1-score'], 2)}",
+            f"p: {round(bert_clf_SVM_report['micro']['precision'], 2)}, r: {round(bert_clf_SVM_report['micro']['recall'], 2)}, F1: {round(bert_clf_SVM_report['micro']['f1-score'], 2)}",
         ],
         "RF": [
             f"p: {round(count_clf_RF_report['micro']['precision'], 2)}, r: {round(count_clf_RF_report['micro']['recall'], 2)}, F1: {round(count_clf_RF_report['micro']['f1-score'], 2)}",
@@ -502,7 +501,7 @@ df_prf = pd.DataFrame(
             f"p: {round(word2vec_with_clf_RF_report['micro']['precision'], 2)}, r: {round(word2vec_with_clf_RF_report['micro']['recall'], 2)}, F1: {round(word2vec_with_clf_RF_report['micro']['f1-score'], 2)}",
             f"p: {round(doc2vec_without_clf_RF_report['micro']['precision'], 2)}, r: {round(doc2vec_without_clf_RF_report['micro']['recall'], 2)}, F1: {round(doc2vec_without_clf_RF_report['micro']['f1-score'], 2)}",
             f"p: {round(doc2vec_with_clf_RF_report['micro']['precision'], 2)}, r: {round(doc2vec_with_clf_RF_report['micro']['recall'], 2)}, F1: {round(doc2vec_with_clf_RF_report['micro']['f1-score'], 2)}",
-            # f"p: {round(bert_clf_RF_report['micro']['precision'], 2)}, r: {round(bert_clf_RF_report['micro']['recall'], 2)}, F1: {round(bert_clf_RF_report['micro avg']['f1-score'], 2)}",
+            f"p: {round(bert_clf_RF_report['micro']['precision'], 2)}, r: {round(bert_clf_RF_report['micro']['recall'], 2)}, F1: {round(bert_clf_RF_report['micro avg']['f1-score'], 2)}",
         ],
     },
     index=[
@@ -512,7 +511,7 @@ df_prf = pd.DataFrame(
         "Word2vec_II",
         "Doc2Vec_I",
         "Doc2Vec_II",
-        # "BERT",
+        "BERT",
     ],
 )
 
