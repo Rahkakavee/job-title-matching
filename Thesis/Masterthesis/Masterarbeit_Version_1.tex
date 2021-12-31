@@ -99,6 +99,8 @@
   \acro{BERT}[BERT]{Bidirectional Encoder  Representations from Transformers}
   \acro{NLP}[NLP]{Nature Language Processing}
   \acro{PCA}[PCA]{Principal Component Analysis}
+  \acro{RF}[RF]{Random Forest}
+  \acro{CART}[CART]{Classification and Regression Trees}
 \end{acronym}
 \newpage
 
@@ -330,26 +332,20 @@ Dimensionality reduction techniques like \ac{PCA} play an important role in redu
   \caption{\label{fig: F6} Running time of word2vec with different data sizes}
 \end{figure}
 
-The input of the classifiers are the word2vec word embeddings without the additional information. The bright lines show the running times without dimensionality reduction, while the dark colored lines report the running time with \ac{PCA} transformation. It becomes clear that the runtime for the transformed embeddings are generally lower. While the magnitude of the differences is almost irrelevant for a data set of 500, the runtime of the non-transformed embeddings increases considerably with the size of the data set for all classifiers. This is most evident with RF. Although the runtime of the transfomized embeddings also increases for all classifiers, it does so at a much slower pace. Therefore, it can be concluded that the transformation clearly contributes to keeping the runtime lower for large data sets.  As already described in chapter x, the training data set is fairly large, which is why it is reasonable to reduce the dimensions. 
+The input of the classifiers are the word2vec word embeddings without the additional information. The bright lines show the running times without dimensionality reduction, while the dark colored lines report the running time with \ac{PCA} transformation. It becomes clear that the runtime for the transformed embeddings are generally lower. While the magnitude of the differences is almost irrelevant for a data set of 500, the runtime of the non-transformed embeddings increases considerably with the size of the data set for all classifiers. This is most evident with \ac{RF}. Although the runtime of the transformed embeddings also increases for all classifiers, it does so at a much slower pace. Therefore, it can be concluded that the transformation clearly contributes to keeping the runtime lower for large data sets. As already described in chapter x, the training data set is fairly large, which is why it is reasonable to reduce the dimensions. 
 
-\ac{PCA}, one of the most popular technique for dimensionality reduction, aims to reduce a high-dimensional feature space to a lower subspace while capturing the most important information \citep{tipping1999, bisong2019}. The main idea is to use linear combinations of the original dimensions to reduce the dimensional space \citep{bro2014}. 
+\ac{PCA}, one of the most popular technique for dimensionality reduction, aims to reduce a high-dimensional feature space to a lower subspace while capturing the most important information \citep{tipping1999, bisong2019}. The main idea is to use linear combinations of the original dimensions, so called principal components, to reduce the dimensional space \citep{bro2014,geladi2017}. 
 
-\ac{PCA} is computet in 
+Conceptually in the first step the covariance matrix for the word embeddings, is obtained. The covariance matrix, denoted by $\textbf{X}$, captures the linear relationships between the features of the word embeddings. In a next step the eigenvectors of $\textbf{X}$ are calculated. The eigenvector of X defined as \citep{bro2014}: 
 
-covariance matrix 
+\[ \textbf{X}z = \lambda z \]
 
-eigenvectors 
-
-reduction 
-
-
+where $z$ is the eigenvector and $\lambda$ the eigenvalue. In order decompose $\textbf{X}$ to get the eigenvalue Singular Value Decomposition is applied. The eigenvalues are then sorted from highest to lowest and the most significant components n are kept. To transform the data a feature vector in generated. This vector contains of the most n significant eigenvalues. After transposing the mean-adjusted the word embedding and the feature vector, the embeddings can be transformed by multiplying both transposed vectors \citep{smith2002}.
 
 \subsection{Classifier}
 As pointed out in the literature review \ac{NB}, \ac{LR} and \ac{SVM} have several advantages for text classifcation tasks. In the following based on a theoretical discussion of each classifier, the exact modeling of the classifiers is justified. 
 
 \subsubsection{Logistic Regression}
-
-\subsubsection{Random Forest Classifier}
 
 \subsubsection{Support Vector Machines}
 However, \ac{SVM} also performed well for text classification. Especially for multiclass tasks, as mentioned in the literature review, often different versions of the algorithm are used and showed good performance \citep{Aiolli2005,Angulo2003,Benabdeslem2006,Guo2015,Mayoraz1999,Tang2019,Tomar2015}. In general \ac{SVM} has several advantages for text classifcation. First, text classifcation usually has a high dimensional input space. \ac{SVM} can handle these large features since they are able to learn independently of the dimensionality of the feature space. In addition \ac{SVM}s are known to perform well for dense and sparse vectors, which is usually the case for text classification \citep{Joachims1998}. Empirical results, for example \citet{Joachims1998} or \cite{Liu2010} confirm the theoretical expectations. It is, therefore, a reasonable option to use a basic version of the \ac{SVM} algorithm as a baseline.
@@ -376,6 +372,44 @@ $K(x_i, x)$ corresponds to a Kernel function, which allows to calculate the dot 
 In order to apply \ac{SVM} to multiclass problems several approaches have been proposed. One stratetgy is to divide the multi-classifcation problem into several binary problems. A common approach here is the one-against-all method. In this method as many \ac{SVM} classifiers are constructed as there are classes k. The k-th classifier assumes that the examples with the k label are positive labels, while all the other examples treated as negative. Another popular approach is the one-against-one method. In this approach $k(k-1)/2$ classifiers are constructed allowing to train in each classifier the data of two classes \citep{Hsu2002}. Besides dividing the multiclass problem into several binary problems, some researches propose approaches to solve the task in one single optimization problem, like \citet{Crammer2001}. \footnote{For a detailed overview of all different methods and the method of \citet{Crammer2001} see \citet{Hsu2002,Crammer2001}}. 
 
 In order to find a strong classifier I checked \ac{SVM}'s with different parameters for the \ac{SVM}, as well as different multiclass approaches. It appears that a SVM using a soft margin with a $C=1$ and a one-vs-rest approach has the best results. I also test different kernels, like  RBF Kernel or linear kernel. The linear kernel, formally  $k(x, x') = x^Tx'$, achieved the best results, which is why I choose it for the classifier. 
+
+\subsubsection{Random Forest Classifier}
+In contrast to the previous two classifiers \ac{RF} is a ensemble learning technique. The main idea of ensemble learning techniques is to create a number of learners, classifiers, and combine them. Usually those learners are for example descision tree or neural networks and are usuall homogeneous, which means that each individual learn is based on the same machine learning algorithm. The different ensemble technique are built on three pillars: the data sampling, the strategy of the training and combination method \cite{polikar2012, zhou2009}. 
+
+The first pillar, the data sampling is important in sense of that it is not desirable to have same outputs for all classifiers. Thus ensemble techniques need diversity in the output, which means the outputs should be optimally independent and negatively correlated. There are well-established methods for achieving diversity. For example bagging techniques \ac{RF} falls back to boostrap \citep{polikar2012}. The second pillar rises the question of which techniques should be applied to train the learners of the method. The most popular strategies for the training are bagging and boosting \citep{polikar2012}. The last pillar is about the combining method. Each classifier of the method will output an individual classifcation result and those results have to be combined in some way to achieve an overall result. There are plenty of methods like majority voting or borda count \citep{polikar2012}
+
+\ac{RF} uses as individual classfier decision trees. Before discussing \ac{RF} in more detail within the three pillars described above, a brief discussion of decision tree is given, in order to understand the mechanism and training procedure of the classifiers. 
+
+The main idea of the decision tree algorithm is to `"break up a complex decision into a union of several simple decisions" \citep[660]{safavian1991} by using trees, with a root node on the top, intermediate nodes and leaf nodes on the bottom. For the root node and each of the intermediate nodes all possible splittings are checked and then are split according to the best feature. Each leaf nodes leads to one of the classification labels. Examples are then classified by traversing the tree from the top to the bottom and choosing at each intermediate node the branch which satisfy the attribute value for the example. Decision tree is a recursive procedure \citep{Berthold2020, xia2008, cutler2012}
+
+There are two important points to discuss in constructing. First the types of splitting and second splitting criterion. There are mainly three types of splits. Boolean splits, nominal splits and continous splits. The latter chooses a particular value from the continous feature as the splitting value \citep{cutler2012, Berthold2020}. For example considering a word embeddings X with 300 dimension and a node t, which is split into a node $t_{left}$ and $t_{right}$. The node t could have the split $X[209] <= 0.336$. Examples with a value smaller than or equal $0.336$ at the dimension index $209$ of the embedding vector are follow the branch to $t_{left}$, while all other examples follow the branch  to $t_{right}$.
+
+The splitting criterion is important to identify the best feature for splitting. Intiutively, the criterions should split the data in such a way that leaf nodes are created fast \citep{Berthold2020}. There are several measurements, so-called impurity measures to obtain the best split for each node, like gini impurity or information gain. Since \ac{RF} uses gini impurity, only this criterion will be discussed in detail. 
+
+The gini index is defined as: 
+
+\[ I_{gini}(X) = \sum_{i=1}^k p_i(1-p_i) \]
+
+where X is a set of training examples, K is th set classes with labels from 1,...k and $p_i$ is the probability of examples belong to a certain class.
+
+The algorithm stops for a specific node if all examples of the training set belong to the same class, or if there are no features left for splitting. This is can end in tree with a high depth, which is why often pruning is applied to avoid overfitting of the tree \citet{Berthold2020}.
+
+Based on above theoretical explanations of the foundations of decision tree, researchers have developed several algorithms to train decision trees, like Iterative Dichotomiser 3, C4.5. or \ac{CART}, which is used in \ac{RF}. \ac{CART} produces depending on the target variable classification (for categorical variables) or regression trees (for numerical variables). It constructs only binary trees, thus each each split is into two nodes. The algorithm uses as impurity measurement gini index and it can handle numerical and categorical input \citep{brijain2014}.
+
+\ac{RF} belongs to the family of bagging ensemble techniques.
+Bagging selects a single algorithm and train a number of independent classifiers. The sampling technique is sampling with replacement (bootstrapping). Bagging combines the individual models by using either majority voting or averaging. \ac{RF} differentiates from the classic bagging method in the way that it also allows to choose a subset of features for each classifier from which the classifiers can select instead of  allowing them to select from the complete range of features \citep{polikar2012, zhou2009, Berthold2020}. 
+
+Formally \citet{breiman2001}, who introduced mainly the \ac{RF} algorithm defines the classifier as follows:
+
+\begin{quote}
+`"A random forest is a classifier consisting of a collection of tree-structured classifiers $\{h(\textbf{x}, \Theta_k), k = 1, ...\}$ where the ${\Theta_k}$ are independent identically distributed random vectors and each tree casts a unit vote for the most popular class at the input $\textbf{x}$." \citep[6]{breiman2001}. 
+\end{quote}
+
+$\Theta_k$ is a random vector which is created for each k-th tree. It is important, that $\Theta_k$ is independent of the vectors $\Theta_1...\Theta_{k-1}$, thus from all random vectors of the previous classifiers. Although the distribution of the random vectors remain. Combined with the training set, with $\textbf{x}$ as the input vector a classifier $h(\textbf{x}, \Theta_k)$ is constructed \citep{breiman2001}. In practical implementation the random component $\Theta_k$ is not explicitly used. Instead it is rather used implicitly to generate two random strategies \citep{cutler2012}. The first strategy is the bootstrapping. Thus drawing sample with replacement from the training data set. In order to estimating generalization error, correlation and variable importance \citet{breiman2001} applied out-of-bag estimation. Out-of-bag estimation leave out some portion of the training data in each bootstrap. The second strategy is to choose random feature for the splitting. Thus at each node from the set of features only a subset is used to split. While decision trees are often pruned to avoid overfitting, \ac{RF} does without. The trees grow by applying \ac{CART}-algorithm. 
+
+Based on the above explanations the implemented \ac{RF} has the following setting: The numbers of learners is 100. Gini is used as the splitting criterion. The maximal number of features is $\sqrt{\text{number of features}}$. Note that sklearn, which is used to implement \ac{RF} here, uses an optimised algorithm of \ac{CART}. \citep{scikit-learn}.
+
+ 
 
 \section{Result}
 \subsection{Evaluation metrics}
