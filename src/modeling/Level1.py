@@ -21,13 +21,18 @@ with open(file="data/processed/training_data_long_l1.json") as fp:
 with open(file="data/processed/training_data_short_l1.json") as fp:
     training_data_short = json.load(fp=fp)
 
+with open(file="data/processed/training_data_medium_l1.json") as fp:
+    training_data_medium = json.load(fp=fp)
+
 sentences_short = [job["title"] for job in training_data_short]
 labels_short = [job["id"] for job in training_data_short]
 sentences_long = [job["title"] for job in training_data_long]
 labels_long = [job["id"] for job in training_data_long]
+sentences_medium = [job["title"] for job in training_data_medium]
+labels_medium = [job["id"] for job in training_data_medium]
 
 train_sentences, test_sentences, y_train, y_test = train_test_split(
-    sentences_long, labels_long
+    sentences_medium, labels_medium
 )
 
 # TRANSFORM I - VECTORIZING
@@ -101,30 +106,30 @@ logger.debug("BERT")
 bert_vectorizer = BertVectorizer(
     train_sentences=train_sentences,
     test_sentences=test_sentences,
-    modelname="all-distilroberta-v1",
+    modelname="src/vectorizer/BERT/fine_tuned_bert_IV",
 )
 
 train_vecs_bert, test_vecs_bert = bert_vectorizer.transform_data()
 
 # # TRANSFORM II - REDUCTION"
 logger.debug("TRANSFORM II - REDUCTION")
-# countvectorizer
-logger.debug("CountVectorizer")
-pca_count = dimension_reduction(
-    train_vecs=train_vecs_count, test_vecs=test_vecs_count, components=0.95
-)
-pca_count.fit_model()
-pca_count.evalute_reduction()
-train_count, test_count = pca_count.transform_data()
+# # countvectorizer
+# logger.debug("CountVectorizer")
+# pca_count = dimension_reduction(
+#     train_vecs=train_vecs_count, test_vecs=test_vecs_count, components=0.95
+# )
+# pca_count.fit_model()
+# pca_count.evalute_reduction()
+# train_count, test_count = pca_count.transform_data()
 
-# TFIDF
-logger.debug("TFIDF")
-pca_tfidvectoizer = dimension_reduction(
-    train_vecs=train_vecs_tfidf, test_vecs=test_vecs_tfidf, components=0.95
-)
-pca_tfidvectoizer.fit_model()
-pca_tfidvectoizer.evalute_reduction()
-train_tfidf, test_tfidf = pca_tfidvectoizer.transform_data()
+# # TFIDF
+# logger.debug("TFIDF")
+# pca_tfidvectoizer = dimension_reduction(
+#     train_vecs=train_vecs_tfidf, test_vecs=test_vecs_tfidf, components=0.95
+# )
+# pca_tfidvectoizer.fit_model()
+# pca_tfidvectoizer.evalute_reduction()
+# train_tfidf, test_tfidf = pca_tfidvectoizer.transform_data()
 
 
 # Word2vec
@@ -184,14 +189,14 @@ logger.debug("LR")
 # CountVectorizer
 logger.debug("CountVectorizer")
 count_clf_LR = LRClassifier(
-    train=train_count, test=test_count, y_train=y_train, y_test=y_test
+    train=train_vecs_count, test=test_vecs_count, y_train=y_train, y_test=y_test
 )
 count_clf_LR.fit_classifier()
 
 # TFIDF
 logger.debug("TFIDF")
 tfidf_clf_LR = LRClassifier(
-    train=train_tfidf, test=test_tfidf, y_train=y_train, y_test=y_test
+    train=train_vecs_tfidf, test=test_vecs_tfidf, y_train=y_train, y_test=y_test
 )
 tfidf_clf_LR.fit_classifier()
 
@@ -241,14 +246,14 @@ logger.debug("SVM")
 # CountVectorizer
 logger.debug("CountVectorizer")
 count_clf_SVM = SVMClassifier(
-    train=train_count, test=test_count, y_train=y_train, y_test=y_test
+    train=train_vecs_count, test=test_vecs_count, y_train=y_train, y_test=y_test
 )
 count_clf_SVM.fit_classifier()
 
 # TFIDF
 logger.debug("TFIDF")
 tfidf_clf_SVM = SVMClassifier(
-    train=train_tfidf, test=test_tfidf, y_train=y_train, y_test=y_test
+    train=train_vecs_tfidf, test=test_vecs_tfidf, y_train=y_train, y_test=y_test
 )
 tfidf_clf_SVM.fit_classifier()
 
@@ -299,14 +304,14 @@ logger.debug("RF")
 # CountVectorizer
 logger.debug("CountVectorizer")
 count_clf_RF = RFClassifier(
-    train=train_count, test=test_count, y_train=y_train, y_test=y_test
+    train=train_vecs_count, test=test_vecs_count, y_train=y_train, y_test=y_test
 )
 count_clf_RF.fit_classifier()
 
 # TFIDF
 logger.debug("TFIDF")
 tfidf_clf_RF = RFClassifier(
-    train=train_tfidf, test=test_tfidf, y_train=y_train, y_test=y_test
+    train=train_vecs_tfidf, test=test_vecs_tfidf, y_train=y_train, y_test=y_test
 )
 tfidf_clf_RF.fit_classifier()
 

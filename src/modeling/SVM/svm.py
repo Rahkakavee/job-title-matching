@@ -12,18 +12,15 @@ class SVMClassifier:
 
     def __init__(self, train, test, y_train, y_test) -> None:
         n_estimators = 10
-        # self.clf = OneVsRestClassifier(
-        #     BaggingClassifier(
-        #         SVC(C=1.0, kernel="linear", gamma="scale"),
-        #         max_samples=1.0,
-        #         n_estimators=n_estimators,
-        #         n_jobs=-1,
-        #         verbose=True,
-        #     )
-        # )
-
-        self.clf = SVC(C=1.0, kernel="linear", gamma="scale")
-        # self.clf = OneVsRestClassifier(SVC(C=1.0, kernel="linear", gamma="scale"))
+        self.clf = OneVsRestClassifier(
+            BaggingClassifier(
+                SVC(C=1.0, kernel="linear", gamma="scale"),
+                max_samples=1.0,
+                n_estimators=n_estimators,
+                n_jobs=-1,
+                verbose=True,
+            )
+        )
 
         self.train = train
         self.test = test

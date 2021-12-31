@@ -15,7 +15,6 @@ class LRClassifier:
             C=1.0,
             solver="lbfgs",
             multi_class="multinomial",
-            max_iter=10000,
         )
 
         self.train = train
