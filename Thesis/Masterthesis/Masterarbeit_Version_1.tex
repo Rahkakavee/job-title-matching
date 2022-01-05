@@ -80,7 +80,7 @@
 \begin{acronym}
   \acro{SVM}[SVM]{Support Vector Machine}
   \acro{NB}[NB]{Naive Bayes}
-  \acro{LR}[LR]{Logistic Regression}
+  \acro{MLR}[MLR]{Multinomial Logistic Regression}
   \acro{OA}[OA]{overall accuracy}
   \acro{ROC}[ROC]{receiver operating characteristics}
   \acro{TP}[TP]{True positives}
@@ -108,7 +108,7 @@
 \section{Introduction}
 \section{Related work}
 \subsection{Textclassification}
-Text classification, a highly researched area, is the process of classifying text documents or text segments into a set of predefined classes. During the last decades, researches developed a various number of classifiers. As \cite{Kowsari2019} summarize in their survey of classifiers, we can group the approaches mainly into three groups. The first group contains traditional methods like Naive Bayes (NV), Support Vector Machines (SVM), K-nearest neighbors (KNN),  Logistic Regressions (LR) or Decision Trees (DT) \citep{Vijayan2017, Colas2006, Kowsari2019, Sebastiani2001}. Deep learning methods like Convolutional Neural Networks (CNN) or Recurrent Neural Networks (RNN), which are currently the most advanced algorithms for NLP, form the second group. The last group consists of ensemble learning techniques like Boosting and Bagging.
+Text classification, a highly researched area, is the process of classifying text documents or text segments into a set of predefined classes. During the last decades, researches developed a various number of classifiers. As \cite{Kowsari2019} summarize in their survey of classifiers, we can group the approaches mainly into three groups. The first group contains traditional methods like Naive Bayes (NV), Support Vector Machines (SVM), K-nearest neighbors (KNN),  Logistic Regressions (MLR) or Decision Trees (DT) \citep{Vijayan2017, Colas2006, Kowsari2019, Sebastiani2001}. Deep learning methods like Convolutional Neural Networks (CNN) or Recurrent Neural Networks (RNN), which are currently the most advanced algorithms for NLP, form the second group. The last group consists of ensemble learning techniques like Boosting and Bagging.
 
 \subsection{Short Text classification} 
 Another potential issue is the length of input documents for classification. Job titles are clearly short text with often not more than 50 characters. Short texts suffer from sparseness, few word co-occurrences, missing shared context, noisiness and ambiguity. Traditional methods, however, are based on word frequency, high word co-occurrence and context, which is why they often fail to achieve high accuracy for short texts \citep{Song2014, WangY2017, WangF2014}. In their overview, \cite{Song2014} present three approaches to solve this. First, since short text data often suffers from unlabeled data in the context of online text data, such as Twitter postings, they suggest using semi-supervised approaches. Second, they recommend to use ensemble learning methods, which focus on the sparseness of the data. Third, \cite{Song2014} propose feature dimensionality reduction and extraction of semantic relationship methods. Based on the latter more recent work on short text classification criticizes the use of the ``Bag of Word'' concept for feature representation as it only reflects the appearance of words in the text. Instead, they represent short texts with semantically similar and conceptual information \citep{Bouaziz2014, WangF2014, Chen2019}.
@@ -343,9 +343,38 @@ Conceptually in the first step the covariance matrix for the word embeddings, is
 where $z$ is the eigenvector and $\lambda$ the eigenvalue. In order decompose $\textbf{X}$ to get the eigenvalue Singular Value Decomposition is applied. The eigenvalues are then sorted from highest to lowest and the most significant components n are kept. To transform the data a feature vector in generated. This vector contains of the most n significant eigenvalues. After transposing the mean-adjusted the word embedding and the feature vector, the embeddings can be transformed by multiplying both transposed vectors \citep{smith2002}.
 
 \subsection{Classifier}
-As pointed out in the literature review \ac{NB}, \ac{LR} and \ac{SVM} have several advantages for text classifcation tasks. In the following based on a theoretical discussion of each classifier, the exact modeling of the classifiers is justified. 
+As pointed out in the literature review \ac{NB}, \ac{MLR} and \ac{SVM} have several advantages for text classifcation tasks. In the following based on a theoretical discussion of each classifier, the exact modeling of the classifiers is justified. 
 
 \subsubsection{Logistic Regression}
+\ac{MLR}, a generalized linear model, is one of the most used analytical tools in social and natural science for exploring the relationships between features and categorical outcomes. For solving classification problems it learns weights and a bias(intercept) from the input vector. Figure \ref{fig: F7} illustrate the idea of the calculation of \ac{MLR}. To classify examples first the weighted sum of the input vector is calculated. For multiclassfication the weighted sum has to be calculated for each class. Thus given a $f \times 1]$ feature vector x with $[x_1, x_2, ..., x_f]$, a weight vector $w_k$ with $k$ indicating the class k of set of classes K, a bias vector $b_k$ the weighted sum the dot product of $w_k$ and $\textbf{x}$ plus the $b_k$ defines the weighted sum. Representing the weight vectors of each class in a $[K \times f]$ matrix $\textbf{W}$, formally the weighted sum is $\textbf{W}x+b$. In Figure \ref{fig: F7} the blue lines for example are a row in $\textbf{W}$ and are the weight vectors related to a class labelled with 1. 
+
+\begin{figure}[hb!]
+  \center
+  \includegraphics[scale=0.5]{LR.png}
+  \caption{\label{fig: F7} Multinomial Logistic Regression}
+\end{figure}
+
+In a second step the weighted sums are mapped to a value range of $[0,1]$ in order to actually classify the input. While binary logistic regression uses a sigmoid function to do so, for \ac{MLR} needs a generalized sigmoid function. This generalization is called the softmax function which outputs probabilities for each of the classes, which is why \ac{MLR} is also often called softmax regression in the literature. These probabilties models for each class $p(y_k = 1|x)$.
+
+Similar to sigmoid function, but for multiple values the softmax function maps each value of an input vector z with $[z_1, z_2, ..., z_K]$ to a value of the range of $[0,1]$. Thus outputting a vector of length z. All values together summing up to 1. Formally it is defined as: 
+\[ softmax(z_i) = \frac{exp(z_i)}{\sum^K_{j=1} exp(z_j)} \text{ } 1 \leq i \leq K \]
+Then the output vector y can be calculated by $\hat{y} = softmax(\textbf{W}x+b)$. 
+
+Cosidering the training of the weights and the bias the goal is to commonly cross-entropy-loss is applied for calculating the error while optimizing. 
+
+Penality 
+
+dual or primal 
+
+solver
+
+l2
+
+lbfgs
+
+C=1.0
+
+primal formulation 
 
 \subsubsection{Support Vector Machines}
 However, \ac{SVM} also performed well for text classification. Especially for multiclass tasks, as mentioned in the literature review, often different versions of the algorithm are used and showed good performance \citep{Aiolli2005,Angulo2003,Benabdeslem2006,Guo2015,Mayoraz1999,Tang2019,Tomar2015}. In general \ac{SVM} has several advantages for text classifcation. First, text classifcation usually has a high dimensional input space. \ac{SVM} can handle these large features since they are able to learn independently of the dimensionality of the feature space. In addition \ac{SVM}s are known to perform well for dense and sparse vectors, which is usually the case for text classification \citep{Joachims1998}. Empirical results, for example \citet{Joachims1998} or \cite{Liu2010} confirm the theoretical expectations. It is, therefore, a reasonable option to use a basic version of the \ac{SVM} algorithm as a baseline.
@@ -460,7 +489,6 @@ There is a trade-off between precision and recall \citep{Buckland1994}. The F-me
 Apart from the trade-off between recall and precision, there is also a tradeoff between sensitivity and specificty (1- sensitivity). Using a \ac{ROC}, which plots the specifity against the sensitivity the trade-off can be visualized for different thresholds. The area under the curve then can be used to obtain the performance of the classifier. A large area indicates a better classifier \citep{Berthold2020, Espindola2005}. 
 
 As shown above, there are several metrics for evaluating the performance of a classifier, with the metrics having different focuses. Since the job title classification involves multiclass classification and the descriptive analysis show that the data is clearly unbalanced, at least for some classes in level 5, it is not reasonable to base the evaluation solely on the \ac{OA}. Taking precision, recall and the harmonic mean into account would capture the performance of the minority classes as well. The \ac{ROC} curve does gives, due to its visualization a good impression for the performance, but it is not feasible for high number of classes. Following this argumentation the performance of the classifiers will be evaluated with accuracy, precision, recall, F-measure and Cohen's Kappa. 
-
 
 \subsection{Experimental results}
 
