@@ -11,6 +11,7 @@
 \usepackage{dcolumn}
 \usepackage[printonlyused, withpage]{acronym}
 \usepackage{amsmath}
+\usepackage{xcolor}
 \DeclareMathOperator*{\argmax}{arg\,max} 
 \usepackage{natbib}
 \makeatletter
@@ -108,24 +109,41 @@
 \section{Introduction}
 \section{Related work}
 \subsection{Textclassification}
-Text classification, a highly researched area, is the process of classifying text documents or text segments into a set of predefined classes. During the last decades, researches developed a various number of classifiers. As \cite{Kowsari2019} summarize in their survey of classifiers, we can group the approaches mainly into three groups. The first group contains traditional methods like Naive Bayes (NV), Support Vector Machines (SVM), K-nearest neighbors (KNN),  Logistic Regressions (MLR) or Decision Trees (DT) \citep{Vijayan2017, Colas2006, Kowsari2019, Sebastiani2001}. Deep learning methods like Convolutional Neural Networks (CNN) or Recurrent Neural Networks (RNN), which are currently the most advanced algorithms for NLP, form the second group. The last group consists of ensemble learning techniques like Boosting and Bagging.
+Text classification, a highly researched area, is the process of classifying text documents or text segments into a set of predefined classes. During the last decades, researches developed a various number of classifiers. As \cite{Kowsari2019} summarize in their survey of classifiers, we can group the approaches mainly into three groups. The first group contains traditional methods like \ac{NB},\ac{SVM}), K-nearest neighbors, Logistic Regressions or Decision Trees \citep{Vijayan2017, Colas2006, Kowsari2019, Sebastiani2001}. Deep learning methods like Convolutional Neural Networks (CNN) or Recurrent Neural Networks (RNN), which are currently the most advanced algorithms for NLP, form the second group. The last group consists of ensemble learning techniques like Boosting and Bagging. 
+
+Although learning models often outperforms traditional methods in comparative studies \citep{kamath2018}, not all classifier have constantly good results over all applications. In contrast to traditional methods, deep learning models also usually require millions of data to train an effective model \citep{chauhan2018}. 
+
+A comparative analysis with \ac{MLR}, \ac{RF} and K-nearest neighbohrs for news text classification indicates a good performance of \ac{MLR} and \ac{RF} compared to K-nearest neighbors, wherby \ac{MLR} performed better then \ac{RF}. The authors used \ac{TF-IDF}. \citep{shah2020}. 
+
+A study showed from biomedical classfication shows best performance of SVM among Random Forest, Naive Bayes with TFIDF \citep{danso2014}
+
+A comparison of BERT with traditional methods and tfidf shows clear outperformance of BERT. 
+
+\subsection{Challenges of job title classification}
+\subsubsection*{Domain-specific and multiclass challenge}
+Each text classification task presents different challenges. One challenge is that domain-specific problems may arise. There is some work that deals with job classification in the English speaking job market. 
+In terms of classifiers, the corresponding work can be categorised into traditional classifiers or deep learning methods. \cite{Zhu2017} for example, use a KNN classifier in combination with document embedding as feature selection strategy. \cite{Javed2015} rely on traditional methods as well, by combining a SVM classifier and a KNN classifier for their job recommendation system. In contrast, the approaches of \cite{Decorte2021}, \cite{WangJ2019} and \cite{Neculoiu2016} are based on Deep Learning methods. From a higher perspective, there is another dividing line between the approaches. As mentioned earlier, job title normalization can be considered as a typical text classification task \citep{WangJ2019, Javed2015, Zhu2017}. \cite{Decorte2021} and \cite{Neculoiu2016}, however, formulate the task as a string representation approach of similar job titles.  
+A last challenge of text classification tasks comes with the number of classes. As \cite{Li2004} show in their classification of tissue, multiclass classification is more difficult than binary classification problems. Partly, because most of classification algorithms were designed for binary problems \citep{Aly2005}. Approaches for multiclassification can be grouped into two types. Binary algorithms can handle multiclassification naturally. This is, for example, the case for Regression, DT, SVM, KNN and NV. The second type is the decomposition of the problem into binary classification tasks (for the different subtypes see \cite{Aly2005}). The literature so far does not have a clear answer to solve multiclassification problems. Different approaches, like Boosting \citep{Schapire2000} or CNN \citep{Farooq2017} are applied. It is noticeable, however, that many works use variations of SVM \citep{Guo2015,Tomar2015,Tang2019}.
 
 \subsection{Short Text classification} 
 Another potential issue is the length of input documents for classification. Job titles are clearly short text with often not more than 50 characters. Short texts suffer from sparseness, few word co-occurrences, missing shared context, noisiness and ambiguity. Traditional methods, however, are based on word frequency, high word co-occurrence and context, which is why they often fail to achieve high accuracy for short texts \citep{Song2014, WangY2017, WangF2014}. In their overview, \cite{Song2014} present three approaches to solve this. First, since short text data often suffers from unlabeled data in the context of online text data, such as Twitter postings, they suggest using semi-supervised approaches. Second, they recommend to use ensemble learning methods, which focus on the sparseness of the data. Third, \cite{Song2014} propose feature dimensionality reduction and extraction of semantic relationship methods. Based on the latter more recent work on short text classification criticizes the use of the ``Bag of Word'' concept for feature representation as it only reflects the appearance of words in the text. Instead, they represent short texts with semantically similar and conceptual information \citep{Bouaziz2014, WangF2014, Chen2019}.
 Another question concerning the representation of short texts is whether to represent them as dense or sparse vectors. In their comparison between tf-idf/counter vectorizer and the dense vectorizer word2vec and doc2vec, \cite{WangY2017} conclude that among the classifiers Naive Bayes, Logisitic Regression and SVM, the sparse vectorizers achieve the highest accuracy. \cite{Chen2019}, conversely, see limitations in sparse representation as it cannot capture the context information. In their work, they integrate sparse and dense representation into a deep neural network with Knowledge powered Attention, which outperform state-of-art deep learning methods, like CNN, for Chinese short texts. 
 Concerning the classifiers, there is no consensus approach for short text classification. For traditional approaches \cite{WangY2017}'s results indicate that logistic regression and SVM perform best, while KNN seems to achieve best accuracy in \cite{Khamar2013}'s work. Similar to job title specific work, more recent work prefers deep learning methods, mostly CNN \citep{Chen2019}. 
 
-\subsection{Domain-specific}
-Each text classification task presents different challenges. One challenge is that domain-specific problems may arise. There is some work that deals with job classification in the English speaking job market. 
-In terms of classifiers, the corresponding work can be categorised into traditional classifiers or deep learning methods. \cite{Zhu2017} for example, use a KNN classifier in combination with document embedding as feature selection strategy. \cite{Javed2015} rely on traditional methods as well, by combining a SVM classifier and a KNN classifier for their job recommendation system. In contrast, the approaches of \cite{Decorte2021}, \cite{WangJ2019} and \cite{Neculoiu2016} are based on Deep Learning methods. From a higher perspective, there is another dividing line between the approaches. As mentioned earlier, job title normalization can be considered as a typical text classification task \citep{WangJ2019, Javed2015, Zhu2017}. \cite{Decorte2021} and \cite{Neculoiu2016}, however, formulate the task as a string representation approach of similar job titles.  
 
-\subsection{Multiclass}
-A last challenge of text classification tasks comes with the number of classes. As \cite{Li2004} show in their classification of tissue, multiclass classification is more difficult than binary classification problems. Partly, because most of classification algorithms were designed for binary problems \citep{Aly2005}. Approaches for multiclassification can be grouped into two types. Binary algorithms can handle multiclassification naturally. This is, for example, the case for Regression, DT, SVM, KNN and NV. The second type is the decomposition of the problem into binary classification tasks (for the different subtypes see \cite{Aly2005}). The literature so far does not have a clear answer to solve multiclassification problems. Different approaches, like Boosting \citep{Schapire2000} or CNN \citep{Farooq2017} are applied. It is noticeable, however, that many works use variations of SVM \citep{Guo2015,Tomar2015,Tang2019}. 
+\subsection{Implications}
+From the above discussed literature three consequences are emerging. First appropriate feature selection or vectorization plays a decisive role in the performance. For that reason, I implement several feature extraction techqniques covering sparse and dense vectors. For sparse vectors I vectorize the data with count vectorizer and \ac{TF-IDF} vectorizer. Word2vec, Doc2vec and BERT embedding built the group of dense vectorization techniques. The discussion of the different techniques will be the first pillar of the comparison. 
 
-\section{Data and taxonomy}
+Second, relying on one classification does not seem a reasonable option. Instead experimenting and exploring different traditional, deep learning and ensemble classifiers allows for identifying the best classifier based on the task and the data. Therefore I use 4 classifier techniques. I fall back to two traditional methods. The literature shows that \ac{SVM} and \ac{MLR} are well compatible with other technqiues, which is why I choose both of them. I also include an ensemble techqniue: \ac{RF}. As a last method I implement a \ac{BERT} classifier since it is the State-of-Art method currently for text classification. The evaluation of different classifications will built the second pillar of the comparision. 
+
+Third as mentioned above the focus of the presented three challenges is on short text classification. The literature on short text classification reveals two points. There are different results on whether sparse or dense techqniques are better suited. Testing different sparse and dense vectorization techniques allows to cover for that point. Second most of the solutions include additional knowledge. Therefore, I use for the training of the dense embedding techqniques additional knowledge from the Taxonomy and compare the results to the models without adding the knowledge, which will build the last pillar of the comparision. 
+
+
+\section{Job title data and taxonomy}
+The training data consists of two data sets. The classes are extracted from the first data set, referred to below as the \ac{KldB} dataset. The \ac{KldB} dataset contains all information of the \ac{KldB} taxonomy. The second dataset, called job title dataset in the following contains the necessary data from the job titles. In the first part of this chapter a brief explanation about the Taxonomy structure and both datasets is given. The second part contains of a descriptive analysis of the class distribution of the data. 
 
 \subsection{KldB 2010 Taxonomy}
-The ``\ac{KldB}" is structured hierarchically with 5 levels. On each level there is a different number of classes. On level 1 each class has an id of length one with a number from 0 to 9. Table \ref{tab: T3} shows the 10 classes of level 1 with their class names. On level 2, then, each of the 10 classes are divided into one or more subclasses having a class id of length 2 with the first digit indicating the class of level 1 and the second digit the class of level 2. An overview of the all 5 levels with an example of classes is given in table \ref{tab: T2}. Note that the example in table \ref{tab: T2} does not show on level 2 to level 5 all classes. Thus on level 2 there exists also, e.g. the class id 41 with ``Mathematik-, Biologie- Chemie- und Physikberufe", which in turn is divided into other classes on level 3 etc..  With this procedure this ultimatley leads to class ids of length 5 on level 5. An occupation can be classified on every level in the Taxonomy. Considering the classes of the example in table \ref{tab: T2}, the job title ``Java Developer" could  be classified on level 5 to the class 43412. From this id, it is also derivable that the jobtitle belongs, for example, on level 3 to the class ``Sofwareentwicklung" \citep{Bundesagentur2011a, Bundesagentur2011b, Paulus2013}
+The ``\ac{KldB}" is structured hierarchically with 5 levels. On each level there is a different number of classes. In the following these classes are also referred to as kldb. On level 1 each class has an id of length one with a number from 0 to 9. Table \ref{tab: T3} shows the 10 classes of level 1 with their class names. On level 2, then, each of the 10 classes are divided into one or more subclasses having a class id of length 2 with the first digit indicating the class of level 1 and the second digit the class of level 2. An overview of the all 5 levels with an example of classes is given in table \ref{tab: T2}. Note that the example in table \ref{tab: T2} does not show on level 2 to level 5 all classes. Thus on level 2 there exists also, e.g. the class id 41 with ``Mathematik-, Biologie- Chemie- und Physikberufe", which in turn is divided into other classes on level 3 etc..  With this procedure this ultimatley leads to class ids of length 5 on level 5. An occupation can be classified on every level in the Taxonomy. Considering the classes of the example in table \ref{tab: T2}, the job title ``Java Developer" could  be classified on level 5 to the class 43412. From this id, it is also derivable that the jobtitle belongs, for example, on level 3 to the class ``Sofwareentwicklung" \citep{Bundesagentur2011a, Bundesagentur2011b, Paulus2013}
 
 The \ac{KldB} contains of two dimension. The first dimension, the so-called "Berufsfachlichkeit" structures jobs according to their similarity in knowledge, activties and jobs. This is reflected in the first 4 levels. Considering the again the example from above and the job title "Fullstack PHP-Entwickler" it is reasonable to classify both on level 1 to "Naturwissenschaft, Geografie and Information", because both of them are related to computer science. It also make sense to classifiy them for example to 4341, because both are about sofware development. On level 5, then, a second dimension is introduced. the "Anforderungsniveau". This dimension gives information on the level of requirement for a job and 4 possible requirements. In table \ref{tab: T4} they are summarized. From the class id of job title ``Java Developer", we can see that the job has been assigned to the second requirement level, since the last digit is a 2 \citep{Bundesagentur2011a,Bundesagentur2011b,Paulus2013}
 
@@ -181,12 +199,16 @@ The \ac{KldB} contains of two dimension. The first dimension, the so-called "Ber
   \caption{\label{tab: T4} Overview of Level of requirements on Level 5} (edited after \citep{Bundesagentur2011b})
   \end{table}
 
-With the KldB 2010, an useful and information-rich occupational classification was created for Germany that reflects the current trends in the labor market \citep{Paulus2013}. One strength relies in the construction of the \ac{KldB}. Instead of just including expert knowledge into the Taxonomy the developement process is based on systematical consideration of information about occupations, as well as statistical procedures for taxonomy developement. Furthermore, the taxonomy was reviewed qualitatively several times in relation to professions and revised. Considering the expressiveness, the \ac{KldB} has some more benefits. Since the taxonmy is quite recent, it reflects new job classes and market trends very adequately. Further, by including the second dimension, the taxonomy provides a powerful tool to organize job titles into simple requirement classes.  In addition, the taxonomy also distinguishes between managerial, supervisory, and professional employees, which is also valuable information. Finally, the taxonomy also convinces with the possibility to switch to ``\ac{ISCO}" through its IDS and thus to normalize jobs to a global standard \citep{Bundesagentur2011b}
+With the \ac{KldB} 2010, an useful and information-rich occupational classification was created for Germany that reflects the current trends in the labor market \citep{Paulus2013}. One strength relies in the construction of the \ac{KldB}. Instead of just including expert knowledge into the Taxonomy the developement process is based on systematical consideration of information about occupations, as well as statistical procedures for taxonomy developement. Furthermore, the taxonomy was reviewed qualitatively several times in relation to professions and revised. Considering the expressiveness, the \ac{KldB} has some more benefits. Since the taxonmy is quite recent, it reflects new job classes and market trends very adequately. Further, by including the second dimension, the taxonomy provides a powerful tool to organize job titles into simple requirement classes.  In addition, the taxonomy also distinguishes between managerial, supervisory, and professional employees, which is also valuable information. Finally, the taxonomy also convinces with the possibility to switch to ``\ac{ISCO}" through its IDS and thus to normalize jobs to a global standard \citep{Bundesagentur2011b}.
+
+The \ac{KldB} dataset contains different information related to the structure descriped above. Besides the class label, the level and the title, on level 5 for each kldb some searchwords are given. There are two types of keywords. One is the job titles that match the respective kldb. On the other hand, real search words, with the help of which the associated kldb can be inferred. Therefore, these searchwords are very helpful knowledge for training classificaiton algorithms, because they contain kldb specific words that are also often present in the job titles. The searchwords will be termed additional knowledge in the rest of the paper. 
+ 
+\subsection{Job title data}
+Job Titles can be scraped from the Federal Employment Agency's job board. Employers must provide additional data for each job posting, including the Job Title, as well as a main internal documentation code that indicates a class in the KLDB taxonomy. There is an option to provide alternative documentation codes if more than one KLDB class is being considered. An example snippet of the scraped data is provided in the Appendix. The documentation code is an internal number of the Federal Employment Agency, which can be uniquely assigned to a KLDB, which, as already mentioned, is specified in the taxonomy data for each kldb. A snippet of the matched training data with the KLDB labels is given in 
 
 \section{Method}
 \subsection{Conceptual overview}
 \subsection{Preprocessing}
-\newpage
 \subsection{Vectorization Techniques}
 \subsubsection{Count vectorizer}
 The count vectorizer is one of most simple techniques of converting texts to vectors. It belongs to the family of \ac{BOW} models. \ac{BOW} models are based on vectors, where each dimension is a word from a vocabulary or corpus. The corpus is built by all words across all documents. \ac{BOW} models have two important properties. First, they do not consider the order of the words, sequences or the grammar, which is why they also called \ac{BOW}. Second, each word in the corpus is represented by it's own dimension. Thus the vectors contains a lot of zeros, especially for short texts, which is why they belong to the family of sparse vectors \citep{ajose2020}.  Assuming, for example, a corpus contains of 1000 words, meaning each text is built only with these 1000 words, the vector for each text has a length of 1000, thus, producing sparse, high-dimensional vectors \citep{kulkarni2021, sarkar2016}
@@ -223,8 +245,6 @@ Given the $idf(t)$ and $tf$ the \ac{TF-IDF} can be obtained by multiplying both 
 \[v_{norm} = \frac{v}{||v||_2} \]
 
 Although \ac{TF-IDF} considers the importance of words compared to count vectorizer, as a \ac{BOW} model it suffers from the same limitation as count vectorizer of not taking semantic, grammatic, sequences and context into account \citep{sarkar2016}. 
-
-
 
 \subsubsection{Word2Vec}
 In contrast to the sparse techniques method mentioned above, word embedding techniques are another popular approach for vectorization. Word embedding vectors are characterised by low dimensions, dense representation and a continous space. They are usually trained with neural networks \citep{li2015, jin2016}. 
@@ -343,41 +363,34 @@ Conceptually in the first step the covariance matrix for the word embeddings, is
 where $z$ is the eigenvector and $\lambda$ the eigenvalue. In order decompose $\textbf{X}$ to get the eigenvalue Singular Value Decomposition is applied. The eigenvalues are then sorted from highest to lowest and the most significant components n are kept. To transform the data a feature vector in generated. This vector contains of the most n significant eigenvalues. After transposing the mean-adjusted the word embedding and the feature vector, the embeddings can be transformed by multiplying both transposed vectors \citep{smith2002}.
 
 \subsection{Classifier}
-As pointed out in the literature review \ac{NB}, \ac{MLR} and \ac{SVM} have several advantages for text classifcation tasks. In the following based on a theoretical discussion of each classifier, the exact modeling of the classifiers is justified. 
+As pointed out in the literature review \ac{NB}, \ac{MLR} and \ac{SVM} have several advantages for text classifcation tasks. In the following based on a theoretical discussion of each classifier, the exact modeling of the classifiers is justified. The focus and the depth of the explanations of the classifier's characteristics like optimization and decision function, loss or regularization depends on the complexity and the need of explanation in order to understand the basic principle of the classifiers and thus are not all equally structured. 
 
 \subsubsection{Logistic Regression}
-\ac{MLR}, a generalized linear model, is one of the most used analytical tools in social and natural science for exploring the relationships between features and categorical outcomes. For solving classification problems it learns weights and a bias(intercept) from the input vector. Figure \ref{fig: F7} illustrate the idea of the calculation of \ac{MLR}. To classify examples first the weighted sum of the input vector is calculated. For multiclassfication the weighted sum has to be calculated for each class. Thus given a $f \times 1]$ feature vector x with $[x_1, x_2, ..., x_f]$, a weight vector $w_k$ with $k$ indicating the class k of set of classes K, a bias vector $b_k$ the weighted sum the dot product of $w_k$ and $\textbf{x}$ plus the $b_k$ defines the weighted sum. Representing the weight vectors of each class in a $[K \times f]$ matrix $\textbf{W}$, formally the weighted sum is $\textbf{W}x+b$. In Figure \ref{fig: F7} the blue lines for example are a row in $\textbf{W}$ and are the weight vectors related to a class labelled with 1. 
+\ac{MLR}, a generalized linear model, is one of the most used analytical tools in social and natural science for exploring the relationships between features and categorical outcomes. For solving classification problems it learns weights and a bias(intercept) from the input vector. Figure \ref{fig: F7} illustrate the idea of the calculation of \ac{MLR}. To classify examples first the weighted sum of the input vector is calculated. For multiclassfication the weighted sum has to be calculated for each class. Thus given a $f \times 1]$ feature vector x with $[x_1, x_2, ..., x_f]$, a weight vector $w_k$ with $k$ indicating the class k of set of classes K, a bias vector $b_k$ the weighted sum the dot product of $w_k$ and $\textbf{x}$ plus the $b_k$ defines the weighted sum. Representing the weight vectors of each class in a $[K \times f]$ matrix $\textbf{W}$, formally the weighted sum is $\textbf{W}x+b$. In Figure \ref{fig: F7} the blue lines for example are a row in $\textbf{W}$ and are the weight vectors related to a class labelled with 1 \citep{jurafsky2021}.
 
 \begin{figure}[hb!]
   \center
   \includegraphics[scale=0.5]{LR.png}
-  \caption{\label{fig: F7} Multinomial Logistic Regression}
+  \caption{\label{fig: F7} Multinomial Logistic Regression (edit after \citep[p.]{jurafsky2021})}
 \end{figure}
 
 In a second step the weighted sums are mapped to a value range of $[0,1]$ in order to actually classify the input. While binary logistic regression uses a sigmoid function to do so, for \ac{MLR} needs a generalized sigmoid function. This generalization is called the softmax function which outputs probabilities for each of the classes, which is why \ac{MLR} is also often called softmax regression in the literature. These probabilties models for each class $p(y_k = 1|x)$.
 
 Similar to sigmoid function, but for multiple values the softmax function maps each value of an input vector z with $[z_1, z_2, ..., z_K]$ to a value of the range of $[0,1]$. Thus outputting a vector of length z. All values together summing up to 1. Formally it is defined as: 
 \[ softmax(z_i) = \frac{exp(z_i)}{\sum^K_{j=1} exp(z_j)} \text{ } 1 \leq i \leq K \]
-Then the output vector y can be calculated by $\hat{y} = softmax(\textbf{W}x+b)$. 
+Then the output vector y can be calculated by 
 
-Cosidering the training of the weights and the bias the goal is to commonly cross-entropy-loss is applied for calculating the error while optimizing. 
+\[ \hat{y} = softmax(\textbf{W}x+b) \]
 
-Penality 
+Considering the training of the weights and the bias the goal is to `"maximize the log probability of the true y labels" of the input data. This is commonly done by minimizing a generalized cross-entropy-loss function for \ac{MLR}. There exists different methods for solving the optimization problem, like stochastic gradient descent or limited-memory Broyden-Fletcher-Goldfarb Shannon solver. The latter converges rapidly and is characterized by a moderate memory, which is why it can converges faster for high-dimensional data \citep{fei2014, scikit-learn}. 
 
-dual or primal 
+For \ac{MLR} it is common to add regularization parameter. This avoids overfitting and ensures that the model is more generalizable to unseen data. The idea is to penalize weights which have a good classifaction, but use a lot of high weights, more than weights with good classification but smaller weights. There are two popular penality term, the L1 and the L2 penalty. 
+While for L1 the absolute values of the weights are summed and used as the penality term, L2 regualizes \textcolor{red}{with a quadractic function of the weights}. With the regularization a parameter C is introduced to control the strength of the regularization, with C being a positive value and smaller C regulizing stronger. 
 
-solver
-
-l2
-
-lbfgs
-
-C=1.0
-
-primal formulation 
+The following setting will be used for the \ac{MLR}: A \ac{MLR} with L2 penality with a C value of 1 is used. Since the input vectors, especially for count vectorizer and for \ac{TF-IDF} are high-dimensional the limited-memory Broyden-Fletcher-Goldfarb-Shannon solver is set for solving. For some trainings converge problems appeared, which is why the maximal iteration of the classifier is set to 10000.
 
 \subsubsection{Support Vector Machines}
-However, \ac{SVM} also performed well for text classification. Especially for multiclass tasks, as mentioned in the literature review, often different versions of the algorithm are used and showed good performance \citep{Aiolli2005,Angulo2003,Benabdeslem2006,Guo2015,Mayoraz1999,Tang2019,Tomar2015}. In general \ac{SVM} has several advantages for text classifcation. First, text classifcation usually has a high dimensional input space. \ac{SVM} can handle these large features since they are able to learn independently of the dimensionality of the feature space. In addition \ac{SVM}s are known to perform well for dense and sparse vectors, which is usually the case for text classification \citep{Joachims1998}. Empirical results, for example \citet{Joachims1998} or \cite{Liu2010} confirm the theoretical expectations. It is, therefore, a reasonable option to use a basic version of the \ac{SVM} algorithm as a baseline.
+However, \ac{SVM} also performed well for text classification. Especially for multiclass tasks, as mentioned in the literature review, often different versions of the algorithm are used and showed good performance \citep{Aiolli2005,Angulo2003,Benabdeslem2006,Guo2015,Mayoraz1999,Tang2019,Tomar2015}. In general \ac{SVM} has several advantages for text classifcation. First, text classifcation usually has a high dimensional input space. \ac{SVM} can handle these large features since they are able to learn independently of the dimensionality of the feature space. In addition \ac{SVM}s are known to perform well for dense and sparse vectors, which is usually the case for text classification \citep{Joachims1998}. Empirical results, for example \citet{Joachims1998} or \cite{Liu2010} confirm the theoretical expectations. It is, therefore, a reasonable option to use a basic version of the \ac{SVM} algorithm as a baseline. 
 
 The general idea of a \ac{SVM} is to map ``the input vectors x into a high-dimensional feature space Z through some nonlinear mapping chosen a priori [...], where an optimal separating hyperplane is constructed'' \citep[138]{Vapnik2000}. In \ac{SVM} this optimal hyperplane maximizes the margin, which is simply put the distance from the hyperplane to the closest points, so called Support Vectors, across both classes \citep{Han2012}. Formally, given a training data set with n training vectors $x_i \in R^n, i = 1,....,n$ and the target classes $y_1,...y_i$ with $y_i \in \{-1, 1\}$, the following quadratic programming problem (primal) has to be solved in order to find the optimal hyperplane:
 \[\min_{w,b} \frac{1}{2}w^{T}w \] 
@@ -491,18 +504,18 @@ Apart from the trade-off between recall and precision, there is also a tradeoff 
 As shown above, there are several metrics for evaluating the performance of a classifier, with the metrics having different focuses. Since the job title classification involves multiclass classification and the descriptive analysis show that the data is clearly unbalanced, at least for some classes in level 5, it is not reasonable to base the evaluation solely on the \ac{OA}. Taking precision, recall and the harmonic mean into account would capture the performance of the minority classes as well. The \ac{ROC} curve does gives, due to its visualization a good impression for the performance, but it is not feasible for high number of classes. Following this argumentation the performance of the classifiers will be evaluated with accuracy, precision, recall, F-measure and Cohen's Kappa. 
 
 \subsection{Experimental results}
-
 \begin{table}[]
-  \centering
 \begin{tabular}{lrrr}
   \hline
   {} &    \textbf{LR} &   \textbf{SVM} &    \textbf{RF} \\
   \hline
-  \textbf{CountVectorizer} &  0.71 &  0.68 &  0.64 \\
-  \textbf{TFIDF}           &  0.71 &  0.69 &  0.64 \\
-  \textbf{Word2Vec}        &  0.55 &  0.53 &  0.62 \\
-  \textbf{Doc2Vec}         &  0.48 &  0.46 &  0.56 \\
-  \textbf{BERT}         &  0.65 &  0.65 &  0.58 \\
+  \textbf{CountVectorizer} &  0.71 &  0.67 &  0.63 \\
+  \textbf{TFIDF}           &  0.70 &  0.67 &  0.62 \\
+  \textbf{Word2Vec\_I}      &  0.52 &  0.51 &  0.60 \\
+  \textbf{Word2Vec\_II}     &  0.52 &  0.50 &  0.60 \\
+  \textbf{Doc2Vec\_I}       &  0.46 &  0.43 &  0.53 \\
+  \textbf{Doc2Vec\_II}      &  0.44 &  0.41 &  0.51 \\
+  \textbf{BERT}            &  0.76 &  0.77 &  0.76 \\
   \hline
   \end{tabular}
   \caption{\label{tab: T5} Evaluation of Level 1 classification - Accuracy}
@@ -510,132 +523,82 @@ As shown above, there are several metrics for evaluating the performance of a cl
 
   \begin{table}[]
     \resizebox{\textwidth}{!}{%
-  \begin{tabular}{llll}
-    \hline
-    {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
-    \hline
-    \textbf{CountVectorizer} &   p: 0.74, r: 0.60, F1: 0.64 &   p: 0.73, r: 0.56, F1: 0.60 &  p: 0.67, r: 0.54, F1: 0.57 \\
-    \textbf{TFIDF}           &   p: 0.75, r: 0.60, F1: 0.63 &  p: 0.74, r: 0.57, F1: 0.62 &  p: 0.65, r: 0.53, F1: 0.55 \\
-    \textbf{Word2Vec}        &   p: 0.52, r: 0.40, F1: 0.42 &  p: 0.46, r: 0.41, F1: 0.41 &  p: 0.62, r: 0.54, F1: 0.56 \\
-    \textbf{Doc2Vec}         &  p: 0.43, r: 0.34, F1: 0.35 &  p: 0.39, r: 0.33, F1: 0.33 &   p: 0.60, r: 0.41, F1: 0.43 \\
-    \textbf{BERT}         &  p: 0.67, r: 0.57, F1: 0.60 &  p: 0.63, r: 0.56, F1: 0.58 &  p: 0.70, r: 0.46, F1: 0.50 \\
-    \hline
-    \end{tabular}%
+\begin{tabular}{llll}
+\hline
+{} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
+\hline
+\textbf{CountVectorizer} &  p: 0.76, r: 0.63, F1: 0.68 &  p: 0.74, r: 0.58, F1: 0.63 &  p: 0.68, r: 0.54, F1: 0.57 \\
+\textbf{TFIDF}           &  p: 0.77, r: 0.61, F1: 0.66 &  p: 0.74, r: 0.57, F1: 0.62 &  p: 0.68, r: 0.52, F1: 0.55 \\
+\textbf{Word2Vec\_I}      &   p: 0.60, r: 0.39, F1: 0.42 &   p: 0.51, r: 0.40, F1: 0.41 &  p: 0.62, r: 0.53, F1: 0.56 \\
+\textbf{Word2vec\_II}     &  p: 0.61, r: 0.41, F1: 0.44 &   p: 0.50, r: 0.41, F1: 0.43 &   p: 0.60, r: 0.51, F1: 0.54 \\
+\textbf{Doc2Vec\_I}       &  p: 0.43, r: 0.33, F1: 0.34 &   p: 0.40, r: 0.31, F1: 0.32 &   p: 0.69, r: 0.40, F1: 0.41 \\
+\textbf{Doc2Vec\_II}      &   p: 0.43, r: 0.30, F1: 0.31 &    p: 0.37, r: 0.30, F1: 0.30 &  p: 0.49, r: 0.37, F1: 0.38 \\
+\textbf{BERT}            &  p: 0.75, r: 0.76, F1: 0.75 &  p: 0.76, r: 0.76, F1: 0.76 &  p: 0.79, r: 0.73, F1: 0.74 \\
+\hline
+\end{tabular}
     }
-    \caption{\label{tab: T6} Evaluation of Level 1 classification - Macro}
-  \end{table}
-
-  \begin{table}[]
-  \begin{tabular}{lrrr}
-    \hline
-    {} &    \textbf{LR}  &   \textbf{SVM}  &    \textbf{RF}  \\
-    \hline
-    \textbf{CountVectorizer}  &  0.48 &  0.50 &  0.43 \\
-    \textbf{TFIDF}            &  0.47 &  0.51 &  0.43 \\
-    \textbf{Word2Vec}         &  0.28 &  0.14 &  0.35 \\
-    \textbf{Doc2Vec}          &  0.19 &  0.20 &  0.31 \\
-    \hline
-    \end{tabular}
-    \caption{\label{tab: T7} Evaluation of Level 3 classification - Accuracy}
-  \end{table}
-    
-    \begin{table}[]
-      \resizebox{\textwidth}{!}{%
-    \begin{tabular}{llll}
-    \hline
-    {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
-    \hline
-    \textbf{CountVectorizer} &   p: 0.42, r: 0.27, F1: 0.3 &  p: 0.41, r: 0.35, F1: 0.36 &  p: 0.37, r: 0.25, F1: 0.28 \\
-    \textbf{TFIDF}           &  p: 0.38, r: 0.23, F1: 0.26 &  p: 0.41, r: 0.35, F1: 0.36 &  p: 0.36, r: 0.25, F1: 0.27 \\
-    \textbf{Word2Vec}        &  p: 0.15, r: 0.11, F1: 0.12 &  p: 0.07, r: 0.05, F1: 0.04 &  p: 0.23, r: 0.18, F1: 0.19 \\
-    \textbf{Doc2Vec}         &   p: 0.1, r: 0.05, F1: 0.05 &  p: 0.13, r: 0.08, F1: 0.09 &  p: 0.23, r: 0.13, F1: 0.14 \\
-    \hline
-    \end{tabular}%
-    }
-    \caption{\label{tab: T8} Evaluation of Level 3 classification - Macro}
-  \end{table}
+\caption{\label{tab: T6} Evaluation of Level 1 classification - macro}
+\end{table}
 
 
-  %Level 3 mit Kürzung 
-  \begin{table}[]
-  \begin{tabular}{lrrr}
-    \hline
-    {} &    \textbf{LR} &   \textbf{SVM} &    \textbf{RF} \\
-    \hline
-    \textbf{CountVectorizer} &  0.54 &  0.52 &  0.47 \\
-    \textbf{TFIDF}           &  0.53 &  0.54 &  0.49 \\
-    \textbf{Word2Vec}        &  0.34 &  0.28 &  0.39 \\
-    \textbf{Doc2Vec}         &  0.24 &  0.28 &  0.36 \\
-    \textbf{BERT}            &  0.51 &  0.49 &  0.45 \\
-    \hline
-    \end{tabular}
-  \end{table}
-
-    \begin{table}[]
-      \resizebox{\textwidth}{!}{%
-    \begin{tabular}{llll}
-      \hline
-      {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
-      \hline
-      \textbf{CountVectorizer} &  p: 0.63, r: 0.49, F1: 0.53 &  p: 0.57, r: 0.48, F1: 0.51 &  p: 0.55, r: 0.42, F1: 0.46 \\
-      \textbf{TFIDF}           &  p: 0.66, r: 0.47, F1: 0.52 &  p: 0.59, r: 0.49, F1: 0.51 &  p: 0.58, r: 0.44, F1: 0.48 \\
-      \textbf{Word2Vec}        &  p: 0.38, r: 0.26, F1: 0.28 &  p: 0.31, r: 0.23, F1: 0.24 &  p: 0.39, r: 0.34, F1: 0.35 \\
-      \textbf{Doc2Vec}         &  p: 0.36, r: 0.14, F1: 0.15 &  p: 0.33, r: 0.23, F1: 0.25 &  p: 0.42, r: 0.29, F1: 0.31 \\
-      \textbf{BERT}            &  p: 0.53, r: 0.44, F1: 0.46 &  p: 0.44, r: 0.45, F1: 0.44 &  p: 0.56, r: 0.38, F1: 0.42 \\
-      \hline
-      \end{tabular}%
-      }
-    \end{table}
-
-    \begin{table}[]
-    \begin{tabular}{lrrr}
-      \hline
-      {} &    \textbf{LR} &   \textbf{SVM} &    \textbf{RF} \\
-      \hline
-      \textbf{CountVectorizer} &  0.63 &  0.65 &  0.57 \\
-      \textbf{TFIDF}           &  0.61 &  0.65 &  0.59 \\
-      \textbf{Word2Vec}        &  0.44 &  0.38 &  0.49 \\
-      \textbf{Doc2Vec}         &  0.27 &  0.35 &  0.45 \\
-      \textbf{BERT}            &  0.62 &  0.63 &  0.55 \\
-      \hline
-      \end{tabular}
-    \end{table}
-
-      \begin{table}[]
-        \resizebox{\textwidth}{!}{%
-      \begin{tabular}{llll}
-        \hline
-        {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
-        \hline
-        \textbf{CountVectorizer} &  p: 0.71, r: 0.59, F1: 0.63 &  p: 0.67, r: 0.62, F1: 0.63 &  p: 0.63, r: 0.55, F1: 0.57 \\
-        \textbf{TFIDF}           &  p: 0.72, r: 0.57, F1: 0.61 &  p: 0.67, r: 0.63, F1: 0.63 &  p: 0.63, r: 0.56, F1: 0.58 \\
-        \textbf{Word2Vec}        &  p: 0.53, r: 0.38, F1: 0.42 &  p: 0.38, r: 0.32, F1: 0.31 &  p: 0.49, r: 0.46, F1: 0.46 \\
-        \textbf{Doc2Vec}         &  p: 0.41, r: 0.15, F1: 0.17 &   p: 0.36, r: 0.3, F1: 0.31 &  p: 0.53, r: 0.37, F1: 0.41 \\
-        \textbf{BERT}            &   p: 0.66, r: 0.58, F1: 0.60 &   p: 0.61, r: 0.62, F1: 0.60 &  p: 0.64, r: 0.49, F1: 0.53 \\
-        \hline
-        \end{tabular}%
-        }
-      \end{table}
-
-
-
-      % Please add the following required packages to your document preamble:
-% \usepackage{graphicx}
 \begin{table}[]
-  \begin{tabular}{lllll}
+  \resizebox{\textwidth}{!}{%
+\begin{tabular}{llll}
   \hline
-                   & Accuracy & Precision & Recall & F1   \\ \hline
-  BERT CLF Level 1 & 0.76     & 0.73      & 0.70   & 0.71 \\v
-  BERT CLF Level 3 & 0.53     & 0.56      & 0.46   & 0.46 \\
-  BERT CLF Level 5 & 0.60     & 0.59      & 0.54   & 0.53 \\ \hline
+  {} &                          \textbf{LR} &                          \textbf{SVM} &                           \textbf{RF} \\
+  \hline
+  \textbf{CountVectorizer} &  p: 0.71, r: 0.71, F1: 0.71 &  p: 0.67, r: 0.67, F1: 0.67 &  p: 0.63, r: 0.63, F1: 0.63 \\
+  \textbf{TFIDF}           &     p: 0.70, r: 0.70, F1: 0.70 &  p: 0.67, r: 0.67, F1: 0.67 &  p: 0.62, r: 0.62, F1: 0.62 \\
+  \textbf{Word2Vec\_I}      &  p: 0.52, r: 0.52, F1: 0.52 &  p: 0.51, r: 0.51, F1: 0.51 &     p: 0.60, r: 0.60, F1: 0.60 \\
+  \textbf{Word2vec\_II}     &  p: 0.52, r: 0.52, F1: 0.52 &     p: 0.50, r: 0.50, F1: 0.50 &     p: 0.60, r: 0.60, F1: 0.60 \\
+  \textbf{Doc2Vec\_I}       &  p: 0.46, r: 0.46, F1: 0.46 &  p: 0.43, r: 0.43, F1: 0.43 &  p: 0.53, r: 0.53, F1: 0.53 \\
+  \textbf{Doc2Vec\_II}      &  p: 0.44, r: 0.44, F1: 0.44 &  p: 0.41, r: 0.41, F1: 0.41 &  p: 0.51, r: 0.51, F1: 0.51 \\
+  \textbf{BERT}            &  p: 0.76, r: 0.76, F1: 0.76 &  p: 0.77, r: 0.77, F1: 0.77 &  p: 0.76, r: 0.76, F1: 0.76 \\
+  \hline
   \end{tabular}
+  }
+  \caption{\label{tab: T7} Evaluation of Level 1 classification - micro}
   \end{table}
+
+
+  % \end{table}
+
+  % \begin{table}[]
+  %   \resizebox{\textwidth}{!}{%
+  % \begin{tabular}{llll}
+  %   \hline
+  %   {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
+  %   \hline
+  %   \textbf{CountVectorizer} &   p: 0.74, r: 0.60, F1: 0.64 &   p: 0.73, r: 0.56, F1: 0.60 &  p: 0.67, r: 0.54, F1: 0.57 \\
+  %   \textbf{TFIDF}           &   p: 0.75, r: 0.60, F1: 0.63 &  p: 0.74, r: 0.57, F1: 0.62 &  p: 0.65, r: 0.53, F1: 0.55 \\
+  %   \textbf{Word2Vec}        &   p: 0.52, r: 0.40, F1: 0.42 &  p: 0.46, r: 0.41, F1: 0.41 &  p: 0.62, r: 0.54, F1: 0.56 \\
+  %   \textbf{Doc2Vec}         &  p: 0.43, r: 0.34, F1: 0.35 &  p: 0.39, r: 0.33, F1: 0.33 &   p: 0.60, r: 0.41, F1: 0.43 \\
+  %   \textbf{BERT}         &  p: 0.67, r: 0.57, F1: 0.60 &  p: 0.63, r: 0.56, F1: 0.58 &  p: 0.70, r: 0.46, F1: 0.50 \\
+  %   \hline
+  %   \end{tabular}%
+  %   }
+  %   \caption{\label{tab: T6} Evaluation of Level 1 classification - Macro}
+  % \end{table}
+
+  
+% \begin{table}[]
+%   \begin{tabular}{lllll}
+%   \hline
+%                    & Accuracy & Precision & Recall & F1   \\ \hline
+%   BERT CLF Level 1 & 0.76     & 0.73      & 0.70   & 0.71 \\v
+%   BERT CLF Level 3 & 0.53     & 0.56      & 0.46   & 0.46 \\
+%   BERT CLF Level 5 & 0.60     & 0.59      & 0.54   & 0.53 \\ \hline
+%   \end{tabular}
+%   \end{table}
 
 \section{Conclusion and Limitations}
 \section{sentences}
 \citet{ajose2020} concludes that for there are different results for different classifiers. 
 
 \citet{singh2022} The results of doc2vec and word2vec seem in the first place counterintuive. But short text high dimensional space. Also other papers like \citet{singh2022} show similar results for short texts.
+
+
+\citet{gonzalez2020} imporant for disavandatgge of tradtional vs. classifier methods
 
 \clearpage
 
