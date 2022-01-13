@@ -38,6 +38,45 @@
 \makeatother
 \MSonehalfspacing
 
+\usepackage{listings}
+\usepackage{xcolor}
+
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+    basicstyle=\normalfont\ttfamily,
+    numbers=left,
+    numberstyle=\scriptsize,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    frame=lines,
+    backgroundcolor=\color{background},
+    literate=
+     *{0}{{{\color{numb}0}}}{1}
+      {1}{{{\color{numb}1}}}{1}
+      {2}{{{\color{numb}2}}}{1}
+      {3}{{{\color{numb}3}}}{1}
+      {4}{{{\color{numb}4}}}{1}
+      {5}{{{\color{numb}5}}}{1}
+      {6}{{{\color{numb}6}}}{1}
+      {7}{{{\color{numb}7}}}{1}
+      {8}{{{\color{numb}8}}}{1}
+      {9}{{{\color{numb}9}}}{1}
+      {:}{{{\color{punct}{:}}}}{1}
+      {,}{{{\color{punct}{,}}}}{1}
+      {\{}{{{\color{delim}{\{}}}}{1}
+      {\}}{{{\color{delim}{\}}}}}{1}
+      {[}{{{\color{delim}{[}}}}{1}
+      {]}{{{\color{delim}{]}}}}{1},
+}
+
+\usepackage{caption}
+\usepackage{subcaption}
 
 %%%%%%%%%%%%%%DOCUMENT%%%%%%%%%%%%%%
 \begin{document}
@@ -119,7 +158,7 @@ Classification algorithms can be selected on different criteria. Certainly one o
 
 Comparisons of ensemble technique, traditional methods and methods within the traditional methods indicate as well that not all classifications perform for all tasks equally good or poor. A comparative analysis with \ac{MLR}, \ac{RF} and K-nearest neighbor, using \ac{TF-IDF}, for news text classification indicates a good performance of \ac{MLR} and \ac{RF} compared to K-nearest neighbors, wherby \ac{MLR} performed better then \ac{RF} \citep{shah2020}. A study from biomedical classfication shows best performance of SVM among Random Forest, Naive Bayes with TFIDF \citep{danso2014}. 
 
-Although performance is essential, other criteria like the transparency of the algorithm, the interpretability and efficiency in terms of the runtime. Methods like \ac{NB} or \ac{LR} are much faster than neural networks or \ac{SVM}s. Considering the transparency and the interpretability algorithms like decision tree or \ac{LR} are more intuitively, easier to understand and to interpretate, while deep learning models and \ac{SVM} rely on complexer computations. Especially deep learning lacks from transperancy \citep{maglogiannis2007}. Considering \ac{BERT} although it outperforms usually other machine learning algorithms for text classification, in general `"there are more questions than answers about how BERT works" \citep[853]{rogers2020}. For example it is not well-understood so far, what exactly happens during the fine-tuning process of \ac{BERT} \citep{merchant2020}. 
+Although performance is essential, other criteria like the transparency of the algorithm, the interpretability and efficiency in terms of the runtime are not irrelevant. Methods like \ac{NB} or \ac{LR} are much faster than neural networks or \ac{SVM}s. Considering the transparency and the interpretability algorithms like decision tree or \ac{LR} are more intuitively, easier to understand and to interpretate, while deep learning models and \ac{SVM} rely on complexer computations. Especially deep learning lacks from transperancy \citep{maglogiannis2007}. Considering \ac{BERT} although it outperforms usually other machine learning algorithms for text classification, in general `"there are more questions than answers about how BERT works" \citep[853]{rogers2020}. For example it is not well-understood so far, what exactly happens during the fine-tuning process of \ac{BERT} \citep{merchant2020}. However, the main focus of this analysis is on performance. 
 
 In addition to the criteria of the classifier itself, it is also important for the performance with which inputs the classifiers are fed. Texts must be converted into a numerical representation to make them machine-readable \citep{singh2019}. Mainly the numerical vector representations of a text or document can be divided into sparse and dense vectors, also called word embeddings. Sparse vectors, relying on the \ac{BOW} model, are high-dimensional vectors with a lot of zeros, while word embeddings techniques are fixed length representation \citep{almeida2019}. Sparse vectors are for example \ac{TF-IDF} or count vectorizer. Examples for word embedding techniques are word2vec, doc2vec and \ac{BERT}. 
 
@@ -149,7 +188,7 @@ Concerning the classifiers, there is no consensus approach for short text classi
 
 
 \subsection{Implications}
-From the above discussed literature three consequences are emerging. First appropriate feature selection or vectorization plays a decisive role in the performance. For that reason, I implement several feature extraction techniques covering sparse and dense vectors. For sparse vectors I vectorize the data with count vectorizer and \ac{TF-IDF} vectorizer. Word2vec, Doc2vec and BERT embedding built the group of dense vectorization techniques. The discussion of the different techniques will be the first pillar of the comparison. 
+From the above discussed literature three consequences are emerging. First appropriate feature selection or vectorization plays a decisive role in the performance. For that reason, I implement several feature extraction techniques covering sparse and dense vectors. For sparse vectors I vectorize the data with count vectorizer and \ac{TF-IDF} vectorizer. Word2vec, Doc2vec and \ac{BERT} embedding built the group of dense vectorization techniques. The discussion of the different techniques will be the first pillar of the comparison. 
 
 Second, relying on one classification does not seem a reasonable option.  Instead experimenting and exploring different traditional, deep learning and ensemble classifiers allows for identifying the best classifier based on the task and the data \citep{maglogiannis2007}. Therefore I use 4 classifier techniques. I fall back to two traditional methods. The literature shows that \ac{SVM} and \ac{MLR} are well compatible with other technqiues, which is why I choose both of them. I also include an ensemble techqniue: \ac{RF}. As a last method I implement a \ac{BERT} classifier since it is the State-of-Art method currently for text classification. The evaluation of different classifications will built the second pillar of the comparision. 
 
@@ -157,7 +196,7 @@ Third as mentioned above the focus of the presented three challenges is on short
 
 
 \section{Job title data and taxonomy}
-The training data consists of two data sets. The classes are extracted from the first data set, referred to below as the \ac{KldB} dataset. The \ac{KldB} dataset contains all information of the \ac{KldB} taxonomy. The second dataset, called job title dataset in the following contains the necessary data from the job titles. In the first part of this chapter a brief explanation about the Taxonomy structure and both datasets is given. The second part contains of a descriptive analysis of the class distribution of the data. 
+The training data consists of two data sets. The classes are extracted from the first data set, referred to below as the \ac{KldB} dataset. The \ac{KldB} dataset contains all information of the \ac{KldB} taxonomy. The second dataset, called job title dataset in the following, contains the necessary data from the job titles. In the first part of this chapter a brief explanation about the Taxonomy structure and both datasets is given. The second part contains of a descriptive analysis of the class distribution of the data. 
 
 \subsection{KldB 2010 Taxonomy}
 The ``\ac{KldB}" is structured hierarchically with 5 levels. On each level there is a different number of classes. In the following these classes are also referred to as kldb. On level 1 each class has an id of length one with a number from 0 to 9. Table \ref{tab: T3} shows the 10 classes of level 1 with their class names. On level 2, then, each of the 10 classes are divided into one or more subclasses having a class id of length 2 with the first digit indicating the class of level 1 and the second digit the class of level 2. An overview of the all 5 levels with an example of classes is given in table \ref{tab: T2}. Note that the example in table \ref{tab: T2} does not show on level 2 to level 5 all classes. Thus on level 2 there exists also, e.g. the class id 41 with ``Mathematik-, Biologie- Chemie- und Physikberufe", which in turn is divided into other classes on level 3 etc..  With this procedure this ultimatley leads to class ids of length 5 on level 5. An occupation can be classified on every level in the Taxonomy. Considering the classes of the example in table \ref{tab: T2}, the job title ``Java Developer" could  be classified on level 5 to the class 43412. From this id, it is also derivable that the jobtitle belongs, for example, on level 3 to the class ``Sofwareentwicklung" \citep{Bundesagentur2011a, Bundesagentur2011b, Paulus2013}
@@ -218,23 +257,51 @@ The \ac{KldB} contains of two dimension. The first dimension, the so-called "Ber
 
 With the \ac{KldB} 2010, an useful and information-rich occupational classification was created for Germany that reflects the current trends in the labor market \citep{Paulus2013}. One strength relies in the construction of the \ac{KldB}. Instead of just including expert knowledge into the Taxonomy the developement process is based on systematical consideration of information about occupations, as well as statistical procedures for taxonomy developement. Furthermore, the taxonomy was reviewed qualitatively several times in relation to professions and revised. Considering the expressiveness, the \ac{KldB} has some more benefits. Since the taxonmy is quite recent, it reflects new job classes and market trends very adequately. Further, by including the second dimension, the taxonomy provides a powerful tool to organize job titles into simple requirement classes.  In addition, the taxonomy also distinguishes between managerial, supervisory, and professional employees, which is also valuable information. Finally, the taxonomy also convinces with the possibility to switch to ``\ac{ISCO}" through its IDS and thus to normalize jobs to a global standard \citep{Bundesagentur2011b}.
 
-The \ac{KldB} dataset contains different information related to the structure descriped above. Besides the class label, the level and the title, on level 5 for each kldb some searchwords are given. There are two types of keywords. One is the job titles that match the respective kldb. On the other hand, real search words, with the help of which the associated kldb can be inferred. Therefore, these searchwords are very helpful knowledge for training classificaiton algorithms, because they contain kldb specific words that are also often present in the job titles. The searchwords will be termed additional knowledge in the rest of the paper. 
+The \ac{KldB} dataset contains different information related to the structure descriped above. Besides the class label, the level and the title, on level 5 for each kldb some searchwords are given. There are two types of keywords. One is the job titles that match the respective kldb. On the other hand, real search words, with the help of which the associated kldb can be inferred. Therefore, these searchwords are very helpful knowledge for training classificaiton algorithms, because they contain kldb specific words that are also often present in the job titles. The searchwords will be termed additional knowledge in the rest of the work. 
  
 \subsection{Job title data}
-Job Titles can be scraped from the Federal Employment Agency's job board. Employers must provide additional data for each job posting, including the Job Title, as well as a main internal documentation code that indicates a class in the KLDB taxonomy. There is an option to provide alternative documentation codes if more than one KLDB class is being considered. An example snippet of the scraped data is provided in the Appendix. The documentation code is an internal number of the Federal Employment Agency, which can be uniquely assigned to a KLDB, which, as already mentioned, is specified in the taxonomy data for each kldb. A snippet of the matched training data with the KLDB labels is given in 
+Job Titles can be scraped from the Federal Employment Agency's job board. Employers must provide additional data for each job posting, including the job title, as well as a main internal documentation code that indicates a class in the \ac{KldB} taxonomy. There is an option to provide alternative documentation codes if more than one KLDB class is being considered. An example snippet of the scraped data is provided in the Appendix \footnote{There are two version of the raw data since the Federal Employement Agency changed during the scraping phase the datastructure. Both version are given in the Appendix.} The documentation code is an internal number of the Federal Employment Agency, which can be uniquely assigned to a \ac{KldB}, which, as already mentioned, is specified in the taxonomy data for each kldb. A snippet of the matched training data with the KLDB labels is given in the appendix.
+
+Initially, in total, the training data set contained of 269788 examples. However, during the training phase, it became clear, that there are problems especially with \ac{SVM} classifier, concerning the running time and memory. Due to limited resources, a sample with the same distribution from the long dataset had to be taken. A sample size of 15000 examples proved to be feasible. Figures \ref{fig: F9} and \ref{fig: F10} show the distribution of the classes in level 1 und level 3 \footnote{The class distribution of the long dataset is given in the Appendix.}. Both figures show the absolute number of examples for each kldb in the respective levels. In figure \ref{fig: F10}  the number of examples is coloured with the belonging kldb level 1 class to give better overview of the 144 kldbs on level 3. In general from both levels it is clear that there is in fact that the data is not distributed equally. For the class distribution if level 1 on Figure \ref{fig: F9} class 1 and class 9 have really few examples, while class 2 has considerably more examples than all other classes. Although the data is imbalanced, all classes have at least some examples in order to get meaningful performance measurements. Note that kldbs with digit 0 are missing. 0 stands for `Militär". Jobs in this category are not normally posted frequently on the Employment Agency Job Board page. At level 3, the uneven distribution is even more apparent.Compared to level 1, the problem is that there are a lot of classes with only one example, which is problematic for obtaining interpretable measurements. This problem will be discussed in the results part. In total 8 classes do not have any examples and thus cannot be trained with the classifier.  
+
+
+\begin{figure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{training_data_short_L1.png}
+    \caption{\label{fig: F9} Class distribution Level 1}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{training_data_short_L3.png}
+    \caption{\label{fig: F10} Class distribution Level 3}
+  \end{subfigure}
+  \caption{Class distribution of the training data}
+  \end{figure}
+
 
 \section{Method}
 \subsection{Conceptual overview}
+
+\begin{figure}[]
+  \center
+  \includegraphics[scale=0.5]{pipeline_MA.png}
+  \caption{\label{fig: F8} Training Pipeline}
+\end{figure}
+
+The classification process is divided into several steps. Figure \ref{fig: F8} gives an overview of the procedure. In the first step, the \ac{KldB} and the job title data are focused on the necessary variables. This is done by matching the kldb ids from the \ac{KldB} data set with the internal documentation id from the job title data. In the next steps, the targeted data is preprocessed. This preprocessed data is then transformed into numerical vectors. For this purpose, different vector representations are created using five vectorization techniques. The transformed data is then reduced to lower dimensions using principal component analysis. The resulting data is the input for the classifier. In the last step, the four classifiers are trained. Note that the BERT classification algorithm follows a different pipeline, which is why the algorithm is presented separately. Here, the data is used as input to the deep learning model directly after preprocessing and the model is trained. The targeting of the data has already been described in the previous chapter. In the following, the procedure and the associated methods are explained in detail. 
+
 \subsection{Preprocessing}
+Preprocessing is crucial step which has to be taken before vectorization. There are several standarized practices for preprocessing like tokenization, stemming, stop-word removal and lowercasing \citep{alsmadi2019}. Preprocessing can have an essential influence on the performance of a classifier \citep{uysal2014, hacohen2020, gonccalves2005}. Therefore, the methods of preprocessing are justified below.
 
-Usual practices of preprocessing are tokenization, stemming, stop-word removal and lowercasing. \citep{alsmadi2019}. 
+The first preprocessing step is the removal of special characters. This is necessary because most titles contain slashes and brackets to distinguish gender forms in occupational titles. Some job titles contain emojis, such as asterisks, which need to be removed as they are not related directly to specific job titles. 
 
-Most documents contains unnecessary words like stopwords, which should be removed before analysis, since they can have a negative effect on the classifiation.
+Capitalized words are usually convert to lowercase in order to treat them equally for the classification. However, lowercase can be at the same time harmful for the performance, if the interpretation changes with converting. Considering the word `US", which refers to the United States of America. Converting to lowercase it is equal to the pronoun `us" and this can affect the performance if the differentiations plays a role for the classification \citep{kowsari2019text}. For occupational names in German, conversion makes sense, since capitalization plays a major role in German. In turn, I don't expect conversion to cause problems often, as described in the example above, since occupational titles usually have their own names and their lowercase variants do not often lead to other words or word classes. Thus in a second step titles are all converted to lowercase. 
 
-Capitalized words are usually convert to lowercase in order to treat them equally for the classification. However, lowercase can be at the same time harmful for the performance, if the interpretation changes with converting. Considering the word `US", which refers to the United States of America. Converting to lowercase it is equal to the pronoun `us" and this can affect the performance if the differentiations plays a role for the classification \citep{kowsari2019text}. For occupational names in German, conversion makes sense, since capitalization plays a major role in German. In turn, I don't expect conversion to cause problems often, as described in the example above, since occupational titles usually have their own names and their lowercase variants do not often lead to other words or word classes. 
+As in every text classification task stop words removal is a common praxis. I removed all stopwords, which are listed in the german stopwords list of the Nature Language Toolkit package \citep{bird2009}. In addition to this standardized processes, the data contained other peculiarities that justify further words removal besides stopwords. Job titles very often contain words, such as "employee" or "effective immediately", that do not contain important information and are not specific to particular job titles. These should be removed. To identify a list of such words, the frequencies of each word across all documents are calculated after the aforementioned preprocessing steps. These frequencies are then used to identify words, such as "employee", that are common but not relevant. As a final preprocessing step, the identified words are then also deleted from all job titles. 
 
 \subsection{Vectorization Techniques}
-\subsubsection{Count vectorizer}
+\subsubsection*{Count vectorizer}
 The count vectorizer is one of most simple techniques of converting texts to vectors. It belongs to the family of \ac{BOW} models. \ac{BOW} models are based on vectors, where each dimension is a word from a vocabulary or corpus. The corpus is built by all words across all documents. \ac{BOW} models have two important properties. First, they do not consider the order of the words, sequences or the grammar, which is why they also called \ac{BOW}. Second, each word in the corpus is represented by it's own dimension. Thus the vectors contains a lot of zeros, especially for short texts, which is why they belong to the family of sparse vectors \citep{ajose2020}.  Assuming, for example, a corpus contains of 1000 words, meaning each text is built only with these 1000 words, the vector for each text has a length of 1000, thus, producing sparse, high-dimensional vectors \citep{kulkarni2021, sarkar2016}
 
 For the count vectorizer the values for the vector are generated by counting for each text the frequency of the words occuring. Considering a corpus including only the three words ``java", ``developer" and ``python", the titles ``java developer" and ``python developer" would be encoded as follows: 
@@ -255,7 +322,7 @@ The table \ref{tab: T11} results in the vectors $(1,1,0)$ and $(0,1,1)$. Note th
 
 While being one of the most simple techniques, count vectorizer has several limitations. The main downside is that it does not consider information like the semantic meaning of a text, the order, sequences or the context. In other words a lot of information of the text is losen \citep{sarkar2016}. In addition, count vectorizer does not take into account the importance of words in terms of a higher weighting of rare words and a lower weighting of frequent words across all documents. \citep{suleymanov2019}
 
-\subsubsection{TFIDF vectorizer}
+\subsubsection*{TFIDF vectorizer}
 \ac{TF-IDF} belongs like the count vectorizer, to the family of \ac{BOW} and is as well a sparse vector. In contrast to count vectorizer, it considers the importance of the words by using the \ac{IDF}. The main idea of \ac{TF-IDF} is to produce high values for words which occur often in a documents, but are rare over all documents. The \ac{TF} represents the frequency of a word t in a document d and is denoted by $tf(t,d)$. The \ac{DF}, denoted by $df$, quantifies the occurence of a word over all documents. By taking the inverse of \ac{DF} we get the \ac{IDF}. Intuitvely the \ac{IDF} should quantify how distinguishable a term is. If a term is frequent over all documents it is not usful for the distinction between documents. Thus the \ac{IDF} produces low values for common words and high values for rare terms and is calculated as follows \citep{sidorov2019, kuang2010}: 
 
 \[idf(t) = log \frac{N}{df} \]
@@ -270,7 +337,7 @@ Given the $idf(t)$ and $tf$ the \ac{TF-IDF} can be obtained by multiplying both 
 
 Although \ac{TF-IDF} considers the importance of words compared to count vectorizer, as a \ac{BOW} model it suffers from the same limitation as count vectorizer of not taking semantic, grammatic, sequences and context into account \citep{sarkar2016}. 
 
-\subsubsection{Word2Vec}
+\subsubsection*{Word2Vec}
 In contrast to the sparse techniques method mentioned above, word embedding techniques are another popular approach for vectorization. Word embedding vectors are characterised by low dimensions, dense representation and a continous space. They are usually trained with neural networks \citep{li2015, jin2016}. 
 
 Word2Vec, introduced by \citet{mikolov2013}, is one computionally efficient word embedding implementation. The main idea of Word2Vec is based on the distributional hypothesis, which states that similar words appear often in similar context \citep{sahlgren2008}. Thus, Word2Vec learns with the help of the context representations of words, which includes the semantic meaning and the context. In such a way it words which are similar are encoded similarily \citep{sarkar2016}. 
@@ -297,7 +364,7 @@ Based on the given theoretical insights, I train two Word2vec models. Both model
 
 As last step the resulting word embeddings need to be processd in some way to get sentence embeddings for each job title. As the name already indicates Word2Vec cannot output sentence embeddings directly. In order to get the sentence embeddings the word vector embeddings of each job title are averaged. 
 
-\subsubsection{Doc2vec}
+\subsubsection*{Doc2vec}
 Doc2vec, also known as paragraph vectors or Distributed Memory Model of Paragraph Vectors is an extension method of Word2Vec, which outputs directly embeddings for each document \citep{lau2016} It was proposed by \cite{le2014}. Doc2Vec can be used for a variable length of paragraphs, thus it is applicable for bigger documents, but also for short sentences like job titles \citep{le2014}. 
 
 The main idea is, like for Word2Vec, to predict words in a paragraph. To do so, a paragraph vector and word vectors, like in Word2Vec, for that paragraph are concatenated. The paragraph vector `"acts as memory that remembers what is missing from the current contest - or the topic of the paragraph" \citep[3]{le2014}. Therby the paragraph vectors are trained as well with stochastic gradient descent and backpropagation. Similar to Word2Vec practical implementation use hierarchical softmax or negative sampling to fast up training time \citep{lau2016}. 
@@ -316,7 +383,7 @@ Besides the model explained above, Doc2Vec comes also in a second variant, the s
 
 Based on this disussion, I created two Distributed Memory Models of Paragraph Vectors. Instead of fine tuning a pretrained model, I trained two custom models, one with the training data and one including the additional knowledge. I set the vector size to 300 with a window size of 5, a minimal count of 1 and trained 10 epochs. Like Word2vec, the models are trained with negative sampling.  
 
-\subsubsection{BERT}
+\subsubsection*{BERT}
 The last vectorization technique, \ac{BERT}, is the state-of-art language modeling technique developed by \citep{devlin2018} at Google. \ac{BERT} stands out from other langugage models in several ways and outperforms other models for many \ac{NLP} tasks. First, \ac{BERT} uses bidirectional pretraining. Thus is does not only process from left-to-right or right-to-left, but it merge both of them. Second, it is possible to fine tune the model for specific task without heavily-engineered and computionally costly architectures. Third compared to word2vec it is a context-dependent model. Thus, while word2vec would produce only one word embedding for "'Python" \ac{BERT} can give based on the context different embeddings. Here '"Python" as a snake or as a programming language. 
 
 \subsubsection*{Architecture}
@@ -324,7 +391,6 @@ The last vectorization technique, \ac{BERT}, is the state-of-art language modeli
 
 The self-attention mechanism improves the representation of a word, represented by a matrix X, by relating it to all other words in the sentence. In the sentence '"A dog ate the food because it was hungry"' \citep[10]{ravichandiran2021} the self-attention mechanism, for example, could identify by relating the word to all other words, that '"it" belongs to '"dog" and not to '"food". 
 In order to compute the self attention of a word three additional matrices, the query matrix Q, the key matrix K and a value matrix V are introduced. Those matrices are created by introducing weights for each of them and multiplying those weights with X. Based on those matrices, the dot product between the Q and the K matrix, a normalization and a softmax function are applied in order to calculate an attention matrix Z  \footnote{For a step-by-step calculating see \citep{ravichandiran2021}}. \ac{BERT} uses a multi-head-attention, which simply means that multiple Z attention matrices instead of a single one are used.
-
 
 \ac{BERT} takes one sentence or a pair of sentences as input. To do so it uses WordPiece tokenizer and three special embedding layers, the token, the segement and the position embedding layer for each token, which is visualized in \ref{fig: F4}. A WordPiece tokenizes each word which exits in the vocabulary. If a word does not exists words are splitas long a subword matches the vocabulary or a individual character is reached. Subwords are indicated by hashes. For the token embeddings the sentence is tokenized first, then a [CLS] is added at the beginning of the sentence and [SEP] token at the end. For example the job title `"java developer" and `" python developer"' becomes to tokens as shown in the second row of \ref{fig: F4}. In order to distinguish between the two titles a segment embedding is added, indicating the sentences. Last the \ac{BERT} model takes a position embedding layer, which indicates the order of the words. For each token those layers are summed up to get the representation for each token \citep{devlin2018,ravichandiran2021}.
 
@@ -358,7 +424,7 @@ I train two models with \ac{BERT}. While the first model includes a classifcatio
 The \ac{BERT} classifier is fine tuned with the complete training data set. Practically this is done by converting the sentences of the dataset to the appropriate data format as described above and train it with the supervised dataset on some epochs, which then outputs  the labels. From a theoretical point of view the last hidden state of the [CLS] token with the aggregation of the whole sentence is used for the classifcation. In order to get the labels \ac{BERT} uses a softmax function \footnote{The explanation of the softmax function follows in the chapter of the classifiers} \citep{sun2019}. As already state in the literature review in the literature it is not well-understood so far, what exactly happens during the fine-tuning. An analysis of \citet{merchant2020} indicates that the fine tuning process is relatively conservative in the sense that they affect only few layers and are specific for examples of a domain. Note that this analysis focussed on other nature language processing task than text classifcation. The set-up of the training is as follows: Testing different epoch numbers indicates that lower epoch size have better results for the model, which is why I fine tune in 6 epochs. For the optimization an adam algorithm, a gradient based optimizer \citep{kingma2014}, with a learning rate of $1e^{-5}$ is used. 
 
 In order to get sentence embeddings different strategies, like averaging the output layer of \ac{BERT} or using the [CLS] token, are applied. Another method, developed by \citet{reimers2019} is Sentence-\ac{BERT}, which is computionally efficient and practicable to implement. Thus, it faciliate to encode sentences directly into embeddings, which is why I use it for the \ac{BERT} vectorizer. The model is constructed with the bert-base-german-case model and a pooling layer. The pooling layer is added to output the sentence embeddings. The fine tuning process uses a siamese network architecture to update the weights. \ref{fig: F5} shows the architecture. The network takes pairs of sentences with a score as an input. Those scores indicate the similarity between the sentences. The network update the weights by passing the sentences through the network, calculating the cosine similarity and comparing to the similarity score \citep{reimers2019}.
-I create from the training data set and from the kldb taxonomy pairs of similar and dissimilar job titles or searchwords. Similar pairs are pairs from the same kldb class. As a score I choose 0.8. Dissimilar pairs are defined as pairs which are not from the same class. The score is 0.2. Building all combinations of titles and the searchwords for each class would results in a huge dataset. For example class 1 of the training data set has 2755 job titles. Thus we would have already have ${2755 \choose 2} = 3793635$ examples. Since this is computionally to expensive I randomly choose pairs of job titles. For the similar ones I choosed for job titles and for searchwords 3250 pairs. For the dissimilar pairs I choosed respectivley 1750 pairs. Thus, in total, I fine tuned the model with 10000 examples in 3 epochs.
+I create from the job title dataset and from the kldb dataset pairs of similar and dissimilar job titles or searchwords. Similar pairs are pairs from the same kldb class. As a score I choose 0.8. Dissimilar pairs are defined as pairs which are not from the same class. The score is 0.2. Building all combinations of titles and the searchwords for each class would results in a huge dataset. For example class 1 of the training data set has 2755 job titles. Thus we would have already have ${2755 \choose 2} = 3793635$ examples. Since this is computionally too expensive I randomly choose pairs of job titles. For level 1 the following samples are drawn: From the job title data for each class I used 3250 pairs. The same also for the searchwords for each class. For unsimilar pairs I used 1750 job titles pairs which are not from the same class. Same for searchwords. This results in total number of $(3250+3250) \times 9 + 2 \times 1750 = 62000$ pairs for the finetuning of level 1. \footnote{The determination of the exact number of pairs is exploratory in character, and run time and performance were taken into account}. For level 3 the procedure is the same, only the numbers differs. I used for similar pairs for job titles and searchwords 400 for each class and for the unsimilar 6000 pairs, which gives a total number of $(400 + 400) \times (136-7) + 2 \times 1500 =  61200$. Classes with only one example are not considered, because building pairs is not possible. 
 
 \begin{figure}[hb!]
   \center
@@ -585,6 +651,59 @@ As shown above, there are several metrics for evaluating the performance of a cl
   \end{table}
 
 
+  LATEX
+Accuracy
+\begin{tabular}{lrrr}
+\hline
+{} &    LR &   SVM &    RF \\
+\hline
+CountVectorizer &  0.48 &  0.49 &  0.42 \\
+TFIDF           &  0.47 &  0.50 &  0.45 \\
+Word2Vec\_I      &  0.29 &  0.17 &  0.35 \\
+Word2Vec\_II     &  0.30 &  0.18 &  0.34 \\
+Doc2Vec\_I       &  0.20 &  0.21 &  0.31 \\
+Doc2Vec\_II      &  0.18 &  0.17 &  0.27 \\
+BERT            &  0.50 &  0.47 &  0.45 \\
+\hline
+\end{tabular}
+
+
+
+\begin{tabular}{llll}
+\hline
+{} &                          LR &                         SVM &                          RF \\
+\hline
+CountVectorizer &  p: 0.48, r: 0.48, F1: 0.48 &  p: 0.49, r: 0.49, F1: 0.49 &  p: 0.42, r: 0.42, F1: 0.42 \\
+TFIDF           &  p: 0.47, r: 0.47, F1: 0.47 &     p: 0.5, r: 0.5, F1: 0.5 &  p: 0.45, r: 0.45, F1: 0.45 \\
+Word2Vec\_I      &  p: 0.29, r: 0.29, F1: 0.29 &  p: 0.17, r: 0.17, F1: 0.17 &  p: 0.35, r: 0.35, F1: 0.35 \\
+Word2vec\_II     &     p: 0.3, r: 0.3, F1: 0.3 &  p: 0.18, r: 0.18, F1: 0.18 &  p: 0.34, r: 0.34, F1: 0.34 \\
+Doc2Vec\_I       &     p: 0.2, r: 0.2, F1: 0.2 &  p: 0.21, r: 0.21, F1: 0.21 &  p: 0.31, r: 0.31, F1: 0.31 \\
+Doc2Vec\_II      &  p: 0.18, r: 0.18, F1: 0.18 &  p: 0.17, r: 0.17, F1: 0.17 &  p: 0.27, r: 0.27, F1: 0.27 \\
+BERT            &     p: 0.5, r: 0.5, F1: 0.5 &  p: 0.47, r: 0.47, F1: 0.47 &  p: 0.45, r: 0.45, F1: 0.45 \\
+\hline
+\end{tabular}
+
+
+
+Precision, Recall, F1-score - macro
+\begin{tabular}{llll}
+\hline
+{} &                          LR &                         SVM &                          RF \\
+\hline
+CountVectorizer &   p: 0.41, r: 0.27, F1: 0.3 &  p: 0.38, r: 0.33, F1: 0.34 &  p: 0.36, r: 0.25, F1: 0.27 \\
+TFIDF           &  p: 0.36, r: 0.22, F1: 0.25 &  p: 0.39, r: 0.33, F1: 0.34 &  p: 0.39, r: 0.25, F1: 0.28 \\
+Word2Vec\_I      &  p: 0.18, r: 0.11, F1: 0.12 &   p: 0.1, r: 0.06, F1: 0.06 &  p: 0.22, r: 0.18, F1: 0.19 \\
+Word2vec\_II     &  p: 0.24, r: 0.14, F1: 0.17 &    p: 0.14, r: 0.1, F1: 0.1 &  p: 0.26, r: 0.19, F1: 0.21 \\
+Doc2Vec\_I       &   p: 0.1, r: 0.05, F1: 0.05 &   p: 0.1, r: 0.09, F1: 0.08 &  p: 0.26, r: 0.14, F1: 0.15 \\
+Doc2Vec\_II      &  p: 0.08, r: 0.04, F1: 0.04 &  p: 0.11, r: 0.07, F1: 0.08 &  p: 0.21, r: 0.11, F1: 0.12 \\
+BERT            &  p: 0.58, r: 0.55, F1: 0.55 &    p: 0.52, r: 0.5, F1: 0.5 &  p: 0.48, r: 0.35, F1: 0.38 \\
+\hline
+\end{tabular}
+
+
+
+Level 3: Macro. The problem is that for level 3 that a lot of classes have no predicted samples making it difficult to calculate the precision, recall and f1-score. The precision and recall for the macro score are not acutally interpretable. Considering the formula given above for the macro scores, setting some of the classes to 0 is directly reflected in the calculation because dividing by n takes the classes setted to zero into account. The micro score just don't take them into account, which gives a better interpretability. Thus in the following only the micro results for Level 3 are given. The macro results are reported in the appendix for completeness.
+
   % \end{table}
 
   % \begin{table}[]
@@ -616,39 +735,139 @@ As shown above, there are several metrics for evaluating the performance of a cl
 %   \end{table}
 
 \section{Conclusion and Limitations}
-\section{sentences}
-\citet{ajose2020} concludes that for there are different results for different classifiers. 
 
-\citet{singh2022} The results of doc2vec and word2vec seem in the first place counterintuive. But short text high dimensional space. Also other papers like \citet{singh2022} show similar results for short texts.
+The problem just highlighted raises the question of whether the limitation is purely a data set quality issue. This can be clarified by an analysis including the alternative kldb ids that employers can provide in case of uncertainty.  
 
+% \section{sentences}
+% \citet{ajose2020} concludes that for there are different results for different classifiers. 
 
-\citet{gonzalez2020} imporant for disavandatgge of tradtional vs. classifier methods
-
-
-Comparing the deep learning classifier we can see that it performed as good as the BERT fine tunes model. Following the literatur with more data the classifier will likely perform much better. But on the on the other side, the interpretability and transperancy is lower compared to the Bert fine tunign model. Here we clearly define ourselves which pairs with which similarity we give as input to train, which makes is much more Intuitvely than the clf. And there is much space for improvements. For example one could combine pairs in other ways, like including the label names of the kldbs, combine searchwords for different levels with different probabilities etc. This is something which has to be explored in future research. 
+% \citet{singh2022} The results of doc2vec and word2vec seem in the first place counterintuive. But short text high dimensional space. Also other papers like \citet{singh2022} show similar results for short texts.
 
 
+% \citet{gonzalez2020} imporant for disavandatgge of tradtional vs. classifier methods
 
-Drawback: Small dataset. But acutally available. It is possible to use more and huge amount of data especially for BERT where pairs are built. 
+
+% Comparing the deep learning classifier we can see that it performed as good as the BERT fine tunes model. Following the literatur with more data the classifier will likely perform much better. But on the on the other side, the interpretability and transperancy is lower compared to the Bert fine tunign model. Here we clearly define ourselves which pairs with which similarity we give as input to train, which makes is much more intuitvely than the clf. And there is much space for improvements. For example one could combine pairs in other ways, like including the label names of the kldbs, combine searchwords for different levels with different probabilities etc. This is something which has to be explored in future research. 
+
+% Drawback: Small dataset. But acutally available. It is possible to use more and huge amount of data especially for BERT where pairs are built.  
+
+% The problem for level three in general is that there is not enough data for each class. It is important to enrich the data here in some way. Over sampling Undersampling Vor und Nachteile aufzählen 
+
+
+
+
 \clearpage
+
+
+
 
 \bibliographystyle{apalike}
 \bibliography{export}
 
-
+\newpage
 \appendix
-\section{Naive Bayes Classifier}
-\subsection{Theory}
-The \ac{NB}, a family of probabilistic classifiers, uses Bayes' rule in order to determine the most likely class for each document \citep{Schneider2005}. All \ac{NB} classifiers rely on the conditional independence assumptions which means, that ``features are independent of each other, given the category variable'' \citep[48]{Xu2018}. Depending on whether the features are discrete or continous, different distributions, so-called event models are proposed. While from a theoretical perspective for continous features Gaussian distribution is well-suited, for discrete features usually Bernoulli or multinomial distibutions are applied \citep{Xu2018}. Although, popular practical implementations, like the one from sklearn, allow as well fractional counts for multinomial distributions \citep{scikit-learn}. Trying different event models, the multinomial \ac{NB} shows indeed for both Count Vectorizer and for TFIDF the best results, which is why I choose it as event model for the baseline. 
+\section{Data}
+\subsection{Data snippet raw data}
+\begin{lstlisting}[language=json]
+  {
+    "hashId": "-IgNS05-jeri5aZhe0_VK35Y0-6xQAoADg3b0MyraTI=",
+    "hauptberuf": "Telefonist/in",
+    "freieBezeichnung": "Telefonist / Telefonistin m/w/d",
+    "referenznummer": "14469-20210617140207-S",
+    "mehrereArbeitsorteVorhanden": false,
+    "arbeitgeber": "aventa Personalmanagement GmbH",
+    "arbeitgeberHashId": "MYRG2meMKxCjrQ9Cpl8JwgEDPbM133Z9iRCkolaOONo=",
+    "aktuelleVeroeffentlichungsdatum": "2021-06-29",
+    "eintrittsdatum": "2021-06-29",
+    "logoHashId": "wMN78p7yNK_C0aJDJ77l63RVH3DCEzwJGxZk1ZzsUrY=",
+    "angebotsart": "ARBEIT",
+    "hauptDkz": "7389",
+    "alternativDkzs": [
+      "35082"
+    ],
+    "angebotsartGruppe": "ARBEIT",
+    "anzeigeAnonym": false,
+    "arbeitsort": {
+      "plz": "10407",
+      "ort": "Berlin",
+      "region": "Berlin",
+      "land": "Deutschland",
+      "koordinaten": {
+        "lat": 52.5335379,
+        "lon": 13.4462856
+      }
+    },
+    "_links": {
+      "details": {
+        "href": "http://jobboerse.arbeitsagentur.de/vamJB/stellenangebotAnzeigen.html?bencs=xZ8NQKDByg2g6avJgLLIrGwqlXZQi1GKNAI%2BzAoCWJ5RD6egZDnwqMFj%2B4AnUX6XN5nyEJ7NKSdBBr1EvlmnVw%3D%3D"
+      },
+      "arbeitgeberlogo": {
+        "href": "https://api-con.arbeitsagentur.de/prod/jobboerse/jobsuche-service/ed/v1/arbeitgeberlogo/wMN78p7yNK_C0aJDJ77l63RVH3DCEzwJGxZk1ZzsUrY="
+      },
+      "jobdetails": {
+        "href": "https://api-con.arbeitsagentur.de/prod/jobboerse/jobsuche-service/pc/v1/jobdetails/-IgNS05-jeri5aZhe0_VK35Y0-6xQAoADg3b0MyraTI="
+      }
+    }
+  },
+\end{lstlisting}
 
-The multinomial \ac{NB} classifies according to the most likely class. Given that a document d has $t = 1, ...., k$ terms and can be assigned to $c = 1,...,j$ classes, the probability of a term in a document given a class is calculated as \citep{Manning2008}:
-\[ P(t_k, c_j) = \frac{occurence(t_k, c_j) + 1}{\sum occurence(t, c_j) + |V|} \]
 
-where $|V|$ is the cardinality of the vocabulary. In the denominator 1 is added, so-called Laplace smoothing, in order to avoid zeros, which is the case if the number of terms in a document for one class is zero. \citep{Manning2008}. Further given that $N_c = count(c_j)$ is the number of documents belonging to class $c_j$ and N is number of documents the probability of $c_j$ is defined as $\frac{N_c}{N}$. The probability of a document d belonging to a class $c_j$ can then formulated as follows \citep[258]{Manning2008}:
-\[ P(c_j|d) \propto P(c_j) \prod_{i = 1}^k P(t_i|c_j) \]
-Then the most likely classes can be determined by \citep{Manning2008}: 
-\[\argmax_{c \in C} P(c_j) \prod_{i = 1}^k P(t_i|c_j) \] 
+\subsection{Trainingsdata snippet (without preprocessing) - Level 1}
+\begin{lstlisting}[language=json, firstnumber=1]
+{'id': '2', 'title': 'Maschinenbediener (m/w/d)'}
+{'id': '7', 'title': 'Controlling'}
+{'id': '5', 'title': 'Lagermitarbeiter (m/w/d)'}
+{'id': '2', 'title': 'Reifenmonteur (m/w/d) Facharbeiter'}
+{'id': '5', 'title': 'Kommissionierer (m /w /d)'}
+{'id': '7', 'title': 'Sachbearbeiter (m/w/d) im Einkauf Weimar'}
+{'id': '5', 'title': 'Schubmaststapler Fahrer (m/w/d)'}
+{'id': '3', 'title': 'Bauhelfer Elektroinstallation (m/w/d)'}
+{'id': '7', 'title': 'Telefonist / Telefonistin m/w/d'}
+{'id': '9', 'title': 'Telefonische Kundenbetreuung (m/w/d)'}
+\end{lstlisting}
 
-\subsection{Results}
+
+\subsection{Trainingdata snippted (preprocessed) - Level 1}
+\begin{lstlisting}[language=json, firstnumber=1]
+[{'id': '2', 'title': 'maschinenbediener'},
+ {'id': '7', 'title': 'controlling'},
+ {'id': '5', 'title': 'lagermitarbeiter'},
+ {'id': '2', 'title': 'reifenmonteur facharbeiter'},
+ {'id': '5', 'title': 'kommissionierer'},
+ {'id': '7', 'title': 'sachbearbeiter einkauf weimar'},
+ {'id': '5', 'title': 'schubmaststapler fahrer'},
+ {'id': '3', 'title': 'bauhelfer elektroinstallation'},
+ {'id': '7', 'title': 'telefonist telefonistin'},
+ {'id': '9', 'title': 'telefonische kundenbetreuung'}]
+\end{lstlisting}
+
+\subsection{Class distribution of level 1 und level 3}
+\begin{figure}[hb!]
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{training_data_long_L1.png}
+    \caption{\label{fig: F11} Class distribution Level 1}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{training_data_long_L3.png}
+    \caption{\label{fig: F12} Class distribution Level 3}
+  \end{subfigure}
+  \caption{Class distribution of training data}
+  \end{figure}
+
+% \section{Naive Bayes Classifier}
+% \subsection{Theory}
+% The \ac{NB}, a family of probabilistic classifiers, uses Bayes' rule in order to determine the most likely class for each document \citep{Schneider2005}. All \ac{NB} classifiers rely on the conditional independence assumptions which means, that ``features are independent of each other, given the category variable'' \citep[48]{Xu2018}. Depending on whether the features are discrete or continous, different distributions, so-called event models are proposed. While from a theoretical perspective for continous features Gaussian distribution is well-suited, for discrete features usually Bernoulli or multinomial distibutions are applied \citep{Xu2018}. Although, popular practical implementations, like the one from sklearn, allow as well fractional counts for multinomial distributions \citep{scikit-learn}. Trying different event models, the multinomial \ac{NB} shows indeed for both Count Vectorizer and for TFIDF the best results, which is why I choose it as event model for the baseline. 
+
+% The multinomial \ac{NB} classifies according to the most likely class. Given that a document d has $t = 1, ...., k$ terms and can be assigned to $c = 1,...,j$ classes, the probability of a term in a document given a class is calculated as \citep{Manning2008}:
+% \[ P(t_k, c_j) = \frac{occurence(t_k, c_j) + 1}{\sum occurence(t, c_j) + |V|} \]
+
+% where $|V|$ is the cardinality of the vocabulary. In the denominator 1 is added, so-called Laplace smoothing, in order to avoid zeros, which is the case if the number of terms in a document for one class is zero. \citep{Manning2008}. Further given that $N_c = count(c_j)$ is the number of documents belonging to class $c_j$ and N is number of documents the probability of $c_j$ is defined as $\frac{N_c}{N}$. The probability of a document d belonging to a class $c_j$ can then formulated as follows \citep[258]{Manning2008}:
+% \[ P(c_j|d) \propto P(c_j) \prod_{i = 1}^k P(t_i|c_j) \]
+% Then the most likely classes can be determined by \citep{Manning2008}: 
+% \[\argmax_{c \in C} P(c_j) \prod_{i = 1}^k P(t_i|c_j) \] 
+
+\section{Results}
 
 \end{document}
