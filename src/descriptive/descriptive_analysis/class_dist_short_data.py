@@ -12,17 +12,17 @@ with open(file="data/processed/training_data_short_l5.json") as fp:
     training_data_short_l5 = json.load(fp=fp)
 
 
-# class_distribution, plt = class_distribution(
-#     data=training_data_short_l1, variable="id", level="1"
-# )
-# plt.savefig("visualization/descriptive_analysis/training_data_short_L1.png")
+class_distribution, plt = class_distribution(
+    data=training_data_short_l1, variable="id", level="1"
+)
+plt.savefig("visualization/descriptive_analysis/training_data_short_L1.png")
 
 
-# class_distribution, plt = class_distribution(
-#     data=training_data_short_l3, variable="id", level="3"
-# )
+class_distribution, plt = class_distribution(
+    data=training_data_short_l3, variable="id", level="3"
+)
 
-# plt.savefig("visualization/descriptive_analysis//training_data_short_L3.png")
+plt.savefig("visualization/descriptive_analysis//training_data_short_L3.png")
 
 
 class_distribution, plt = class_distribution(
