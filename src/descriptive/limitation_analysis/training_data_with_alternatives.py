@@ -1,13 +1,8 @@
 import json
-from collections import Counter
-import pandas as pd
 import re
-import itertools
 from src.preprocessing.preprocessing_functions import *
 import pickle
-from matplotlib import pyplot
-import seaborn as sns
-from src.descriptive.descriptive_analysis.descriptive_analysis_functions import *
+from src.descriptive.descriptive_analysis_functions import *
 
 """co-occurence analysis of kldbs"""
 
@@ -49,7 +44,7 @@ for kldb in kldb_level5:
 data = []
 for job in data_old:
     try:
-        alternative_kldb = []
+        alternative_kldb: List = []
         job_kldb = kldbs_dkzs[job["hauptDkz"]]
         data.append(
             {
@@ -75,11 +70,7 @@ servicekraft = [
     )
 ]
 
-plt_servicekraft = co_occurence_with_kldbs(
-    data=servicekraft,
-    kldbs_dkzs=kldbs_dkzs,
-    title="",
-)
+plt_servicekraft = co_occurence_with_kldbs(data=servicekraft, kldbs_dkzs=kldbs_dkzs)
 
 fig_servicekraft = plt_servicekraft.get_figure()
 fig_servicekraft.savefig("visualization/limitations/co_occurence_servicekraft.jpg")
@@ -88,11 +79,7 @@ maurer = [
     job for job in training_data if re.search(r"maurer|maurerin kraft", job["title"])
 ]
 
-plt_maurer = co_occurence_with_kldbs(
-    data=maurer,
-    kldbs_dkzs=kldbs_dkzs,
-    title="",
-)
+plt_maurer = co_occurence_with_kldbs(data=maurer, kldbs_dkzs=kldbs_dkzs)
 
 fig_servicekraft = plt_servicekraft.get_figure()
 fig_servicekraft.savefig("visualization/limitations/co_occurence_maurer.jpg")
@@ -101,11 +88,7 @@ elektriker = [
     job for job in training_data if re.search(r"elektriker|elektrikerin", job["title"])
 ]
 
-plt_elektriker = co_occurence_with_kldbs(
-    data=elektriker,
-    kldbs_dkzs=kldbs_dkzs,
-    title="",
-)
+plt_elektriker = co_occurence_with_kldbs(data=elektriker, kldbs_dkzs=kldbs_dkzs)
 
 fig_servicekraft = plt_servicekraft.get_figure()
 fig_servicekraft.savefig("visualization/limitations/co_occurence_elektriker.jpg")
@@ -120,9 +103,7 @@ softwareentwickler = [
 ]
 
 plt_softwareentwickler = co_occurence_with_kldbs(
-    data=softwareentwickler,
-    kldbs_dkzs=kldbs_dkzs,
-    title="",
+    data=softwareentwickler, kldbs_dkzs=kldbs_dkzs
 )
 
 fig_servicekraft = plt_servicekraft.get_figure()
