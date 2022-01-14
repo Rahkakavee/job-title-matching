@@ -9,6 +9,7 @@ from matplotlib import pyplot
 import seaborn as sns
 from src.descriptive.descriptive_analysis.descriptive_analysis_functions import *
 
+"""co-occurence analysis of kldbs"""
 
 # load data
 with open(
@@ -42,7 +43,7 @@ kldbs_dkzs = {}
 kldb_level5 = [kldb for kldb in kldbs if kldb["level"] == 5]
 for kldb in kldb_level5:
     for dkz in kldb["dkzs"]:
-        kldbs_dkzs.update({str(dkz["id"]): kldb["id"]})
+        kldbs_dkzs.update({str(dkz["id"]): kldb["id"][:3]})
 
 # match with kldbs
 data = []
@@ -53,15 +54,15 @@ for job in data_old:
         data.append(
             {
                 "title": job["title"],
-                "hauptKldB": job_kldb,
-                "alternativeDkzs": job["alternativDkzs"],
+                "hauptKldB": job_kldb[:3],
+                "alternativeDkzs": job["alternativDkzs"][:3],
             }
         )
     except:
         pass
 
 # preprocess data
-with open(file="src/preprocessing/specialwords.tex", mode="rb") as fp:
+with open(file="src/preprocessing/specialwords.txt", mode="rb") as fp:
     specialwords = pickle.load(fp)
 training_data = preprocess(data=data, special_words_ovr=specialwords)
 
@@ -73,12 +74,58 @@ servicekraft = [
         r"servicekraft|service kraft|service kräfte|servicekräfte", job["title"]
     )
 ]
-servicekraft_6000 = [
-    example for example in servicekraft if example["hauptKldB"][:1] == "6"
-]
 
 plt_servicekraft = co_occurence_with_kldbs(
-    data=servicekraft_6000,
+    data=servicekraft,
     kldbs_dkzs=kldbs_dkzs,
-    title="Co-occurence for Servicekraft (only HauptkldB category 6 considered",
+    title="",
+)
+
+fig_servicekraft = plt_servicekraft.get_figure()
+fig_servicekraft.savefig("visualization/limitations/co_occurence_servicekraft.jpg")
+
+maurer = [
+    job for job in training_data if re.search(r"maurer|maurerin kraft", job["title"])
+]
+
+plt_maurer = co_occurence_with_kldbs(
+    data=maurer,
+    kldbs_dkzs=kldbs_dkzs,
+    title="",
+)
+
+fig_servicekraft = plt_servicekraft.get_figure()
+fig_servicekraft.savefig("visualization/limitations/co_occurence_maurer.jpg")
+
+elektriker = [
+    job for job in training_data if re.search(r"elektriker|elektrikerin", job["title"])
+]
+
+plt_elektriker = co_occurence_with_kldbs(
+    data=elektriker,
+    kldbs_dkzs=kldbs_dkzs,
+    title="",
+)
+
+fig_servicekraft = plt_servicekraft.get_figure()
+fig_servicekraft.savefig("visualization/limitations/co_occurence_elektriker.jpg")
+
+softwareentwickler = [
+    job
+    for job in training_data
+    if re.search(
+        r"softwareentwickler|software entwickler",
+        job["title"],
+    )
+]
+
+plt_softwareentwickler = co_occurence_with_kldbs(
+    data=softwareentwickler,
+    kldbs_dkzs=kldbs_dkzs,
+    title="",
+)
+
+fig_servicekraft = plt_servicekraft.get_figure()
+fig_servicekraft.savefig(
+    "visualization/limitations/co_occurence_softwareentwickler.jpg"
 )
