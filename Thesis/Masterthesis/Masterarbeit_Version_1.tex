@@ -565,23 +565,26 @@ Most metrics rely on a confusion matrix. For the multiclass case this confusion 
   \caption{\label{tab: T1} Confusion Matrix (edited after \citep[113]{Kautz2017}}
   \end{table}
 
-From the confusion matrix follows that $c_{i, j}$ defines examples which belong to class j and are predicted as class i. Given that $k$ is the current class, \ac{TP} is defined as $tp_{k} = c_{k, k}$, thus examples which are correctly predicted as the current class k. \ac{FN} are defined as those examples which not belonging to the current class k, but are predicted as k. Formally $fn_{k} = \sum_{i=1, i \neq k}^n c_{i, k}$. Next, \ac{TN}, are examples belonging to the current class m, but are not predicted as m. Formally $tn_{k} = \sum_{i=1, i\neq k}^n \sum_{j=1, j \neq k}^n c_{i,j}$. Last, \ac{FP} are defined as examples not belonging to class k, but are predicted as such. Formally this can be expressed as: $fp_{k} =  \sum_{i=1, i \neq k}^n c_{k, i}$ \citep{Kautz2017}
+From the confusion matrix follows that $c_{i, j}$ defines examples which belong to class j and are predicted as class i. Based on the confusion matrix the true positives of a current class $m$ can be defined $tp_{m} = c_{m, m}$, thus examples which are correctly predicted as the current class m. The false negatives are defined as those examples which not belonging to the current class m, but are predicted as k. Formally $fn_{m} = \sum_{i=1, i \neq m}^n c_{i, m}$. Next, the true negatives are examples belonging to the current class m, but are not predicted as m. Formally $tn_{m} = \sum_{i=1, i\neq m}^n \sum_{j=1, j \neq m}^n c_{i,j}$. Last, false positives are defined as examples not belonging to class m, but are predicted as such. Formally this can be expressed as: $fp_{m} =  \sum_{i=1, i \neq m}^n c_{m, i}$ \citep{Kautz2017}
 
-As mentioned the \ac{OA} is one of most common metric for performance evaluation. It represents how well the classifier classifies across all classes correctly. Formally, given that N is number of examples and K the number of all classes, this can be expressed as \citep{Branco2017}: 
-\[OA = \frac{1}{K} \sum_{i = 1}^K \frac{tp_{k} + tn_{k}}{N}\]
-% \[OA = \frac{TP+ TN}{n}\]
+As mentioned the \ac{OA} is one of most common metric for performance evaluation. It represents how well the classifier classifies across all classes correctly. Given that N is the number of examples, formally the \ac{OA} can be expressed as: 
+\[OA = \frac{\sum_{i=1}^m tp_i}{N} \]
+
+% Formally, given that N is number of examples and K the number of all classes, this can be expressed as \citep{Branco2017}: 
+% \[OA = \frac{1}{K} \sum_{i = 1}^K \frac{tp_{k} + tn_{k}}{N}\]
+
 Following the formula an accuracy of 1 means that all examples are correctly classified, while a 0 mean that each example is classified with the wrong class. \citep{Berthold2020}
 Although \ac{OA} is a widley used metric it is critized for favouring the majority classes, thus not reflecting minority classes appropriatly in unbalanced datasets \citep{Berthold2020, Fatourechi2008}
 
-Two more popular metrics are precision and recall. Precision respresents how well the classifier detects actual positive examples among the positive predicted examples. Recall, also called sensitivity, in contrast, represents how many examples are labelled as positive among the actual positive examples \citep{Berthold2020}. For the multiclass scenario, two different calculation approaches for each of the metrics are proposed: micro and macro average \citep{Branco2017}. In the macro approach first the metric is calculated for each class k against all other classes. The average of all of them is built. Formally: 
+Two more popular metrics are precision and recall. Precision respresents how well the classifier detects actual positive examples among the positive predicted examples. Recall, also called sensitivity, in contrast, represents how many examples are labelled as positive among the actual positive examples \citep{Berthold2020}. For the multiclass scenario, two different calculation approaches for each of the metrics are proposed: micro and macro average \citep{Branco2017}. In the macro approach first the metric is calculated for each class m against all other classes. The average of all of them is built. Formally, given that $K$ is the total number of classes: 
 
-\[precision_{macro} = \frac{1}{K} \sum_{i=1}^k \frac{tp_{i}}{tp_{i} + fp_{i}}\]
-\[recall_{macro} = \frac{1}{K} \sum_{i=1}^k \frac{tp_{i}}{tp_{i} + fn_{i}}\]
+\[precision_{macro} = \frac{1}{M} \sum_{i=1}^m \frac{tp_{i}}{tp_{i} + fp_{i}}\]
+\[recall_{macro} = \frac{1}{M} \sum_{i=1}^m \frac{tp_{i}}{tp_{i} + fn_{i}}\]
 
 In contrast the micro approach aggregates the values, which can be formally expressed as follows: 
 
-\[precision_{micro} = \frac{\sum_{i=1}^K tp_i}{\sum_{i=1}^K tp_i + fp_i}\]
-\[recall_{micro} = \frac{\sum_{i=1}^K tp_i}{\sum_{i=1}^K tp_i + fn_i}\]
+\[precision_{micro} = \frac{\sum_{i=1}^m tp_i}{\sum_{i=1}^m tp_i + fp_i}\]
+\[recall_{micro} = \frac{\sum_{i=1}^m tp_i}{\sum_{i=1}^m tp_i + fn_i}\]
 
 There is a trade-off between precision and recall \citep{Buckland1994}. The F-measure capture both precision and recall by taking the harmonic mean between both. It is calculated as follows \citep{Branco2017,Pan2016}:  
 
@@ -589,13 +592,23 @@ There is a trade-off between precision and recall \citep{Buckland1994}. The F-me
 
 \[F_{macro} = 2 \cdot \frac{precision_{macro} \cdot recall_{macro} }{precision_{macro} + recall_{macro} }\ \]
 
-Apart from the trade-off between recall and precision, there is also a tradeoff between sensitivity and specificty (1- sensitivity). Using a \ac{ROC}, which plots the specifity against the sensitivity the trade-off can be visualized for different thresholds. The area under the curve then can be used to obtain the performance of the classifier. A large area indicates a better classifier \citep{Berthold2020, Espindola2005}. 
+A closer look at the formula of the micro scores shows that acutally the micro precision score and the recall score are exactly the same, since aggregating the false negatives and aggregating the false positive results in the same number. If the precision and recall are the same, it follows from the F-meausre calculation that it has to be as well similar. And even further the micro score is actually reducing to the accuracy, thus suffering from the same problem as accuracy \citep{grandini2020}
 
-As shown above, there are several metrics for evaluating the performance of a classifier, with the metrics having different focuses. Since the job title classification involves multiclass classification and the descriptive analysis show that the data is clearly unbalanced, at least for some classes in level 5, it is not reasonable to base the evaluation solely on the \ac{OA}. Taking precision, recall and the harmonic mean into account would capture the performance of the minority classes as well. The \ac{ROC} curve does gives, due to its visualization a good impression for the performance, but it is not feasible for high number of classes. Following this argumentation the performance of the classifiers will be evaluated with accuracy, precision, recall, F-measure and Cohen's Kappa. 
+% Apart from the trade-off between recall and precision, there is also a tradeoff between sensitivity and specificty (1- sensitivity). Using a \ac{ROC}, which plots the specifity against the sensitivity the trade-off can be visualized for different thresholds. The area under the curve then can be used to obtain the performance of the classifier. A large area indicates a better classifier \citep{Berthold2020, Espindola2005}. 
+
+Since the job title classification involves multiclass classification and the descriptive analysis show that the data is clearly unbalanced, at least for some classes in level 5, it is not reasonable to base the evaluation solely on the \ac{OA}. Showing that micro score of precision, recall and f1 reducing to accuracy, it is important to take the macro precision, recall and their harmonic mean besides the accuarcy into account in order to capture the performance of the minority classes as well. 
+
+% The \ac{ROC} curve does gives, due to its visualization a good impression for the performance, but it is not feasible for high number of classes. Following this argumentation the performance of the classifiers will be evaluated with accuracy, precision, recall, F-measure and Cohen's Kappa. 
 
 \subsection{Experimental results}
-\begin{table}[]
-\begin{tabular}{lrrr}
+
+As explained at the top of this work, the results are compared on three perspectives: Vectorization techniques, classification algorithms and enrichment with additional knowledge. Table \ref{tab: T5} and \ref{tab: T6} show the results of level 1 for all vectorization methods. Each row denotes a vectorization technique. Each column represents a classifier. Table \ref{tab: T5} reports the accuracy while table \ref{tab: T6}  report the macro precision(p), recall(r) and f1(F1) scores. The word2vec and doc2vec without additional knowledge training are the marked with $I$, the ones with additional knowledge by $II$. The results of the \ac{BERT} deep learning model are reported separately in table \ref{tab: T12}. 
+
+
+
+\begin{table}[hb!]
+  \center
+\begin{tabular}{lrrr} 
   \hline
   {} &    \textbf{LR} &   \textbf{SVM} &    \textbf{RF} \\
   \hline
@@ -611,8 +624,9 @@ As shown above, there are several metrics for evaluating the performance of a cl
   \caption{\label{tab: T5} Evaluation of Level 1 classification - Accuracy}
 \end{table}
 
-  \begin{table}[]
-    \resizebox{\textwidth}{!}{%
+
+\begin{table}[]
+  \resizebox{\textwidth}{!}{%
 \begin{tabular}{llll}
 \hline
 {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
@@ -626,85 +640,144 @@ As shown above, there are several metrics for evaluating the performance of a cl
 \textbf{BERT}            &  p: 0.75, r: 0.76, F1: 0.75 &  p: 0.76, r: 0.76, F1: 0.76 &  p: 0.79, r: 0.73, F1: 0.74 \\
 \hline
 \end{tabular}
-    }
+  }
 \caption{\label{tab: T6} Evaluation of Level 1 classification - macro}
 \end{table}
 
 
 \begin{table}[]
   \resizebox{\textwidth}{!}{%
-\begin{tabular}{llll}
+  \begin{tabular}{llllllll}
   \hline
-  {} &                          \textbf{LR} &                          \textbf{SVM} &                           \textbf{RF} \\
-  \hline
-  \textbf{CountVectorizer} &  p: 0.71, r: 0.71, F1: 0.71 &  p: 0.67, r: 0.67, F1: 0.67 &  p: 0.63, r: 0.63, F1: 0.63 \\
-  \textbf{TFIDF}           &     p: 0.70, r: 0.70, F1: 0.70 &  p: 0.67, r: 0.67, F1: 0.67 &  p: 0.62, r: 0.62, F1: 0.62 \\
-  \textbf{Word2Vec\_I}      &  p: 0.52, r: 0.52, F1: 0.52 &  p: 0.51, r: 0.51, F1: 0.51 &     p: 0.60, r: 0.60, F1: 0.60 \\
-  \textbf{Word2vec\_II}     &  p: 0.52, r: 0.52, F1: 0.52 &     p: 0.50, r: 0.50, F1: 0.50 &     p: 0.60, r: 0.60, F1: 0.60 \\
-  \textbf{Doc2Vec\_I}       &  p: 0.46, r: 0.46, F1: 0.46 &  p: 0.43, r: 0.43, F1: 0.43 &  p: 0.53, r: 0.53, F1: 0.53 \\
-  \textbf{Doc2Vec\_II}      &  p: 0.44, r: 0.44, F1: 0.44 &  p: 0.41, r: 0.41, F1: 0.41 &  p: 0.51, r: 0.51, F1: 0.51 \\
-  \textbf{BERT}            &  p: 0.76, r: 0.76, F1: 0.76 &  p: 0.77, r: 0.77, F1: 0.77 &  p: 0.76, r: 0.76, F1: 0.76 \\
-  \hline
+   &
+    \textbf{accuracy} &
+    \textbf{precision macro} &
+    \textbf{recall macro} &
+    \textbf{f1 macro} & \\ \hline
+  \textbf{BERT clf level 1} &
+    0.76 &
+    0.73 &
+    0.70 &
+    0.71 & \\
+  \textbf{BERT clf level 3} &
+    0.43 &
+    0.20 &
+    0.16 &
+    0.15 &\\ \hline
   \end{tabular}
   }
-  \caption{\label{tab: T7} Evaluation of Level 1 classification - micro}
+  \caption{\label{tab: T12} Evaluation of Level 1 and 3 \ac{BERT} deep learning model}
   \end{table}
 
+Comparing the accuracy of the vectorization techniques \ac{BERT} outperforms with $76\%$ accuracy clearly the other methods. A look at the macro table \ref{tab: T6} for BERT confirm the high performance with relative similar macro scores over all classifiers. Only in combination with \ac{RF} the recall is approx. $3\%$ lower with \ac{BERT} compared to the other classifiers. Further both sparse techniques count vectorizer and \ac{TF-IDF} performend quite well, especially compared to the word embedding techniques word2vec and doc2vec regardless of having additional knowldege or not for \ac{LR} and \ac{SVM}. Related to \ac{LR} and \ac{SVM} the worst performance is achieved by Doc2vec. However, word2vec also performs considerably below the sparse vectors and \ac{BERT}. For example, Word2vec\_I has $19\%$ less accuracy than count vectorizer for \ac{LR}. This picture is confirmed when looking at the macro table. Here the difference between Word2vec and Doc2vec compared to the sparse vectors and BERT shows up more strongly. Again for \ac{LR}, in comparison with Word2vec\_I, the count vectorizer performed $26\% $ better, measured by the f1 score. A different picture is given for \ac{RF}. The differences between the sparse methods and the word2vec techniques is almost vanished, while doc2vec performs again considerably lower. Finally compared to \ac{BERT} all other vectorizer are performing lower taking the macro score as performance metric instead of accuracy. 
 
-  LATEX
-Accuracy
+The analysis of the classification algorithms confirms the ambiguous impression in the literature. While for the dense vectorization techniques LR and SVM have a really good performance, RF shows the best performance for the two word embedding techniques word2vec and doc2vec. For BERT, on the other hand, all classification algorithms turn out to be strong. The BERT deep learning model matches the performance of BERT vectorizer in combination with the traditional classification algorithms, thus shows no differences. 
+
+Concerning the last analysis dimension the focus relies on Word2vec\_II and Doc2vec\_II which are contain additional knowledge for the embeddings \footnote{The \ac{BERT} model contains as well additional knowledge since searchwords pairs also were used for the fine tuning, but a model comparision is difficult, since \ac{BERT} outperforms in general the other methods and there is no direct comparable method, which is why the focus will rely on the other two}. Analysing the accuracy table \ref{tab: T6} the results of Word2vec\_II are show no improvement by adding knowledge. For the doc2vec, the results are even slightly worse, which is reflected also in the macro results. The macro results for word2vec in contrast leave uncertainties. While for \ac{LR} and \ac{SVM} the f1 score of Word2vec\_II is $2\%$ higher than for Word2vec\_I, it is the opposite for \ac{RF}. 
+
+
+Table \ref{tab: T8} and \ref{tab: T10} contain the results of Level 3. Again thr results of the \ac{BERT} deep learning model are reported separatly in \ref{tab: T12}. Bearing the class distribution of level 3 in mind, the problem is that a lot of classes only have one example. This leads to ill-defined precision, recall and f1 score for macro scores. Considering the formula above, if a class has zero examples, this class is set to zero, but is included in the average. In other words the macro scores have to be interpretated with caution. At the same time the accuracy still suffers from the mentioned problems of favoring classes. Nevertheless, the performance of the classifier can at least be compared, since all suffer about equally from the classes without prediction. However, not too much meaning should be given to the exact percentages of accuracy and macro scores. 
+
+
+\begin{table}[hb!]
+  \center
 \begin{tabular}{lrrr}
 \hline
-{} &    LR &   SVM &    RF \\
+{} &   \textbf{LR} &   \textbf{SVM} &    \textbf{RF} \\
 \hline
-CountVectorizer &  0.48 &  0.49 &  0.42 \\
-TFIDF           &  0.47 &  0.50 &  0.45 \\
-Word2Vec\_I      &  0.29 &  0.17 &  0.35 \\
-Word2Vec\_II     &  0.30 &  0.18 &  0.34 \\
-Doc2Vec\_I       &  0.20 &  0.21 &  0.31 \\
-Doc2Vec\_II      &  0.18 &  0.17 &  0.27 \\
-BERT            &  0.50 &  0.47 &  0.45 \\
+\textbf{CountVectorizer} &  0.48 &  0.49 &  0.42 \\
+\textbf{TFIDF}           &  0.47 &  0.50 &  0.45 \\
+\textbf{Word2Vec\_I}      &  0.29 &  0.17 &  0.35 \\
+\textbf{Word2Vec\_II}     &  0.30 &  0.18 &  0.34 \\
+\textbf{Doc2Vec\_I}       &  0.20 &  0.21 &  0.31 \\
+\textbf{Doc2Vec\_II}      &  0.18 &  0.17 &  0.27 \\
+\textbf{BERT}            &  0.50 &  0.47 &  0.45 \\
 \hline
 \end{tabular}
+\caption{\label{tab: T8} Evaluation of Level 3 classification - Accuracy}
+\end{table}
 
 
-
+\begin{table}[hb!]
+  \resizebox{\textwidth}{!}{%
 \begin{tabular}{llll}
 \hline
-{} &                          LR &                         SVM &                          RF \\
+{} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
 \hline
-CountVectorizer &  p: 0.48, r: 0.48, F1: 0.48 &  p: 0.49, r: 0.49, F1: 0.49 &  p: 0.42, r: 0.42, F1: 0.42 \\
-TFIDF           &  p: 0.47, r: 0.47, F1: 0.47 &     p: 0.5, r: 0.5, F1: 0.5 &  p: 0.45, r: 0.45, F1: 0.45 \\
-Word2Vec\_I      &  p: 0.29, r: 0.29, F1: 0.29 &  p: 0.17, r: 0.17, F1: 0.17 &  p: 0.35, r: 0.35, F1: 0.35 \\
-Word2vec\_II     &     p: 0.3, r: 0.3, F1: 0.3 &  p: 0.18, r: 0.18, F1: 0.18 &  p: 0.34, r: 0.34, F1: 0.34 \\
-Doc2Vec\_I       &     p: 0.2, r: 0.2, F1: 0.2 &  p: 0.21, r: 0.21, F1: 0.21 &  p: 0.31, r: 0.31, F1: 0.31 \\
-Doc2Vec\_II      &  p: 0.18, r: 0.18, F1: 0.18 &  p: 0.17, r: 0.17, F1: 0.17 &  p: 0.27, r: 0.27, F1: 0.27 \\
-BERT            &     p: 0.5, r: 0.5, F1: 0.5 &  p: 0.47, r: 0.47, F1: 0.47 &  p: 0.45, r: 0.45, F1: 0.45 \\
-\hline
-\end{tabular}
-
-
-
-Precision, Recall, F1-score - macro
-\begin{tabular}{llll}
-\hline
-{} &                          LR &                         SVM &                          RF \\
-\hline
-CountVectorizer &   p: 0.41, r: 0.27, F1: 0.3 &  p: 0.38, r: 0.33, F1: 0.34 &  p: 0.36, r: 0.25, F1: 0.27 \\
-TFIDF           &  p: 0.36, r: 0.22, F1: 0.25 &  p: 0.39, r: 0.33, F1: 0.34 &  p: 0.39, r: 0.25, F1: 0.28 \\
-Word2Vec\_I      &  p: 0.18, r: 0.11, F1: 0.12 &   p: 0.1, r: 0.06, F1: 0.06 &  p: 0.22, r: 0.18, F1: 0.19 \\
-Word2vec\_II     &  p: 0.24, r: 0.14, F1: 0.17 &    p: 0.14, r: 0.1, F1: 0.1 &  p: 0.26, r: 0.19, F1: 0.21 \\
-Doc2Vec\_I       &   p: 0.1, r: 0.05, F1: 0.05 &   p: 0.1, r: 0.09, F1: 0.08 &  p: 0.26, r: 0.14, F1: 0.15 \\
-Doc2Vec\_II      &  p: 0.08, r: 0.04, F1: 0.04 &  p: 0.11, r: 0.07, F1: 0.08 &  p: 0.21, r: 0.11, F1: 0.12 \\
-BERT            &  p: 0.58, r: 0.55, F1: 0.55 &    p: 0.52, r: 0.5, F1: 0.5 &  p: 0.48, r: 0.35, F1: 0.38 \\
+\textbf{CountVectorizer} &   p: 0.41, r: 0.27, F1: 0.30 &  p: 0.38, r: 0.33, F1: 0.34 &  p: 0.36, r: 0.25, F1: 0.27 \\
+\textbf{TFIDF}           &  p: 0.36, r: 0.22, F1: 0.25 &  p: 0.39, r: 0.33, F1: 0.34 &  p: 0.39, r: 0.25, F1: 0.28 \\
+\textbf{Word2Vec\_I}      &  p: 0.18, r: 0.11, F1: 0.12 &   p: 0.10, r: 0.06, F1: 0.06 &  p: 0.22, r: 0.18, F1: 0.19 \\
+\textbf{Word2vec\_II}     &  p: 0.24, r: 0.14, F1: 0.17 &    p: 0.14, r: 0.10, F1: 0.10 &  p: 0.26, r: 0.19, F1: 0.21 \\
+\textbf{Doc2Vec\_I}       &   p: 0.10, r: 0.05, F1: 0.05 &   p: 0.10, r: 0.09, F1: 0.08 &  p: 0.26, r: 0.14, F1: 0.15 \\
+\textbf{Doc2Vec\_II}      &  p: 0.08, r: 0.04, F1: 0.04 &  p: 0.11, r: 0.07, F1: 0.08 &  p: 0.21, r: 0.11, F1: 0.12 \\
+\textbf{BERT}            &  p: 0.58, r: 0.55, F1: 0.55 &    p: 0.52, r: 0.50, F1: 0.50 &  p: 0.48, r: 0.35, F1: 0.38 \\
 \hline
 \end{tabular}
+}
+\caption{\label{tab: T10} Evaluation of Level 3 classification - macro}
+\end{table}
+
+In general the performance of level 3 is lower than of level 1, which is due to the higher number of classes and lower number of examples in the classes. In contrast to level 1 there is no noticeable difference for accuracy between \ac{BERT} and the sparse vectors. But looking at the macro scores \ac{BERT} has a much higher recall, and thus a higher f1 score than the other techniques. In general, while the macro results reveal for all other techniques much worse performance compared to the accuracy score, \ac{BERT} is stable over all metrics. Thus, again it can be concluded that \ac{BERT} outperforms the other classifiers. Both sparse vectors performed relative equally. Comparing the sparse vectors against the word embeddings Word2vec and Doc2vec, the latters are the underdogs. Same as for level 1 Doc2vec has the worst performance. 
+
+Comparing the classifiers for level 3 shows exactly the same picture for sparse vectors and word embeddings. Sparse vectors perform better with \ac{LR} and \ac{SVM}, while the word embeddings have the best result with \ac{RF}. In contrast to level 1, for \ac{BERT} the best performance is achieved by \ac{LR} on level 3 checking the metrics. Especially compared to the deep learning model, which performed much lower than \ac{BERT} classifier and looking at the macro results even much worse than the sparse techniques. However, with respect to the results of BERT of LR and SVM, a peculiarity should be noted. During training, there was no convergence of \ac{SVM} with \ac{BERT} in a real running time. Therefore a maximal iteration of 10000 was set. But this might affected the performance of \ac{SVM}. Thus one should be careful to rank \ac{LR} as considerably better from a comparison between \ac{LR} and \ac{SVM}. 
+
+Including additional knowledge to word2vec might had a slightly effect on the performance. While the accuarcies do not differ considerably, comparing the macro results for Word2vec\_II against Word2vec\_I results in better f1 scores for Word2vec\_II. Doc2vec\_II on contrast has no differences checking the macro results and even performed worse than Doc2Vec\_I taking the accuracy as the performance metric. 
 
 
 
-Level 3: Macro. The problem is that for level 3 that a lot of classes have no predicted samples making it difficult to calculate the precision, recall and f1-score. The precision and recall for the macro score are not acutally interpretable. Considering the formula given above for the macro scores, setting some of the classes to 0 is directly reflected in the calculation because dividing by n takes the classes setted to zero into account. The micro score just don't take them into account, which gives a better interpretability. Thus in the following only the micro results for Level 3 are given. The macro results are reported in the appendix for completeness.
 
-  % \end{table}
+% \begin{table}[]
+%   \resizebox{\textwidth}{!}{%
+% \begin{tabular}{llll}
+%   \hline
+%   {} &                          \textbf{LR} &                          \textbf{SVM} &                           \textbf{RF} \\
+%   \hline
+%   \textbf{CountVectorizer} &  p: 0.71, r: 0.71, F1: 0.71 &  p: 0.67, r: 0.67, F1: 0.67 &  p: 0.63, r: 0.63, F1: 0.63 \\
+%   \textbf{TFIDF}           &     p: 0.70, r: 0.70, F1: 0.70 &  p: 0.67, r: 0.67, F1: 0.67 &  p: 0.62, r: 0.62, F1: 0.62 \\
+%   \textbf{Word2Vec\_I}      &  p: 0.52, r: 0.52, F1: 0.52 &  p: 0.51, r: 0.51, F1: 0.51 &     p: 0.60, r: 0.60, F1: 0.60 \\
+%   \textbf{Word2vec\_II}     &  p: 0.52, r: 0.52, F1: 0.52 &     p: 0.50, r: 0.50, F1: 0.50 &     p: 0.60, r: 0.60, F1: 0.60 \\
+%   \textbf{Doc2Vec\_I}       &  p: 0.46, r: 0.46, F1: 0.46 &  p: 0.43, r: 0.43, F1: 0.43 &  p: 0.53, r: 0.53, F1: 0.53 \\
+%   \textbf{Doc2Vec\_II}      &  p: 0.44, r: 0.44, F1: 0.44 &  p: 0.41, r: 0.41, F1: 0.41 &  p: 0.51, r: 0.51, F1: 0.51 \\
+%   \textbf{BERT}            &  p: 0.76, r: 0.76, F1: 0.76 &  p: 0.77, r: 0.77, F1: 0.77 &  p: 0.76, r: 0.76, F1: 0.76 \\
+%   \hline
+%   \end{tabular}
+%   }
+%   \caption{\label{tab: T7} Evaluation of Level 1 classification - micro}
+%   \end{table}
+
+
+
+
+
+% \begin{table}[]
+%   \resizebox{\textwidth}{!}{%
+% \begin{tabular}{llll}
+% \hline
+% {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
+% \hline
+% \textbf{CountVectorizer} &  p: 0.48, r: 0.48, F1: 0.48 &  p: 0.49, r: 0.49, F1: 0.49 &  p: 0.42, r: 0.42, F1: 0.42 \\
+% \textbf{TFIDF}           &  p: 0.47, r: 0.47, F1: 0.47 &     p: 0.50, r: 0.50, F1: 0.50 &  p: 0.45, r: 0.45, F1: 0.45 \\
+% \textbf{Word2Vec\_I}      &  p: 0.29, r: 0.29, F1: 0.29 &  p: 0.17, r: 0.17, F1: 0.17 &  p: 0.35, r: 0.35, F1: 0.35 \\
+% \textbf{Word2vec\_II}     &     p: 0.30, r: 0.30, F1: 0.30 &  p: 0.18, r: 0.18, F1: 0.18 &  p: 0.34, r: 0.34, F1: 0.34 \\
+% \textbf{Doc2Vec\_I}       &     p: 0.20, r: 0.20, F1: 0.20 &  p: 0.21, r: 0.21, F1: 0.21 &  p: 0.31, r: 0.31, F1: 0.31 \\
+% \textbf{Doc2Vec\_II}      &  p: 0.18, r: 0.18, F1: 0.18 &  p: 0.17, r: 0.17, F1: 0.17 &  p: 0.27, r: 0.27, F1: 0.27 \\
+% \textbf{BERT}            &     p: 0.50, r: 0.50, F1: 0.50 &  p: 0.47, r: 0.47, F1: 0.47 &  p: 0.45, r: 0.45, F1: 0.45 \\
+% \hline
+% \end{tabular}
+% }
+% \caption{\label{tab: T9} Evaluation of Level 3 classification - micro}
+% \end{table}
+
+
+
+
+
+
+
+\subsection{Deeper insight into the results}
+While the outstanding performance of \ac{BERT} is intuitive and confirm the results of the literature, some of the results are suprising. In order to get better insights and to open the blackbox of the classifiers and the vectorization techniques at least a little bit, it is useful to look at the actual predictions of the classifiers and at the encoding of the individual classifiers. 
+
+% \end{table}
 
   % \begin{table}[]
   %   \resizebox{\textwidth}{!}{%
@@ -869,5 +942,7 @@ The problem just highlighted raises the question of whether the limitation is pu
 % \[\argmax_{c \in C} P(c_j) \prod_{i = 1}^k P(t_i|c_j) \] 
 
 \section{Results}
+
+
 
 \end{document}
