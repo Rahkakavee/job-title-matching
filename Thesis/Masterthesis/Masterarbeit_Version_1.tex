@@ -87,27 +87,27 @@
     \\[1cm]
     {\Large \textbf{Masterthesis}}
     \\[1cm]
+    {\normalsize A thesis submitted in partial fulfilment of the requirments for the degree of the Master of Social and Economic Data Science at the University of Konstanz}
+    \\[1cm]
     {\Large submitted by}
     \\[0.5cm]
     {\LARGE \textbf{Rahkakavee Baskaran}}
     \\[0.5cm]
-    {\Large at the}
+    {\LARGE 01/950253}
     \\[0.5cm]
-    \includegraphics[width=0.4\textwidth]{logo.jpg}
-    \\[1cm]
-    {\Large \textbf{Department of Politics and Public Administration}}
-    \\[1cm]
-    {\Large \textbf{Center for Data and Methods}}
-    \\[2cm]
-    \begin{minipage}[c]{0.8\textwidth}
-    \begin{description}
-     \item {\Large \textbf{1.Gutachter:} Prof. Dr. Susumu Shikano}
-     \item {\Large \textbf{2.Gutachter:} JunProf Juhi Kulshresthra}
-    \end{description}
-    \end{minipage}
-    \vfill
+    {\Large at}
+    \\[0.5cm]
+    \includegraphics[width=0.6\textwidth]{logo.jpg}
+  \end{center}
+  {\normalsize \textbf{Period of completion: }} 
+  \\[0.2cm]
+  \begin{center}
+  {\normalsize \textbf{1\textsuperscript{st} supervisor:} Prof. Dr. Susumu Shikano}
+  \\[0.1cm]
+  {\normalsize \textbf{2\textsuperscript{nd} supervisor:} JunProf Juhi Kulshresthra}
+  \\[2cm]
     {\LARGE \textbf{Konstanz, \today}}
-    \end{center}
+  \end{center}
     \end{titlepage}
 
 %%%%%%%%%%%%%%TableOfContents%%%%%%%%%%%%%%
@@ -153,18 +153,25 @@
 
 %%%%%%%%%%%%%%SECTIONS%%%%%%%%%%%%%%
 \section{Introduction}
-Job titles are key information within the labor market. They are useful for job seekers to find jobs \citep{marinescu2020}. They are an important component of job search engines \citep{slamet2018, javed2015, javed2016} and job recommendation systems \citep{malherbe2014}. 
+Job titles are key information within the labor market. They are helpful for job seekers to find jobs \citep{marinescu2020}. They are an essential component of job search engines \citep{slamet2018, javed2015, javed2016} and job recommendation systems \citep{malherbe2014}. And lastly, they serve as a valuable data source for various analyses, such as job market trend \citep{martin2021, li2021}, job perception \citep{smith1989, boydston2020} or social science analyses \citep{martin2021}. However, since job titles are not normalized, it is challenging to structure them appropriately for downstream tasks. Various institutions developed job taxonomies to structure and generalize job titles. Established taxonomies are, for example, the ``International Standard Classification of Occupation'' (ISCO) for the European job market or the ``Klassifikation der Berufe 2010'' (KLdB) for the German job market \citep{uter2020}. Classifying job titles from job postings into classes from those taxonomies is inevitable to improve job search engines or recommendation systems and analyze the labor market. 
 
-And lastly, they serve as a valuable data source for various analyses, such as job market trend \citep{martin2021, li2021}, job perception \citep{smith1989, boydston2020} or social science analyses \citep{martin2021}. However, since job titles are not normalized, it is challenging to structure them in an appropriate way for downstream tasks. Various institutions developed job taxonomies in order to structure and generalize job titles. Established taxonomies are, for example, the ``International Standard Classification of Occupation'' (ISCO) for the European job market or the ``Klassifikation der Berufe 2010'' (KLdB) for the German job market \citep{uter2020}. Matching job titles from job postings with classes from those taxonomies is inevitable in order to improve job search engines or recommendation systems as well as analyzing the labor market. In Natural Language Processing (NLP), this process of matching is known as text classification. 
+In the literature, there exist some works on the classification of job titles.\citep{zhu2016, javed2015, decorte2021, wang2019,neculoiu2016}. While there are, for example, job title classification systems like ``Carotene" \citet{javed2015} for English titles, for the German job market, as far as I am concerned, there are no classification attempts. However, accurate classification of job titles with the \ac{KldB} taxonomy would facilitate several downstream tasks for the German job market. With the \ac{KldB} 2010, a taxonomy was created that reflects the current trends in the labor market based on empirical and theoretical foundations, which gives an excellent basis for the normalization. In addition, most of the previous work suffers from a solid database because labeled data is missing. This often forces to use unsupervised methods \citep{decorte2021, javed2015}. For the German job market, the Federal Employment Agency provides job postings with labeled titles on their job board, creating large labeled data for the text classification. 
 
-Text classification, a highly researched area, is the process of classifying text documents or text segments into a set of predefined classes. 
+Over time, the literature has been virtually flooded with algorithms for text classification. Starting with traditional techniques followed by ensemble techniques, nowadays, mainly deep learning methods dominate the research. Choosing a classification algorithm is far from trivial: no algorithm works equally well for every task. This makes exploration and comparison of different algorithms necessary. However, not only the choice of the classifier itself is a challenge, but also the input for the algorithms plays a significant role. Methods have been developed that take into account various properties, such as the context of the text or the consideration of word order. This results in vectors with different densities and dimensions. In order to develop a powerful algorithm, various techniques have to be explored and compared.
 
+Task-specific requirements require further adjustments in the training process. The focus of this paper is on the challenge of job titles being concise. Short texts suffer from sparseness, few word co-occurrences,  missing shared context, noisiness, and ambiguity. The literature offers several approaches. Enriching features with additional knowledge has proven to be a promising method \citep{WangF2014, wang2017J}.
+
+Given the lack of a classification system for German job titles and the challenges this task brings, I define the following research goal: A comparison of different vectorization and classification methods for classifying German job titles under consideration of short text classification. The comparison should help to develop a German job title classification system based on the \ac{KldB} taxonomy to facilitate downstream tasks for the German labor market. Based on the state of the literature, the comparison is carried out under three aspects: First, different feature extraction techniques are implemented and compared. The comparison includes the sparse vectors count vectorizer and tfidf and the dense techniques word2vec, doc2vec, and BERT. Second, different classifiers from different research directions are considered. The traditional methods SVM and LR, the ensemble technique RF, and a BERT as a deep learning method are applied and compared. Finally, the task-specific challenge of short texts is considered by enriching word2vec and doc2vec, each with a second model with additional knowledge from the taxonomy. 
+
+Some interesting trends emerge from the training. \ac{BERT} as a vectorization technique is the clear winner. The sparse vectors perform better than word2vec and doc2vec, except for \ac{RF} where word2vec has similar performance to the sparse vectors. Except for \ac{BERT}, the other classifiers developed label bias in different settings, which explains most of the performance scores. The additional knowledge may have positively affected the word2vec embedding technique, while it may have been detrimental to doc2vec. 
+
+This paper is organized as follows: The first section gives an overview of the related work to derive the research gap and the framework for the task. The following section presents the data sets and elaborates the taxonomy. This is followed by the third chapter, with a detailed explanation of the pipeline and the associated methods. Then the results are presented, and possible reasons are given. Some limitations and a summary are drawn at the end of the paper.  
 
 \section{Related work}
 \subsection*{Domain related work}
 As being a useful application for many downstream task, some works for the English-language job market that deal with job classification can be found. In terms of classifiers, the corresponding work can be categorized into traditional classifiers or deep learning methods. \cite{zhu2017} for example, use a \ac{KNN} classifier in combination with document embedding as a feature selection strategy. \cite{javed2015} rely on traditional methods as well, by combining a \ac{SVM} classifier and a \ac{KNN} classifier for their job recommendation system. In contrast, the approaches of \cite{decorte2021}, \cite{wang2019} and \cite{neculoiu2016} are based on deep learning methods. From a higher perspective, there is another dividing line between the approaches. As mentioned earlier, job title normalization can be considered as a typical text classification task \citep{wang2019, javed2015, zhu2017}. \cite{decorte2021} and \cite{neculoiu2016}, however, formulate the task as a string representation approach of similar job titles. 
 
-While there is some work on job title classification for the English speaking job market, as far as I am concerned, there have not been any classification attempts for the German job market. However, an accurate classification of job titles with the German taxonomy would facilitate several downstream tasks for the German job market. With the KldB 2010, an occupational classification was created for Germany that reflects the current trends in the labor market based on empirical and theoretical foundations. Further, most of the work about job title classification suffers from solid databases. Therefore, \cite{decorte2021}, for example, use skills to understand the meaning of job titles and to avoid manually labelling them. \cite{javed2015} rely on a weakly supervised approach to get enough labelled data. The advantage of classifying for the German job market is that the Federal Employment Agency of Germany provides a data set with job titles and the possibility of linking them with die KldB classes, which offers a huge and powerful training data set which in turn allows for more flexibility in which algorithms are applicable. Following \citet{wang2019, javed2015, zhu2017} the task will be framed as a text classification task. 
+While there is some work on job title classification for the English speaking job market, as far as I am concerned, there have not been any classification attempts for the German job market. However, an accurate classification of job titles with the German taxonomy would facilitate several downstream tasks for the German job market. Further, most of the work about job title classification suffers from solid databases. Therefore, \cite{decorte2021}, for example, use skills to understand the meaning of job titles and to avoid manually labelling them. \cite{javed2015} rely on a weakly supervised approach to get enough labelled data. The advantage of classifying for the German job market is that the Federal Employment Agency of Germany provides a data set with job titles and the possibility of linking them with die KldB classes, which offers a huge and powerful training data set which in turn allows for more flexibility in which algorithms are applicable. Following \citet{wang2019, javed2015, zhu2017} the task will be framed as a text classification task. 
 
 \subsection*{Textclassification}
 During the last decades, researchers developed a various number of classifiers. As \cite{kowsari2019text} summarize in their survey of classifiers, we can group the approaches mainly into three groups. The first group contains traditional methods like \ac{NB},\ac{SVM}), \ac{KNN}, \ac{LR} or Decision Trees \citep{Vijayan2017, Colas2006, kowsari2019text, Sebastiani2001}. Deep learning methods like \ac{CNN} or \ac{RNN}, which are currently the most advanced algorithms for NLP, form the second group. The last group consists of ensemble learning techniques like Boosting and Bagging. Each group can be further split mainly into supervised and unsupervised learning techniques. Since labeled data is available for the classification task in this study, the focus will be on supervised learning techniques. 
@@ -180,7 +187,7 @@ Besides the classifier, it is also important for the performance with which inpu
 Unsuitable features considerably affect the performance of the classification algorithms \citep{cahyani2021}. The correct selection of a feature extraction technique depends on many factors, like the length of the dataset or the specific domain \citep{arora2021}. Empirically, this is reflected in the diverse and conflicting studies in the literature. Considering the sparse vectors, \citet{wendland2021} compared for fake news data \ac{TF-IDF} and count vectorization and found slightly better results with \ac{TF-IDF} while the results of \citet{WangY2017} show no difference between them. Some studies from different domains demonstrate the strength of word2vec comparing to \ac{TF-IDF} \citep{arora2021, rahmawati2016}, while others show opposite results \citep{zhu2016,cahyani2021}. \citet{shao2018} conclude that they find no clear picture between \ac{BOW} models and word2vec. Comparing doc2vec and word2vec \citet{lau2016} found in general good performance of doc2vec. However, the authors admit that the qualitative differences between both techniques are not clear. Both \citet{shao2018} and \citet{WangY2017} obtain the worst results for doc2vec compared to word2vec and \ac{BOW} vectorization techniques. \ac{BERT} shows overall a good performance \citep{gonzalez2020}. Nevertheless, \citet{miaschi2020} reach in their study the conclusion that word2vec and \ac{BERT} code similarly for sentence-related linguistic features.  
 
 \subsection*{Challenges of job title classification}
-Each text classification task has different challenges. One challenge of the presented task is the number of classes. As \cite{Li2004} shows in their classification of tissues, multiclass classification is more complex than binary classification problems. Partly because most classification algorithms were designed for binary problems \citep{Aly2005}. Approaches for multiclassification can be grouped into two types. Either binary algorithms can handle multiclassification naturally, or the problem is decomposed into binary classification tasks (for the different subtypes, see \cite{Aly2005}). The literature so far does not have a clear answer to solve multiclassification problems. Different approaches, like boosting \citep{Schapire2000} or \ac{CNN} \citep{Farooq2017} are applied. It is noticeable, however, that many works use variations of SVM \citep{Guo2015, Tomar2015, Tang2019}.  
+Each text classification task has different challenges. One challenge of the presented task is the number of classes. As \cite{li2004} shows in their classification of tissues, multiclass classification is more complex than binary classification problems. Partly because most classification algorithms were designed for binary problems \citep{aly2005}. Approaches for multiclassification can be grouped into two types. Either binary algorithms can handle multiclassification naturally, or the problem is decomposed into binary classification tasks (for the different subtypes, see \cite{aly2005}). The literature so far does not have a clear answer to solve multiclassification problems. Different approaches, like boosting \citep{schapire2000} or \ac{CNN} \citep{farooq2017} are applied. It is noticeable, however, that many works use variations of SVM \citep{guo2015pattern, tomar2015comparison, tang2019multi2019}.  
 
 Another important issue is the length of input documents for classification. Job titles are short text with often not more than 50 characters. Short texts suffer from sparseness, few word co-occurrences, missing shared context, noisiness, and ambiguity. These attributes make it challenging to construct features that capture the meaning of the text on the one side. On the other side, traditional methods are based on word frequency, high word co-occurrence, and context, which is why they often fail to achieve high accuracy for short texts \citep{Song2014, WangY2017, WangF2014,  alsmadi2019}. Besides this, short texts are also often characterized as having a lot of misspelling and informal writing. In addition, applications like Twitter deliver and process short texts in real-time. The last three attributes of short texts are indeed a problem, e.g., for Twitter data, which is a popular topic for short text data \citep{karimi2013, sriram2010, yan2018}. However, these attributes play little or no role in the job title classification, especially compared to the other stated issues, since job postings are usually reviewed and controlled thoroughly before release. Due to this reason, only research concerning the first mentioned attributes is considered in the following. 
 
@@ -297,7 +304,7 @@ Initially, in total, the training data set contained 269788 examples. However, d
 \begin{figure}[]
   \center
   \includegraphics[scale=0.5]{pipeline_MA.png}
-  \caption{\label{fig: F8} Training Pipeline}
+  \caption{\label{fig: F8} Training pipeline}
 \end{figure}
 
 The classification process is divided into several steps. Figure \ref{fig: F8} gives an overview of the procedure. In the first step, the \ac{KldB} and the job title data are focused on the necessary variables. This is done by matching the kldb ids from the \ac{KldB} data set with the internal documentation id from the job title data. In the following steps, the targeted data is preprocessed. This preprocessed data is then transformed into numerical vectors. For this purpose, different vector representations are created using five vectorization techniques. The transformed data is then reduced to lower dimensions using principal component analysis. The resulting data is the input for the classifier. In the last step, the four classifiers are trained. Note that the \ac{BERT} deep learning algorithm follows a different pipeline, which is why the algorithm is presented separately. Here, the data is directly input to the deep learning model after preprocessing, and the model is trained. The targeting of the data has already been described in the previous chapter. The procedure and the associated methods are explained in detail in the following.
@@ -361,7 +368,7 @@ There exist two variants of word2vec. The first variant is based on \ac{BOW}, th
 \begin{figure}[]
   \center
   \includegraphics[scale=0.5]{word2vecCBOW.png}
-  \caption{\label{fig: F1} \ac{CBOW} \citep[6]{rong2014}}
+  \caption[CBOW word2vec]{\label{fig: F1} CBOW word2vec \citep[6]{rong2014}}
 \end{figure}
 
 The weights between the input layer and the hidden layer are shown in figure \ref{fig: F1}. Taking the dimension of V and the hidden layer size N results in the $V \times N$ matrix W. Given that each row $v_w$ in W represents the weights of the associated word from the input and C equals to the number of context words, the hidden layer h is calculated as follows \citep{rong2014}:
@@ -384,7 +391,7 @@ The main idea is, like for word2vec, to predict words in a paragraph. To do so, 
 \begin{figure}[]
   \center
   \includegraphics[scale=0.5]{doc2vec.png}
-  \caption{\label{fig: F2} Doc2vec - Distributed Memory Model of Paragraph Vectors \citep[3]{le2014}}
+  \caption[Doc2vec - Distributed Memory Model of Paragraph Vectors]{\label{fig: F2} Doc2vec - Distributed Memory Model of Paragraph Vectors \citep[3]{le2014}}
 \end{figure}
 
 In figure \ref{fig: F2} the algorithm is visualized. The neural networks take word vectors and a paragraph vector as input. While the word vectors are shared over all paragraphs, each paragraph's paragraph vectors are unique. The paragraphs are represented as unique vectors in a column of a matrix D. The word vectors are expressed in the matrix W as before. In order to predict the word, both vectors are combined, for example, by averaging or concatenating. The doc2vec implementation described by \citet{le2014} and also used in this work here concatenate the vectors. Formally this only changes the calculation of h. \citep{lau2016}
@@ -403,27 +410,27 @@ In order to compute the self-attention of a word, three additional matrices, the
 
 \begin{figure}[hb!]
   \center
-  \includegraphics[scale=0.5]{BERTInput_own.png}
-  \caption{\label{fig: F4} Input \ac{BERT} \citep[5]{devlin2018}}
+  \includegraphics[scale=0.8]{BERTInput_own.png}
+  \caption[Input of BERT]{\label{fig: F4} Input of BERT \citep[5]{devlin2018}}
 \end{figure}
 
 \begin{figure}[hb!]
   \center
   \includegraphics[scale=0.5]{BERTOverview.png}
-  \caption{\label{fig: F3} Overview \ac{BERT} \citep[3]{devlin2018}}
+  \caption[Overview BERT]{\label{fig: F3} Overview BERT \citep[3]{devlin2018}}
 \end{figure}
 
 
-The \ac{BERT} algorithm can be described in two steps. First, the pretraining phase, which is illustrated on the left-hand side of the figure \ref{fig: F3} and the fine-tuning phase, which is visualized on the right-hand side. The pretraining phase consists of two jobs: Masked language modeling and next sentence prediction. 
+The \ac{BERT} algorithm can be described in two steps. First, the pretraining phase, which is illustrated on the left-hand side of the figure \ref{fig: F3} and the fine-tuning phase, which is visualized on the right-hand side. 
 
-\subsubsection*{Pretraining}
-Masked language modeling means that a percentage of the input tokens are masked at random. For example, the job title `"python developer" could be masked as follows: [[CLS] python [MASK] [SEP]]. Since in fine-tuning tokens are not masked, a mismatch would occur between fine-tuning and pretraining, which is why not all of the masked tokens are matched with a [mask] token, but also with a random token or the real tokens \footnote{There are specific rules of how to mask. See \citet{devlin2018} for detailed implementation}. Instead of predicting the complete sentence, \ac{BERT} trains to predict the masked tokens. The prediction is performed with a feed-forward network and a softmax activation \citep{devlin2018,ravichandiran2021}. 
+\paragraph{Pretraining}
+The pretraining phase consists of two jobs: Masked language modeling and next sentence prediction. Masked language modeling means that a percentage of the input tokens are masked at random. For example, the job title ``python developer" could be masked as follows: [[CLS] python [MASK] [SEP]]. Since in fine-tuning tokens are not masked, a mismatch would occur between fine-tuning and pretraining, which is why not all of the masked tokens are matched with a [mask] token, but also with a random token or the real tokens \footnote{There are specific rules of how to mask. See \citet{devlin2018} for detailed implementation}. Instead of predicting the complete sentence, \ac{BERT} trains to predict the masked tokens. The prediction is performed with a feed-forward network and a softmax activation \citep{devlin2018,ravichandiran2021}. 
 
 The second task retakes two sentences but predicts whether the second sentence follows the first one, which helps understand the relationship between the sentences. Each sentence pair is labeled with either isNext or NotNext. By using the [CLS] token, which has the aggregating representation of all tokens, a classification task of whether a sentence pair is isNext or NotNext can be carried out \citep{ravichandiran2021,devlin2018}
 
 The pretraining of \ac{BERT} is in contrast to the fine-tuning process computationally expensive. There are plenty of pre-trained \ac{BERT} models for the German case, like ``bert-base-german-cased" or ``distilbert-base-german-cased" \footnote{All german \ac{BERT} models are open source and are accessible through the transformers library \citep{wolf2020}}. In an evaluation of German pre-trained language models, \citep{assenmacher2021} conclude that the ``bert-base-german-dbmd-uncased" algorithm works quite well. Following their results and own tests on different models, "bert-base-german-dbmd-uncased`` and ``bert-base-german-cased" seem to have the best results, which is why they are used for the fine-tuning process. Both models consist of 12 encoder layers, 12 attention heads, and 768 hidden units, resulting in 110 million parameters. The first model was trained with 16GB of German texts, the second model with 12GB of German texts. 
 
-\subsubsection*{Fine-Tuning}
+\paragraph{Fine-Tuning}
 The second phase, fine-tuning, can be performed differently depending on the task. Either the weights of the pre-trained model are updated during the classification process, or the pre-trained model is first fine-tuned and then used as a feature extractor. 
 
 I train two models with \ac{BERT}. While the first model includes a classification layer, in the following named as \ac{BERT} deep learning model, the second model applies \ac{BERT} as a feature extraction method, in the following named \ac{BERT} vectorizer. 
@@ -436,7 +443,7 @@ I create from the job title dataset and the kldb dataset pairs of similar and di
 \begin{figure}[hb!]
   \center
   \includegraphics[scale=0.5]{SBERT.png}
-  \caption{\label{fig: F5} Sentence-\ac{BERT} siamese architecture \citep[3]{reimers2019}}
+  \caption[Sentence-BERT siamese structure]{\label{fig: F5} Sentence-\ac{BERT} siamese architecture \citep[3]{reimers2019}}
 \end{figure}
 
 \subsection{Dimensionality reduction}
@@ -468,7 +475,7 @@ In the following, based on a theoretical discussion of each classifier, the exac
 \begin{figure}[hb!]
   \center
   \includegraphics[scale=0.5]{LR.png}
-  \caption{\label{fig: F7} Multinomial Logistic Regression (edit after \citep[p.]{jurafsky2021})}
+  \caption[MLR]{\label{fig: F7} MRL (edit after \citep[p.]{jurafsky2021})}
 \end{figure}
 
 In a second step, the weighted sums are mapped to a value range of $[0,1]$ to classify the input. While binary logistic regression uses a sigmoid function to do so, \ac{MLR} needs a generalized sigmoid function. This generalization is called the softmax function, which outputs probabilities for each of the classes, which is why \ac{MLR} is also often called softmax regression in the literature. These probabilities models for each class $p(y_k = 1|x)$.
@@ -736,7 +743,7 @@ Interestingly, the share of the two embedding techniques, word2vec and docv2vec,
   \begin{subfigure}[b]{0.475\textwidth}  
       \centering 
       \includegraphics[width=\textwidth]{predictions_correct_relative_LR.jpg}
-      {{\small Frequency of correct predictions for each labels and frequency of true labels - \ac{LR}}}    
+      {{\small Frequency of correct predictions for each labels and frequency of true labels - LR}}    
   \end{subfigure}
 \caption{\label{fig: F13} Confusion matrices - \ac{LR}}
 \end{figure}
@@ -977,7 +984,7 @@ The results revealed some interesting trends. \ac{BERT} vectorization technique 
 
 It can be concluded from this study that due to the stability of the \ac{BERT} algorithm against the imbalanced data, as well as over all classification algorithms, the BERT vectorizer in combination with LR is a promising method for the classification of job titles into the ``kldb" classes. The possibility of controlling which pairs are used as input for the fine-tuning gives the \ac{BERT} vectorizer the advantage of being interpretable and transparent. Furthermore, there is much space for improvements with this vectorizer method. Future research might combine pairs in other ways, like including the label names of the ``kldbs" or combine search words for different levels with different probabilities. This produces vast datasets with millions of pairs for the fine-tuning process. 
 
-The results in this paper contribute to the literature because it provides initial results and first analysis on job title classification in Germany. The presented results on \ac{BERT} and the problem of biased classifiers are leading the way for future research. Nevertheless, some limitations require future research to develop a high-performance classification algorithm. The first limitation concerns the dataset. As detailed in the discussion of the results, the data imbalance has been problematic for most methods. This was reflected in the performance, especially for level 3, where many classes have few to no examples. Due to this fact, it was also not possible to train all taxonomy classes. 8 out of the 144 classes on level 3 were not trained. For level 1, class 0 could not be trained. In addition, this problem led to ill-defined metrics, which allowed partly only a cautious interpretation of the performance. Further, regarding the dataset, only a small version of the dataset could be used in this work due to computational resources. It is expected that a larger dataset could improve the results, especially for the deep learning model. It will be important that future research investigate how to cope with the imbalance of the data in order to compare the vectorization methods again without the bias problem. Another strategy would be to enrich the data manually with examples for minority classes. This would also be important to ensure the training of all classes.  
+The results in this paper contribute to the literature because it provides initial results and first analysis on job title classification for German job title classification with the \ac{KldB}. The presented results on \ac{BERT} and the problem of biased classifiers are leading the way for future research. Nevertheless, some limitations require future research to develop a high-performance classification algorithm. The first limitation concerns the dataset. As detailed in the discussion of the results, the data imbalance has been problematic for most methods. This was reflected in the performance, especially for level 3, where many classes have few to no examples. Due to this fact, it was also not possible to train all taxonomy classes. 8 out of the 144 classes on level 3 were not trained. For level 1, class 0 could not be trained. In addition, this problem led to ill-defined metrics, which allowed partly only a cautious interpretation of the performance. Further, regarding the dataset, only a small version of the dataset could be used in this work due to computational resources. It is expected that a larger dataset could improve the results, especially for the deep learning model. It will be important that future research investigate how to cope with the imbalance of the data in order to compare the vectorization methods again without the bias problem. Another strategy would be to enrich the data manually with examples for minority classes. This would also be important to ensure the training of all classes.  
 
 The second limitation addresses the question of generalization. Often the problem is that the classifiers are overfitted to the training data. The data was divided into training and test data to ensure that the performance was measured on unseen data. However, since not all classes are trained, the classifiers cannot classify titles belonging to those missing classes, restricting the generalization of the algorithm. In addition, the classifiers are not multilingual and thus not generalizable to other job postings than German.  
 
@@ -1101,17 +1108,6 @@ The problem just highlighted raises the question of whether the limitation is pu
   \caption{Class distribution of training data}
   \end{figure}
 
-% \section{Naive Bayes Classifier}
-% \subsection{Theory}
-% The \ac{NB}, a family of probabilistic classifiers, uses Bayes' rule in order to determine the most likely class for each document \citep{Schneider2005}. All \ac{NB} classifiers rely on the conditional independence assumptions which means, that ``features are independent of each other, given the category variable'' \citep[48]{Xu2018}. Depending on whether the features are discrete or continous, different distributions, so-called event models are proposed. While from a theoretical perspective for continous features Gaussian distribution is well-suited, for discrete features usually Bernoulli or multinomial distibutions are applied \citep{Xu2018}. Although, popular practical implementations, like the one from sklearn, allow as well fractional counts for multinomial distributions \citep{scikit-learn}. Trying different event models, the multinomial \ac{NB} shows indeed for both Count Vectorizer and for TFIDF the best results, which is why I choose it as event model for the baseline. 
-
-% The multinomial \ac{NB} classifies according to the most likely class. Given that a document d has $t = 1, ...., k$ terms and can be assigned to $c = 1,...,j$ classes, the probability of a term in a document given a class is calculated as \citep{Manning2008}:
-% \[ P(t_k, c_j) = \frac{occurence(t_k, c_j) + 1}{\sum occurence(t, c_j) + |V|} \]
-
-% where $|V|$ is the cardinality of the vocabulary. In the denominator 1 is added, so-called Laplace smoothing, in order to avoid zeros, which is the case if the number of terms in a document for one class is zero. \citep{Manning2008}. Further given that $N_c = count(c_j)$ is the number of documents belonging to class $c_j$ and N is number of documents the probability of $c_j$ is defined as $\frac{N_c}{N}$. The probability of a document d belonging to a class $c_j$ can then formulated as follows \citep[258]{Manning2008}:
-% \[ P(c_j|d) \propto P(c_j) \prod_{i = 1}^k P(t_i|c_j) \]
-% Then the most likely classes can be determined by \citep{Manning2008}: 
-% \[\argmax_{c \in C} P(c_j) \prod_{i = 1}^k P(t_i|c_j) \] 
 
 \section{Results}
 
