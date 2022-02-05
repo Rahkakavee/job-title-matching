@@ -189,7 +189,7 @@ Besides the classifier, it is also important for the performance with which inpu
 Unsuitable features considerably affect the performance of the classification algorithms \citep{cahyani2021}. The correct selection of a feature extraction technique depends on many factors, like the length of the dataset or the specific domain \citep{arora2021}. Empirically, this is reflected in the diverse and conflicting studies in the literature. Considering the sparse vectors, \citet{wendland2021} compared for fake news data \ac{TF-IDF} and count vectorization. While they found slightly better results with \ac{TF-IDF}, the results of \citet{WangY2017} show no difference between them. Some studies from different domains demonstrate the strength of word2vec compare to \ac{TF-IDF} \citep{arora2021, rahmawati2016}, while others show opposite results \citep{zhu2016,cahyani2021}. \citet{shao2018} conclude that they find no clear picture between \ac{BOW} models and word2vec. Comparing doc2vec and word2vec, \citet{lau2016} found in general good performance of doc2vec. However, the authors admit that the qualitative differences between both techniques are not clear. Both \citet{shao2018} and \citet{WangY2017} obtain the worst results for doc2vec compared to word2vec and \ac{BOW} vectorization techniques. \ac{BERT} shows overall a good performance \citep{gonzalez2020}. Nevertheless, \citet{miaschi2020} conclude from their research finding that word2vec and \ac{BERT} code similarly for sentence-related linguistic features.  
 
 \paragraph{Challenges of Job Title Classification}
-Each text classification task has different challenges. One challenge of the presented task is the number of classes. As \cite{li2004} show in their classification of tissue, multi-class classification is more complex than binary classification problems. Partly because most classification algorithms were designed for binary problems \citep{aly2005}. Approaches for multi-class classification can be grouped into two types. Either binary algorithms can handle multi-class classification naturally, or the problem is decomposed into binary classification tasks (for the different subtypes, see \cite{aly2005}). The literature so far does not have a clear answer to solve multi-class classification problems. Different approaches, like boosting \citep{schapire2000} or \ac{CNN} \citep{farooq2017} are applied. It is apparent, however, that many works use variations of SVM \citep{guo2015, tomar2015comparison, tang2019multi}.  
+Each text classification task has different challenges. One challenge of the presented task is the number of classes. As \cite{li2004} show in their classification of tissue, multi-class classification is more complex than binary classification problems. Partly because most classification algorithms were designed for binary problems \citep{aly2005}. Approaches for multi-class classification can be grouped into two types. Either binary algorithms can handle multi-class classification naturally, or the problem is decomposed into binary classification tasks (for the different subtypes, see \cite{aly2005}). The literature so far does not have a clear answer to solve multi-class classification problems. Different approaches, like boosting \citep{schapire2000} or \ac{CNN} \citep{farooq2017} are applied. It is apparent, however, that many works use variations of SVM \citep{guo2015, tomar2015comparison, Tang2019}.  
 
 Another important issue for text classification is the length of input documents. Job titles are short texts with often not more than 50 characters. Short texts suffer from sparseness, few word co-occurrences, missing shared context, noisiness, and ambiguity. These attributes make it challenging to construct features that capture the meaning of the text. Furthermore, traditional methods are based on word frequency, high word co-occurrence, and context, which is why they often fail to achieve high accuracy for short texts \citep{Song2014, WangY2017, WangF2014,  alsmadi2019}. Besides this, short texts are also often characterized as having a lot of misspelling and informal writing. The last two attributes of short texts are indeed a problem, e.g., for Twitter data, which is a popular topic for short text data \citep{karimi2013, sriram2010, yan2018}. However, these attributes play little or no role in the job title classification, especially compared to the other stated issues, since job postings are usually reviewed and controlled thoroughly before release. Due to this, only research concerning the first mentioned attributes is considered in the following. 
 
@@ -238,7 +238,7 @@ Furthermore, the \ac{KldB} has two dimensions. The first dimension, the so-calle
   0                                          & Militär                                                                    \\ \hline
   \end{tabular}%
   }
-  \caption[Overview of classes level 1 - Berufsbereiche]{\label{tab: T3} Overview of classes Level 1 - Berufsbereiche (adapted from \citep{Bundesagentur2011b})}
+  \caption[Overview of classes level 1 - Berufsbereiche]{\label{tab: T3} Overview of classes Level 1 - Berufsbereiche (adapted from \citep[9]{Bundesagentur2011a} and \citep[1]{Bundesagentur2011b})}
   \end{table}
 
 \begin{table}[hb!]
@@ -254,7 +254,7 @@ Furthermore, the \ac{KldB} has two dimensions. The first dimension, the so-calle
   Berufsgattungen    & 5 & 1286 & 43412: Berufe in der Sofwareenetwicklung - fachlich ausgerichtete Tätigkeiten \\ \hline
   \end{tabular}%
   }
-  \caption[Levels of KldB with examples for each level]{\label{tab: T2} Levels of KldB with examples for each level (adapted from \citep{Bundesagentur2011b})}
+  \caption[Levels of KldB with examples for each level]{\label{tab: T2} Levels of KldB with examples for each level (adapted from \citep[8]{Bundesagentur2011a})}
   \end{table}
 
 
@@ -269,7 +269,7 @@ Furthermore, the \ac{KldB} has two dimensions. The first dimension, the so-calle
   4 & xxxx4 & hoch komplexe Tätigkeiten          & Experte    \\ \hline
   \end{tabular}%
   }
-  \caption[Level of requirements on level 5]{\label{tab: T4} Level of requirements on level 5 (adapted from \citep{Bundesagentur2011b})}
+  \caption[Level of requirements on level 5]{\label{tab: T4} Level of requirements on level 5 (adapted from \citep[2]{Bundesagentur2011b})}
   \end{table}
 
 The \ac{KldB} 2010 thus represents a valuable and information-rich occupational classification scheme for Germany, that also reflects the current trends in the labor market \citep{Paulus2013}. It can capitalize, above all, on its sophisticated construction process. Instead of just including expert knowledge into the taxonomy, the development process is based on systematical consideration of occupations and statistical procedures for taxonomy development. Furthermore, the taxonomy was reviewed qualitatively several times concerning professions. 
@@ -518,7 +518,7 @@ $K(x_i, x)$ corresponds to a Kernel function, which allows calculating the dot p
 
 In order to apply \ac{SVM} to multi-class problems, several approaches have been proposed. One strategy is to divide the multi-classification problem into several binary problems. A common approach here is the one-against-all method. In this method, as many \ac{SVM} classifiers are constructed as there are classes k. The k-th classifier assumes that the examples with the k label are positive labels, while all the other examples are treated as negative. Another popular approach is the one-against-one method. In this approach $k(k-1)/2$ classifiers are constructed, allowing to train the data of two classes within each classifier \citep{Hsu2002}. Besides, some researchers, like \citet{Crammer2001}, propose approaches that seek to solve the task in a single optimization problem.\footnote{For a detailed overview of all different methods and the method of \citet{Crammer2001} see \citet{Hsu2002,Crammer2001}}. 
 
-In order to find a robust classifier, I checked \ac{SVM}s with different parameters, as well as different multi-class approaches. I found that a \ac{SVM} using a soft margin with a $C=1$ and a one-vs-rest approach yielded the best results. I also tested different kernels, like  RBF Kernel or linear kernel. The latter, formally  $k(x, x') = x^Tx'$, achieved the best results, which is why I chose it for the classifier. 
+In order to find a robust classifier, I checked \ac{SVM}s with different parameters, as well as different multi-class approaches. I found that a \ac{SVM} using a soft margin with a $C=1$ and a one-vs-rest approach yielded the best results. I also tested different kernels, like  RBF Kernel or linear kernel. The latter, formally  $k(x, x') = x^Tx'$ \citep{Jordan2006}, achieved the best results, which is why I chose it for the classifier. 
 
 \subsubsection{Random Forest Classifier}
 In contrast to the previous two classifiers, \ac{RF} is an ensemble learning technique. The main idea of ensemble learning techniques is to create several learners and combine them. Those learners are, for example, a Decision Tree or neural networks and are usually homogeneous, meaning that each learner is based on the same machine learning algorithm. The different ensemble techniques are built on three pillars: the data sampling technique, the strategy of the training, and the combination method \citep{polikar2012, zhou2009}. 
@@ -562,7 +562,7 @@ Based on the above explanations, the implemented \ac{RF} has the following setti
 
 \section{Result}
 \subsection{Evaluation Metrics}
-Appropriate measurements are crucial for being able to meaningfully compare the performance of different algorithms. There exist several metrics for the evaluation of classification approaches in the literature \citep{Fatourechi2008}. In the following, the selected measurements for performance measurement will be justified. 
+Appropriate measurements are crucial for being able to meaningfully compare the performance of different algorithms \citep{Ferri2009}. There exist several metrics for the evaluation of classification approaches in the literature \citep{Fatourechi2008}. In the following, the selected measurements for performance measurement will be justified. 
 
 Most metrics rely on a confusion matrix. For the multi-class case, this confusion matrix is defined as follows \citep{Kautz2017}: 
 \begin{table}[hb!]
@@ -585,12 +585,12 @@ The \ac{OA} is one of the most common metrics for performance evaluation. It rep
 
 An accuracy of 1 means that all examples are correctly classified. 0 means that each example is classified with the wrong class \citep{Berthold2020}. Although \ac{OA} is a widely used metric, it is criticized for favoring the majority classes and therefore not adequatley reflecting minority classes in unbalanced datasets \citep{Berthold2020, Fatourechi2008}.
 
-Two more popular metrics are precision and recall. Precision represents how well the classifier detects actual positive examples among the positive predicted examples. Recall, also called sensitivity, in contrast, represents how many examples are labeled as positive among the actual positive examples \citep{Berthold2020}. For the multi-class scenario, two different calculation approaches for each of the metrics are proposed: micro and macro average \citep{Branco2017}. In the macro approach the metric for each \textit{class m} is first calculated against all other classes. Then, the average of all of them is computed. Given that $K$ is the total number of classes the macro precision and recall are defined as:
+Two more popular metrics are precision and recall. Precision represents how well the classifier detects actual positive examples among the positive predicted examples. Recall, also called sensitivity, in contrast, represents how many examples are labeled as positive among the actual positive examples \citep{Berthold2020}. For the multi-class scenario, two different calculation approaches for each of the metrics are proposed: micro and macro average. In the macro approach the metric for each \textit{class m} is first calculated against all other classes. Then, the average of all of them is computed. Given that $K$ is the total number of classes the macro precision and recall are defined as \citep{Branco2017}:
 
 \[precision_{macro} = \frac{1}{M} \sum_{i=1}^m \frac{tp_{i}}{tp_{i} + fp_{i}}\]
 \[recall_{macro} = \frac{1}{M} \sum_{i=1}^m \frac{tp_{i}}{tp_{i} + fn_{i}}\]
 
-In contrast to the macro apporach, the micro approach aggregates the values, which can be formally expressed as follows: 
+In contrast to the macro apporach, the micro approach aggregates the values, which can be formally expressed as follows \citep{Branco2017}: 
 
 \[precision_{micro} = \frac{\sum_{i=1}^m tp_i}{\sum_{i=1}^m tp_i + fp_i}\]
 \[recall_{micro} = \frac{\sum_{i=1}^m tp_i}{\sum_{i=1}^m tp_i + fn_i}\]
