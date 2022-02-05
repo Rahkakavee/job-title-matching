@@ -2,6 +2,7 @@
 \documentclass[12pt, a4paper, titlepage]{article}
 \usepackage[a4paper,left=2.5cm,right=2.5cm,top=2.54cm,bottom=2.54cm]{geometry}
 
+\usepackage{lipsum}
 \usepackage{placeins}
 \usepackage[bottom]{footmisc}
 \usepackage{float}
@@ -41,6 +42,11 @@
 
 \usepackage{listings}
 \usepackage{xcolor}
+
+\newenvironment{acknowledgments}{%
+  \renewcommand*{\abstractname}{Acknowledgments} \abstract}{%
+  \endabstract
+}
 
 \colorlet{punct}{red!60!black}
 \definecolor{background}{HTML}{EEEEEE}
@@ -150,9 +156,26 @@
 \end{acronym}
 \newpage
 
+\begin{acknowledgments}
+I would like to express my sincere gratitude to my supervisors Professor. Dr. Susumu Shikano and Junior Professor Juhi Kulshresthra, who guided me throughout this project.
+
+\bigskip
+
+\noindent My special thanks go to Johannes Müller and his team at cause\&effect DFSG UG for their guidance during the thesis, as well as for providing the data.
+
+\bigskip
+
+\noindent Lastly, I would also like to thank my family and friends for their encouragement and support throughout my thesis. 
+\end{acknowledgments}
+
+\begin{abstract}
+  Job titles are key information within the area of labor market. As a valuable resource for labor market analysis and an essential component of job search engines and job recommendation systems, it is necessary to develop classification systems for job titles based on taxonomies that reflect current market trends. So far, the literature has focused on the English-speaking job market, while there are no classification attempts for the German market. Considering the challenges of this task, this paper aims at comparing different vectorization and classification methods for the classification of German job titles considering short text classification. The paper results show that BERT as a vectorization technique is a promising method for classifying German job titles, as it is stable and has excellent performance against imbalanced data and compared to other methods. 
+\end{abstract}
+
+
 %%%%%%%%%%%%%%SECTIONS%%%%%%%%%%%%%%
 \section{Introduction}
-Job titles are key information within the area of labor market. They are helpful for job seekers to find jobs \citep{marinescu2020}; they are an essential component of job search engines \citep{slamet2018, javed2015, javed2016} and job recommendation systems \citep{malherbe2014}; and lastly, they serve as a valuable data source for various analyses, such as job market trends \citep{martin2021, li2021}, job perception \citep{smith1989, boydston2020} or social science analyses \citep{martin2021}. However, since job titles are not normalized, it is challenging to structure them appropriately for downstream tasks. Various institutions developed job taxonomies to structure and generalize job titles. Established taxonomies are, for example, the ``International Standard Classification of Occupation'' for the European job market or the ``\ac{KldB}" for the German job market \citep{uter2020}. Classifying job titles from job postings into classes based on these taxonomies is indispensable to improve job search engines or recommendation systems or to enable comprehensive analysis of the labor market. 
+Job titles are key information within the area of labor market. They are helpful for job seekers to find jobs \citep{marinescu2020}; they are an essential component of job search engines \citep{slamet2018, javed2015, javed2016} and job recommendation systems \citep{malherbe2014}; and lastly, they serve as a valuable data source for various analyses, such as job market trends \citep{martin2021, li2021}, job perception \citep{smith1989, boydston2020} or social science analyses \citep{martin2021}. However, since job titles are not normalized, it is challenging to structure them appropriately for downstream tasks. Various institutions developed job taxonomies to structure and generalize job titles. Established taxonomies are, for example, the ``International Standard Classification of Occupations'' for the European job market or the ``\ac{KldB}" for the German job market \citep{uter2020}. Classifying job titles from job postings into classes based on these taxonomies is indispensable to improve job search engines or recommendation systems or to enable comprehensive analysis of the labor market. 
 
 In the literature, there exist some works on the classification of job titles \citep{zhu2016, javed2015, decorte2021, wang2019,neculoiu2016}. While job title classification systems like ``Carotene" \citep{javed2015} have been developed for English job titles, to the best of my knowledge, there have not been any classification attempts for German titles yet. However, accurate classification of job titles with the \ac{KldB} taxonomy would facilitate several downstream tasks for the German job market. With the \ac{KldB} 2010, a taxonomy was created that reflects the current trends in the labor market based on empirical and theoretical foundations, which gives an excellent basis for the normalization. In addition, most previous work does not have a solid database due to the lack of labeled data. This often leads researcher to resort to unsupervised methods \citep{decorte2021, javed2015}. For the German job market, the Federal Employment Agency provides job postings with labeled titles on their job board, creating large labeled data for text classification. 
 
@@ -404,7 +427,7 @@ Since doc2vec is a word embedding method, it has the same advantages mentioned f
 Based on this discussion, I created two Distributed Memory Models of Paragraph Vectors. Since there are no popular pre-trained models for doc2vec, I trained two custom models, one with the training data and one including the additional knowledge. I set the vector size to 300 with a window size of 5, a minimal count of 1, and trained ten epochs. Like word2vec, the models are trained with negative sampling. 
 
 \subsubsection*{BERT}
-\ac{BERT} uses a Multi-Layer Bidirectional Transformer Encoder as the architecture. This transformer architecture was introduced by \citet{vaswani2017}. It consists of an encoder and a decoder and makes use of self-attention. Both encoder and decoder stack include an identical layer. In addition, each of them includes two sub-layers: A multi-head attention and a feedforward network layer.\footnote{A simplified visualization with a two-layer encoder, as well the architecture of a can be found in the Appendix.} It is out of the scope of this paper to elaborate on the technical details of the attention mechanism, which is why a simplified explanation is given. 
+\ac{BERT} uses a Multi-Layer Bidirectional Transformer Encoder as the architecture. This transformer architecture was established by \citet{vaswani2017}. It consists of an encoder and a decoder and makes use of self-attention. Both encoder and decoder stack include an identical layer. In addition, each of them includes two sub-layers: A multi-head attention and a feedforward network layer.\footnote{A simplified visualization with a two-layer encoder, as well the architecture of a can be found in the Appendix.} It is out of the scope of this paper to elaborate on the technical details of the attention mechanism, which is why a simplified explanation is given. 
 
 The self-attention mechanism improves the representation of a word, represented by a matrix X by relating it to all other words in the sentence. In the sentence ``A dog ate the food because it was hungry" \citep[10]{ravichandiran2021} the self-attention mechanism, for example, could identify that ``it" belongs to ``dog" and not to ``food" by relating the word to all other words. In order to compute the self-attention of a word, three additional matrices, the query matrix Q, the key matrix K, and a value matrix V are introduced. Those matrices are created by introducing weights for each of them and multiplying those weights with X. Based on those matrices, the dot product between the Q and the K matrix, a normalization and a softmax function is applied in order to calculate an attention matrix Z.\footnote{For a step-by-step calculating see \citep{ravichandiran2021}} \ac{BERT} uses a multi-head-attention, which means that multiple Z attention matrices instead of a single one are used.
 
@@ -428,7 +451,7 @@ The \ac{BERT} algorithm can be described in two steps. First, the pretraining ph
 \paragraph{Pretraining}
 The pretraining phase consists of two jobs: Masked language modeling and next sentence prediction. Masked language modeling means that a percentage of the input tokens are masked at random. For example, the job title ``python developer" could be masked as follows: [[CLS] python [MASK] [SEP]]. Since in fine-tuning tokens are not masked, a mismatch would occur between fine-tuning and pretraining, which is why not all of the masked tokens are matched with a [mask] token, but also with a random token or the real tokens.\footnote{There are specific rules of how to mask. See \citet{devlin2018} for detailed implementation} Instead of predicting the complete sentence, \ac{BERT} trains to predict the masked tokens. The prediction is performed with a feed-forward network and a softmax activation \citep{devlin2018,ravichandiran2021}. 
 
-The second task retakes two sentences but predicts whether the second sentence follows the first one, which helps understand the relationship between the sentences. Each sentence pair is labeled with either isNext or NotNext. By using the [CLS] token, which has the aggregating representation of all tokens, a classification task of whether a sentence pair is isNext or NotNext can be carried out \citep{ravichandiran2021,devlin2018}.
+The second task retakes two sentences but predicts whether the first sentence is followed by the second one, which helps to understand the relationship between the sentences. Each sentence pair is labeled with either isNext or NotNext. By using the [CLS] token, which has the aggregating representation of all tokens, a classification task of whether a sentence pair is isNext or NotNext can be carried out \citep{ravichandiran2021,devlin2018}.
 
 The pretraining of \ac{BERT} is, in contrast to the fine-tuning process, computationally expensive. There are plenty of pre-trained \ac{BERT} models for the German case, like ``bert-base-german-cased" or ``distilbert-base-german-cased". \footnote{All german \ac{BERT} models are open source and are accessible through the transformers library \citep{wolf2020}} In an evaluation of German pre-trained language models, \citet{assenmacher2021} conclude that the ``bert-base-german-dbmd-uncased" algorithm works quite well. Following their results and own tests on different models, "bert-base-german-dbmd-uncased`` and ``bert-base-german-cased" seem to have the best results, which is why they are used for the fine-tuning process. Both models consist of 12 encoder layers, 12 attention heads, and 768 hidden units, resulting in 110 million parameters. The first model was trained with 16GB of German texts, the second model with 12GB of German texts. 
 
@@ -556,7 +579,7 @@ Formally \citet{breiman2001}, who introduced mainly the \ac{RF} algorithm, defin
 \begin{quote}
 ``A random forest is a classifier consisting of a collection of tree-structured classifiers $\{h(\textbf{x}, \Theta_k), k = 1, ...\}$ where the ${\Theta_k}$ are independent identically distributed random vectors and each tree casts a unit vote for the most popular class at the input $\textbf{x}$." \citep[6]{breiman2001}. 
 \end{quote}
-$\Theta_k$ is a random vector created for each k-th tree. $\Theta_k$ must be independent of the vectors $\Theta_1...\Theta_{k-1}$ and thus of all random vectors of the previous classifiers. Nonetheless, the distribution of the random vectors remains. Combined with the training set, with $\textbf{x}$ as the input vector a classifier $h(\textbf{x}, \Theta_k)$ is constructed \citep{breiman2001}. The random component $\Theta_k$ is not explicitly used in practical implementation. Instead, it is rather used implicitly to generate two random strategies \citep{cutler2012}. The first strategy is bootstrapping, i.e. drawing a sample with replacement from the training dataset. In order to estimate the generalization error, the correlation and the variable importance, \citet{breiman2001} applied out-of-bag estimation. Out-of-bag estimation leaves out some portion of the training data in each bootstrap. The second strategy is to choose a random feature for the splitting. Thus, at each node from the set of features, only a subset is used to split. \ac{RF} does not use pruning. The trees grow by applying \ac{CART}-algorithm. As combination method for classification \ac{RF} uses unweighted voting.\citep{cutler2012}.
+$\Theta_k$ is a random vector created for each k-th tree. $\Theta_k$ must be independent of the vectors $\Theta_1...\Theta_{k-1}$ and thus of all random vectors of the previous classifiers. Nonetheless, the distribution of the random vectors remains. Combined with the training set, with $\textbf{x}$ as the input vector a classifier $h(\textbf{x}, \Theta_k)$ is constructed \citep{breiman2001}. The random component $\Theta_k$ is not explicitly used in practical implementation. Instead, it is rather used implicitly to generate two random strategies \citep{cutler2012}. The first strategy is bootstrapping, i.e. drawing a sample with replacement from the training dataset. In order to estimate the generalization error, the correlation and the variable importance, \citet{breiman2001} applied out-of-bag estimation. Out-of-bag estimation leaves out some portion of the training data in each bootstrap. The second strategy is to choose a random feature for the splitting. Thus, at each node from the set of features, only a subset is used to split. \ac{RF} does not apply pruning. The trees grow by applying \ac{CART}-algorithm. As combination method for classification \ac{RF} uses unweighted voting.\citep{cutler2012}.
 
 Based on the above explanations, the implemented \ac{RF} has the following setting: The number of learners is 100. Gini is used as the splitting criterion. The maximal number of features is square root of the number of features. Note that sklearn, which is used to implement \ac{RF} here, uses an optimized algorithm of \ac{CART} \citep{scikit-learn}.
 
@@ -585,7 +608,7 @@ The \ac{OA} is one of the most common metrics for performance evaluation. It rep
 
 An accuracy of 1 means that all examples are correctly classified. 0 means that each example is classified with the wrong class \citep{Berthold2020}. Although \ac{OA} is a widely used metric, it is criticized for favoring the majority classes and therefore not adequatley reflecting minority classes in unbalanced datasets \citep{Berthold2020, Fatourechi2008}.
 
-Two more popular metrics are precision and recall. Precision represents how well the classifier detects actual positive examples among the positive predicted examples. Recall, also called sensitivity, in contrast, represents how many examples are labeled as positive among the actual positive examples \citep{Berthold2020}. For the multi-class scenario, two different calculation approaches for each of the metrics are proposed: micro and macro average. In the macro approach the metric for each \textit{class m} is first calculated against all other classes. Then, the average of all of them is computed. Given that $K$ is the total number of classes the macro precision and recall are defined as \citep{Branco2017}:
+Two more popular metrics are precision and recall. Precision represents how well the classifier detects actual positive examples among the positive predicted examples. Recall, also called sensitivity, in contrast, represents how many examples are labeled as positive among the actual positive examples \citep{Berthold2020}. For the multi-class scenario, two different calculation approaches for each of the metrics are proposed: micro and macro average. In the macro approach the metric for each \textit{class m} is first calculated against all other classes. Then, the average of all of them is computed. Given that $K$ is the total number of classes the macro precision and recall are calculated as \citep{Branco2017}:
 
 \[precision_{macro} = \frac{1}{M} \sum_{i=1}^m \frac{tp_{i}}{tp_{i} + fp_{i}}\]
 \[recall_{macro} = \frac{1}{M} \sum_{i=1}^m \frac{tp_{i}}{tp_{i} + fn_{i}}\]
@@ -977,15 +1000,15 @@ According to the trends of level 3 and the explanations for level 1, it can be e
 
 Similar to level 1, the performance for \ac{RF} is, due to the better handling of imbalance, better for word2vec and doc2vec, which is reflected in their confusion matrices in figure \ref{fig: F22}. While the performance of word2vec and doc2vec are closer to the sparse techniques for \ac{RF} than for the linear techniques, the confusion matrices do not clearly show differences. In addition, it is interesting that \ac{BERT} has a considerably better performance with \ac{RF}, while the confusion matrices do not have substantial differences in terms of the bias. Thus, the differences between the results for \ac{RF} remain unexplained by the analysis.
 
-As for level 1, the generally lower performance for \ac{RF} for \ac{BERT} and sparse vectors cannot be explained by the analysis and is probably because \ac{RF} is not as suitable for the application as \ac{LR} and \ac{SVM}. More interesting is the low performance of the deep learning model. Figure \ref{fig: F26}, however, shows no differences to the \ac{BERT} vectorizer confusion matrix in \ref{fig: F22}. As mentioned above, for level 1, the deep learning model trained with much less data might have a greater impact on a classification problem with much more labels. The pairs for the vectorization are also specifically tailored for level 3. According to the literature, this might be a better strategy than using a deep learning model with automatic feature selection for a small dataset. 
-
-The additional knowledge models behave similarly to level 1. The confusion matrices do not provide any remarkable differences. Adding knowledge seems to improve the performance of word2vec somewhat, while it seems to be detrimental to doc2vec.
-
 \begin{figure}[hb!]
   \center
   \includegraphics[scale=0.5]{cm_bert_clf_3.jpg}
   \caption{\label{fig: F26} Confusion matrix BERT deep learning model - Level 3}
 \end{figure}
+
+As for level 1, the generally lower performance for \ac{RF} for \ac{BERT} and sparse vectors cannot be explained by the analysis and is probably because \ac{RF} is not as suitable for the application as \ac{LR} and \ac{SVM}. More interesting is the low performance of the deep learning model. Figure \ref{fig: F26}, however, shows no differences to the \ac{BERT} vectorizer confusion matrix in \ref{fig: F22}. As mentioned above, for level 1, the deep learning model trained with much less data might have a greater impact on a classification problem with much more labels. The pairs for the vectorization are also specifically tailored for level 3. According to the literature, this might be a better strategy than using a deep learning model with automatic feature selection for a small dataset. 
+
+The additional knowledge models behave similarly to level 1. The confusion matrices do not provide any remarkable differences. Adding knowledge seems to improve the performance of word2vec somewhat, while it seems to be detrimental to doc2vec.
 
 
 \section{Conclusion and Limitations}
@@ -993,32 +1016,42 @@ The starting point of this work was to examine the classification of job titles 
 
 The results revealed some interesting trends. The \ac{BERT} vectorizer in combination with \ac{LR} has shown the best performance. Due to imbalanced data, the other classification algorithms might have developed a label bias in different settings, both for level 1 and level 3. \ac{RF} can reduce this bias for doc2vec and word2vec, but not to the extent that it overpowers the sparse vectors or BERT results, especially in combination with the linear classification algorithms. The deep learning model of \ac{BERT} performs, in general and especially for level 3, worse than the \ac{BERT} vectorizer. Adding additional knowledge does not lead to clear improvement. The performance of word2vec seems to improve slightly, whereas that of doc2vec deteriorates slightly. 
 
-In conclusion, this paper suggests that the \ac{BERT} vectorizer is, due to the stable and excellent performance against imbalanced data and compared to the other classification algorithms, a promising method for classifying job titles into the \textit{kldb} classes, especially in combination with \ac{LR}. The possibility of controlling which pairs are used as input for the fine-tuning gives the \ac{BERT} vectorizer the advantage of being interpretable and transparent. Furthermore, there is much space for improvements with this vectorizer method. Future research could combine pairs in other ways, for instance by including the label names of the \textit{kldb} or by combining search words for different levels with different probabilities. This would result in vast datasets with millions of pairs for the fine-tuning process. However, corresponding computing resources must then also be available for the training process. 
+In conclusion, this paper suggests that the \ac{BERT} vectorizer is, due to the stable and excellent performance against imbalanced data and compared to the other methods, a promising method for classifying job titles into the \textit{kldb} classes, especially in combination with \ac{LR}. The possibility of controlling which pairs are used as input for the fine-tuning gives the \ac{BERT} vectorizer the advantage of being interpretable and transparent. Furthermore, there is much space for improvements with this vectorizer method. Future research could combine pairs in other ways, for instance by including the label names of the \textit{kldb} or by combining search words for different levels with different probabilities. This would result in vast datasets with millions of pairs for the fine-tuning process. However, corresponding computing resources must then also be available for the training process. 
 
-This paper is the first step towards establishing a job title classification system for German job postings with the \ac{KldB} by providing initial results and first analysis. The results on \ac{BERT} and the problem of biased classifiers are leading the way for future research. Nevertheless, some limitations require future research to develop a high-performance classification algorithm. The first limitation concerns the dataset. As detailed in the discussion of the results, the data imbalance has been problematic for most methods. This was reflected in the performance, especially for level 3, where many classes have few to no examples. Due to this fact, it was also not possible to train all taxonomy classes - 8 out of the 144 classes on level 3 were not trained. For level 1, class 0 could not be trained. In addition, this problem led to ill-defined metrics, which in part only allowed a cautious interpretation of the performance. Further, only a sample of the dataset could be used in this work due to limited computational resources. A larger dataset is likely to improve the results, especially those of the deep learning model. Additionally, future research should investigate how to cope with the imbalanced data in order to compare the vectorization methods without the bias problem. Another strategy that should be pursued, is to enrich the data manually with examples for minority classes. Such efforts are also vital to ensure that all classes are trained.
+The results of this study are subject to several limitations that need to be addressed in future research to develop a high-performance classification algorithm. The first limitation concerns the dataset. As detailed in the discussion of the results, the data imbalance has been problematic for most methods. This was reflected in the performance, especially for level 3, where many classes have few to no examples. Due to this fact, it was also not possible to train all taxonomy classes - 8 out of the 144 classes on level 3 were not trained. For level 1, class 0 could not be trained. In addition, this problem led to ill-defined metrics, which in part only allowed a cautious interpretation of the performance. Further, only a sample of the dataset could be used in this work due to limited computational resources. A larger dataset is likely to improve the results, especially those of the deep learning model. Additionally, future research should investigate how to cope with the imbalanced data in order to compare the vectorization methods without the bias problem. Another strategy that should be pursued, is to enrich the data manually with examples for minority classes. Such efforts are also vital to ensure that all classes are trained.
+% This paper is the first step towards establishing a job title classification system for German job postings with the \ac{KldB} by providing initial results and first analysis. The results on \ac{BERT} and the problem of biased classifiers are leading the way for future research. Nevertheless, some limitations require future research to develop a high-performance classification algorithm. The first limitation concerns the dataset. As detailed in the discussion of the results, the data imbalance has been problematic for most methods. This was reflected in the performance, especially for level 3, where many classes have few to no examples. Due to this fact, it was also not possible to train all taxonomy classes - 8 out of the 144 classes on level 3 were not trained. For level 1, class 0 could not be trained. In addition, this problem led to ill-defined metrics, which in part only allowed a cautious interpretation of the performance. Further, only a sample of the dataset could be used in this work due to limited computational resources. A larger dataset is likely to improve the results, especially those of the deep learning model. Additionally, future research should investigate how to cope with the imbalanced data in order to compare the vectorization methods without the bias problem. Another strategy that should be pursued, is to enrich the data manually with examples for minority classes. Such efforts are also vital to ensure that all classes are trained.
+
 
 The second limitation addresses the question of generalization. A frequent problem is overfitting the classifier to the trainings data. The data was divided into training and test data to ensure that the performance was measured on unseen data. However, since not all classes are trained, the classifiers cannot classify titles belonging to those missing classes, restricting the generalizability of the algorithms. Furthermore, the classifiers are not multilingual and therefore cannot be generalized to job postings in other languages. 
 
 Lastly, there is certainly room for improving the usage of additional knowledge. As \ac{BERT} is a promising technique, one could combine and compare different \ac{BERT} algorithms with additional knowledge. For example, \citet{ostendorff2019} use an approach of enriching \ac{BERT} with knowledge graph embeddings. This is a relevant topic for future work. 
 
-In addition to the above limitations, in general, the complexity of structuring and normalization job titles limits the ability to improve the performance of the job title classification algorithms. Considering the occupation software developer, figure \ref{fig: F27} shows the \textit{kldb} that are assigned to the title with the terms ``softwareentwickler" or ``softwareentwicklerin" in the training dataset. Most of the titles belong to ``434", but approx. $30\%$ are assigned to other \textit{kldb}. Comparing the titles in these different \textit{kldbs}, most of them do not contain keywords other than ``Softwareentwickler" or ``Softwareentwicklerin" that would allow distinguishing the \textit{kldbs}. There are even titles with exactly the same wording in the different \textit{kldbs}. Thus, the data is ambiguous for some occupations and \textit{kldb} making it impossible for a classifier to differentiate between the \textit{kldb}. This reveals the complexity of the problem and the limitations of improving in the performance. 
+\begin{figure}
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=.8\linewidth]{kldbs_frequency_softwareentwickler.jpg}
+    \caption{\label{fig: F27} Share of \textit{kldb} for the occupation `softwareentwickler"}
+  \end{subfigure}%
+  \begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[width=.9\linewidth]{co_occurence_softwareentwickler.jpg}
+    \caption{\label{fig: F28} Co-occurence matrix for the occupation `softwareentwickler"}
+  \end{subfigure}
+  \end{figure}
 
-\begin{figure}[hb!]
-  \center
-  \includegraphics[scale=0.5]{kldbs_frequency_softwareentwickler.jpg}
-  \caption{\label{fig: F27} Share of \textit{kldb} for the occupation `softwareentwickler"}
-\end{figure}
+In addition to the above limitations, in general, the complexity of structuring and normalization job titles limits the ability to improve the performance of the job title classification algorithms. Considering the occupation software developer, figure \ref{fig: F27} shows the \textit{kldb} that are assigned to the title with the terms ``softwareentwickler" or ``softwareentwicklerin" in the training dataset. Most of the titles belong to ``434", but approx. $30\%$ are assigned to other \textit{kldb}. Comparing the titles in these different \textit{kldbs}, most of them do not contain keywords other than ``Softwareentwickler" or ``Softwareentwicklerin" that would allow distinguishing the \textit{kldbs}. There are even titles with exactly the same wording in the different \textit{kldbs}. Thus, the data is ambiguous for some occupations and \textit{kldb} making it impossible for a classifier to differentiate between the \textit{kldb}. This reveals the complexity of the problem and the limitations of improving in the performance. 
 
 The problem just highlighted raises the question of whether the limitation is merely a problem of the quality of the dataset. This can be clarified by analyzing the alternative \textit{kldb} that employers can provide in case of uncertainty. The heatmap in \ref{fig: F28} shows on the horizontal line the \textit{kldb} which were used for the training and on the vertical line the alternative \textit{kldb}. Considering again the main \textit{kldb} $431$, the vertical line that emanates from the \textit{kldb} indicates that it is not clear at all what \textit{kldb} a title might belong in the real world.\footnote{Note that this analysis relies on the complete dataset, not on the short one. This is due to illustrative purposes to highlight the problem better. However, since a sample with the same distribution was drawn, the logic is the same.} This poses the question of whether it is adequate to develop a classifier with only one class as an output. At the same time, one should elaborate on whether a multilabel classification algorithm is practical for downstream tasks in this domain. In addition, there are concerns about appropriate evaluation measurements. This may constitute the object of future studies.
 
-\begin{figure}[hb!]
-  \center
-  \includegraphics[scale=0.5]{co_occurence_softwareentwickler.jpg}
-  \caption{\label{fig: F28} Co-occurence matrix for the occupation `softwareentwickler"}
-\end{figure}
+In spite of this limitations, this paper is the first step towards establishing a job title classification system for German job postings with the \ac{KldB} by providing initial results and first analysis. The results on \ac{BERT} and the problem of biased classifiers are leading the way for future research. 
 
-% \section{sentences}
-% \citet{ajose2020} concludes that for there are different results for different classifiers. 
+\noindent\rule[0.5ex]{\linewidth}{1pt}
+
+\noindent \small{\textbf{Conflicts of interest statement}}
+
+\bigskip
+
+\noindent \footnotesize{The paper was written as part of a project by cause\&effect DFSG UG, which collaborates with the Bertelsmann Foundation. The data for this work was provided by cause\&effect DFSG UG. The work was not financially supported neither by cause\&effect DFSG UG nor by the Bertelsmann Foundation. The interests of both parties did not influence the results of this study. I, therefore, declare that there have been no conflicts of interest.}
 
 
 \clearpage
@@ -1118,6 +1151,9 @@ The problem just highlighted raises the question of whether the limitation is me
   \end{subfigure}
   \caption{Class distribution of training data}
   \end{figure}
+
+
+  
 
 
 \section{Results}
