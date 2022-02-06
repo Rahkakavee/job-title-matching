@@ -1,12 +1,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%% Title Page %%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[12pt, a4paper, titlepage]{article}
 \usepackage[a4paper,left=2.5cm,right=2.5cm,top=2.54cm,bottom=2.54cm]{geometry}
-
+\usepackage{float}
 \usepackage{lipsum}
 \usepackage{placeins}
 \usepackage[bottom]{footmisc}
 \usepackage{float}
-\usepackage{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{graphicx}
 \usepackage{appendix}
 \usepackage{setspace}
@@ -90,7 +90,9 @@
 %%%%%%%%%%%%%%TITLEPAGE%%%%%%%%%%%%%%
 \begin{titlepage}
     \begin{center}
-    {\LARGE \textbf{Job Title Classification - A Comparision of Vectorization and Classification Techniques for German Job Postings}}
+    {\LARGE \textbf{Job Title Classification}}
+    \noindent\rule[0.5ex]{\linewidth}{1pt}
+    {\Large \textbf{A Comparision of Vectorization and Classification Techniques for German Job Postings}}
     \\[1cm]
     {\Large \textbf{Masterthesis}}
     \\[1cm]
@@ -98,22 +100,22 @@
     \\[1cm]
     {\Large submitted by}
     \\[0.5cm]
-    {\LARGE \textbf{Rahkakavee Baskaran}}
+    \renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+    {\Large \textbf{Rahkakavee Baskaran}\footnote{Contact details: Howiesenstraße 5, 70839 Gerlingen, rahkakavee.baskaran@uni-konstanz.de}}
     \\[0.5cm]
-    {\LARGE 01/950253}
+    {\Large 01/950253}
     \\[0.5cm]
     {\Large at}
-    \\[0.5cm]
+    \\[1cm]
     \includegraphics[width=0.6\textwidth]{logo.jpg}
-  \end{center}
-  {\normalsize \textbf{Period of completion: }} 
-  \\[0.2cm]
-  \begin{center}
+    \\[1cm]
+    {\normalsize \textbf{Period of completion: October, 8, 20222 - Februrary, 15, 2022}} 
+    \\[0.2cm]
   {\normalsize \textbf{1\textsuperscript{st} supervisor:} Professor Doctor Susumu Shikano}
   \\[0.1cm]
   {\normalsize \textbf{2\textsuperscript{nd} supervisor:} Junior Professor Juhi Kulshresthra}
-  \\[2cm]
-    {\LARGE \textbf{Konstanz, \today}}
+  \\[1cm]
+    {\Large \textbf{Konstanz, \today}}
   \end{center}
     \end{titlepage}
 
@@ -127,32 +129,32 @@
 %%%%%%%%%%%%%%Abbreviations%%%%%%%%%%%%%%
 \section*{Abbreviations}
 \begin{acronym}
-  \acro{SVM}[SVM]{Support Vector Machine}
-  \acro{KNN}[KNN]{K-Nearest-Neighbor}
-  \acro{NB}[NB]{Naive Bayes}
-  \acro{MLR}[MLR]{Multinomial Logistic Regression}
-  \acro{OA}[OA]{Overall Accuracy}
-  \acro{TP}[TP]{True Positives}
-  \acro{TN}[TN]{True Negatives}
+  \acro{BERT}[BERT]{Bidirectional Encoder Representations from Transformers}
+  \acro{BOW}[BOW]{Bag of Words}
+  \acro{CBOW}[CBOW]{Continous Bag of Words}
+  \acro{CNN}[CNN]{Convolutional Neural Network}
+  \acro{CART}[CART]{Classification and Regression Trees}
+  \acro{DF}[DF]{Document Frequency}
   \acro{FN}[FN]{False Negatives}
   \acro{FP}[FP]{False Positives}
-  \acro{MAP}[MAP]{Maximum a Posteriori}
-  \acro{KldB}[KldB]{Klassifikation der Berufe 2010}
-  \acro{ISCO}[ISCO]{International Standard Clasification of Occupations}
-  \acro{BOW}[BOW]{Bag of Words}
-  \acro{TF-IDF}[TF-IDF]{Term Frequency-Inverse Document Frequency}
-  \acro{TF}[TF]{Term Frequency}
   \acro{IDF}[IDF]{Inverse Document Frequency}
-  \acro{DF}[DF]{Document Frequency}
-  \acro{CBOW}[CBOW]{Continous Bag of Words}
-  \acro{BERT}[BERT]{Bidirectional Encoder Representations from Transformers}
+  \acro{ISCO}[ISCO]{International Standard Clasification of Occupations}
+  \acro{KldB}[KldB]{Klassifikation der Berufe 2010}
+  \acro{KNN}[KNN]{K-Nearest-Neighbor}
+  \acro{LR}[LR]{Logistic Regression}
+  \acro{MAP}[MAP]{Maximum a Posteriori}
+  \acro{MLR}[MLR]{Multinomial Logistic Regression}
   \acro{NLP}[NLP]{Nature Language Processing}
+  \acro{NB}[NB]{Naive Bayes}
+  \acro{OA}[OA]{Overall Accuracy}
   \acro{PCA}[PCA]{Principal Component Analysis}
   \acro{RF}[RF]{Random Forest}
-  \acro{CART}[CART]{Classification and Regression Trees}
-  \acro{CNN}[CNN]{Convolutional Neural Network}
-  \acro{LR}[LR]{Logistic Regression}
   \acro{RNN}[RNN]{Recurrent Neural Networks}
+  \acro{SVM}[SVM]{Support Vector Machine}
+  \acro{TF}[TF]{Term Frequency}
+  \acro{TF-IDF}[TF-IDF]{Term Frequency-Inverse Document Frequency}
+  \acro{TP}[TP]{True Positives}
+  \acro{TN}[TN]{True Negatives}
 \end{acronym}
 \newpage
 
@@ -169,7 +171,7 @@ I would like to express my sincere gratitude to my supervisors Professor. Dr. Su
 \end{acknowledgments}
 
 \begin{abstract}
-  Job titles are key information within the area of labor market. As a valuable resource for labor market analysis and an essential component of job search engines and job recommendation systems, it is necessary to develop classification systems for job titles based on taxonomies that reflect current market trends. So far, the literature has focused on the English-speaking job market, while there are no classification attempts for the German market. Considering the challenges of this task, this paper aims at comparing different vectorization and classification methods for the classification of German job titles considering short text classification. The paper results show that BERT as a vectorization technique is a promising method for classifying German job titles, as it is stable and has excellent performance against imbalanced data and compared to other methods. 
+  Job titles are key information within the area of labor market. As a valuable resource for labor market analysis and an essential component of job search engines and job recommendation systems, it is necessary to develop classification systems for job titles based on taxonomies that reflect current market trends. So far, the literature has focused on the English-speaking job market, while there are no classification attempts for the German market. Therefore, this work aims to compare different vectorization and classification methods for the classification of German job titles, taking into account one of the challenges of this task, namely the classification of short texts. The comparison is made using the five vectorization techniques count vectorizer, TF-IDF, word2vec, doc2vec, and BERT. The data is trained using LR, SVM, and RF. In addition, a BERT deep learning model is applied. Word2vec and Doc2vec are additionally tested with additional knowledge to account for short text classification issues. The results show that BERT as a vectorization technique is a promising method for classifying German occupational titles. It is stable and offers excellent performance against unbalanced data and compared to other methods. Considering short job titles with additional knowledge yields inconclusive results.
 \end{abstract}
 
 
@@ -183,7 +185,7 @@ Over time, the literature on \ac{NLP} has been virtually flooded with algorithms
 
 Task-specific requirements necessitate further adjustments in the training process. The focus of this paper is on the challenge of job titles being concise. Short texts suffer from sparseness, few word co-occurrences,  missing shared context, noisiness, and ambiguity. The literature offers several approaches. Enriching features with additional knowledge has proven to be a promising method \citep{WangF2014, wang2017J}.
 
-Given the lack of a classification system for German job titles and the challenges this task entails, I define the following research goal: A comparison of different vectorization and classification methods for classifying German job titles under consideration of short text classification. The comparison should help to develop a German job title classification system based on the \ac{KldB} taxonomy to facilitate downstream tasks for the German labor market. Based on the state of the literature, the comparison is carried out under three aspects: First, different feature extraction techniques are implemented and compared. The comparison includes the sparse vectors count vectorizer and \ac{TF-IDF} and the dense techniques word2vec, doc2vec, and BERT. Second, different classifiers from different research directions are considered. The traditional methods SVM and LR, the ensemble technique RF, and BERT as a deep learning method are applied and compared. Finally, the task-specific challenge of short texts is considered by enriching word2vec and doc2vec, each with a second model with additional knowledge from the taxonomy. 
+Given the lack of a classification system for German job titles and the challenges this task entails, I define the following research goal: A comparison of different vectorization and classification methods for classifying German job titles under consideration of short text classification. The comparison should help to develop a German job title classification system based on the \ac{KldB} taxonomy to facilitate downstream tasks for the German labor market. Based on the state of the literature, the comparison is carried out under three aspects: First, different feature extraction techniques are implemented and compared. The comparison includes the sparse vectors count vectorizer and \ac{TF-IDF} and the dense techniques word2vec, doc2vec, and \ac{BERT}. Second, different classifiers from different research directions are considered. The traditional methods SVM and LR, the ensemble technique RF, and \ac{BERT} as a deep learning method are applied and compared. Finally, the task-specific challenge of short texts is considered by enriching word2vec and doc2vec, each with a second model with additional knowledge from the taxonomy. 
 
 Some interesting trends emerge from the training. \ac{BERT} as a vectorization technique is the clear winner. The sparse vectors perform better than word2vec and doc2vec, except for \ac{RF} where word2vec has similar performance to the sparse vectors. Except for \ac{BERT}, the other classifiers developed label bias in different settings, which explains most of the performance scores. The additional knowledge may have positively affected the word2vec embedding technique, while it may have been detrimental to doc2vec. 
 
@@ -235,14 +237,6 @@ Secondly, relying on one classification does not seem to be a reasonable option.
 
 Thirdly, from the two challenges presented, the focus of this paper is on the classification of short texts. The literature on short text classification reveals two issues. First, there are different results on whether sparse or dense techniques are better suited. Testing different sparse and dense vectorization techniques allows adressing this issue. Second, most of the solutions include additional knowledge. Therefore, I introduce a second model for each word2vec and doc2vec with additional knowledge from the taxonomy. The model comparison between these models forms the last pillar of the comparison. 
 
-\section{Job Title Data and Taxonomy}
-The training data consists of two datasets.\footnote{Both datasets are provided by cause\&effect DFSG UG for this study. They are not publicly available in this format.} The classes are extracted from the first dataset, referred to below as the \ac{KldB} dataset. The \ac{KldB} dataset contains all information of the \ac{KldB} taxonomy. The second dataset, called the job title dataset, contains the necessary data from the job titles. In the first part of this chapter, a brief explanation about the taxonomy structure and both datasets is given. The second part consists of a descriptive analysis of the class distribution of the data. 
-
-\subsection{KldB 2010}
-The \ac{KldB} dataset is structured hierarchically with five levels, with each level containing a different number of classes. The classifiers are trained for level 1 and level 3. In the following, these classes are also referred to as \textit{kldb}. On level 1, each class has an id of length 1 with a number from 0 to 9. Table \ref{tab: T3} shows the ten classes of level 1 with their class names. On level 2, each of the ten classes is divided into one or more subclasses having a class id of length 2, with the first digit indicating the class of level 1 and the second digit the class of level 2. An overview of all five levels with an example of classes is given in table \ref{tab: T2}. This procedure ultimately leads to class ids of length five on level 5. An occupation can be classified on every level in the taxonomy. Considering the classes of the example in table \ref{tab: T2}, the job title ``java developer" could be classified on level 5 to the class 43412. From this id, it is also derivable that the job title belongs, for example, on level 3 to the class ``Sofwareentwicklung" \citep{Bundesagentur2011a, Bundesagentur2011b, Paulus2013}
-
-Furthermore, the \ac{KldB} has two dimensions. The first dimension, the so-called ``Berufsfachlichkeit", structures jobs according to their similarity in knowledge, activities, and jobs, reflected in the first four levels. Considering the job titles ``fullstack php-entwickler" and ``java developer", it is reasonable to classify both on level 1 to "Naturwissenschaft, Geografie and Information" because they are related to computer science. It also makes sense to classify them, for example, to 4341 as both are concerned with software development. On level 5, then, a second dimension is introduced - the "Anforderungsniveau". This dimension gives information on the level of requirement for a job summarized in table \ref{tab: T4}. From the class ID of job title ``Java Developer", we can see that the job has been assigned to the second requirement level since the last digit is a two \citep{Bundesagentur2011a, Bundesagentur2011b, Paulus2013}. 
-
 
 \begin{table}[]
   \resizebox{\textwidth}{!}{%
@@ -261,38 +255,47 @@ Furthermore, the \ac{KldB} has two dimensions. The first dimension, the so-calle
   0                                          & Militär                                                                    \\ \hline
   \end{tabular}%
   }
-  \caption[Overview of classes level 1 - Berufsbereiche]{\label{tab: T3} Overview of classes Level 1 - Berufsbereiche (adapted from \citep[9]{Bundesagentur2011a} and \citep[1]{Bundesagentur2011b})}
+  \caption[Overview of Classes Level 1 - Berufsbereiche]{\label{tab: T3} Overview of Classes Level 1 - Berufsbereiche (adapted from \citep[9]{Bundesagentur2011a} and \citep[1]{Bundesagentur2011b})}
   \end{table}
+
+
+\section{Job Title Data and Taxonomy}
+\setcounter{footnote}{0}
+The training data consists of two datasets.\footnote{Both datasets are provided by cause\&effect DFSG UG for this study. They are not publicly available in this format.} The classes are extracted from the first dataset, referred to below as the \ac{KldB} dataset. The \ac{KldB} dataset contains all information of the \ac{KldB} taxonomy. The second dataset, called the job title dataset, contains the necessary data from the job titles. In the first part of this chapter, a brief explanation about the taxonomy structure and both datasets is given. The second part consists of a descriptive analysis of the class distribution of the data. 
+
+\subsection{KldB 2010}
+The \ac{KldB} dataset is structured hierarchically with five levels, with each level containing a different number of classes. The classifiers are trained for level 1 and level 3. In the following, these classes are also referred to as \textit{kldb}. On level 1, each class has an id of length 1 with a number from 0 to 9. Table \ref{tab: T3} shows the ten classes of level 1 with their class names. On level 2, each of the ten classes is divided into one or more subclasses having a class id of length 2, with the first digit indicating the class of level 1 and the second digit the class of level 2. An overview of all five levels with an example of classes is given in table \ref{tab: T2}. This procedure ultimately leads to class ids of length five on level 5. An occupation can be classified on every level in the taxonomy. Considering the classes of the example in table \ref{tab: T2}, the job title ``java developer" could be classified on level 5 to the class 43412. From this id, it is also derivable that the job title belongs, for example, on level 3 to the class ``Sofwareentwicklung" \citep{Bundesagentur2011a, Bundesagentur2011b, Paulus2013}.
+
+  \begin{table}[]
+    \center
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{lccl}
+    \hline
+    \textbf{Name}      & \textbf{Level} & \textbf{Number of Classes} & \textbf{Example}                               \\ \hline
+    Berufsbereiche     & 1              & 10                         & 4: Naturwissenschaft, Geografie und Informatik \\
+    Berufshauptgruppen & 2 & 37   & 43: Informatik-, Informations- und Kommunikationstechnologieberufe            \\
+    Berufsgruppen      & 3              & 144                        & 434: Sofwareentwicklung                        \\
+    Berufsuntergruppen & 4              & 700                        & 4341: Berufe in der Sofwareentwicklung         \\
+    Berufsgattungen    & 5 & 1286 & 43412: Berufe in der Sofwareenetwicklung - fachlich ausgerichtete Tätigkeiten \\ \hline
+    \end{tabular}%
+    }
+    \caption[Levels of KldB with Examples for each Level]{\label{tab: T2} Levels of KldB with Examples for each Level (adapted from \citep[8]{Bundesagentur2011a})}
+    \end{table}
+
+Furthermore, the \ac{KldB} has two dimensions. The first dimension, the so-called ``Berufsfachlichkeit", structures jobs according to their similarity in knowledge, activities, and jobs, reflected in the first four levels. Considering the job titles ``fullstack php-entwickler" and ``java developer", it is reasonable to classify both on level 1 to "Naturwissenschaft, Geografie and Information" because they are related to computer science. It also makes sense to classify them, for example, to 4341 as both are concerned with software development. On level 5, then, a second dimension is introduced - the "Anforderungsniveau". This dimension gives information on the level of requirement for a job summarized in table \ref{tab: T4}. From the class ID of job title ``Java Developer", we can see that the job has been assigned to the second requirement level since the last digit is a two \citep{Bundesagentur2011a, Bundesagentur2011b, Paulus2013}. 
 
 \begin{table}[hb!]
-  \center
-  \resizebox{\textwidth}{!}{
-  \begin{tabular}{llll}
-  \hline
-  \textbf{Name}      & \textbf{Level} & \textbf{Number of classes} & \textbf{Example}                               \\ \hline
-  Berufsbereiche     & 1              & 10                         & 4: Naturwissenschaft, Geografie und Informatik \\
-  Berufshauptgruppen & 2 & 37   & 43: Informatik-, Informations- und Kommunikationstechnologieberufe            \\
-  Berufsgruppen      & 3              & 144                        & 434: Sofwareentwicklung                        \\
-  Berufsuntergruppen & 4              & 700                        & 4341: Berufe in der Sofwareentwicklung         \\
-  Berufsgattungen    & 5 & 1286 & 43412: Berufe in der Sofwareenetwicklung - fachlich ausgerichtete Tätigkeiten \\ \hline
-  \end{tabular}%
-  }
-  \caption[Levels of KldB with examples for each level]{\label{tab: T2} Levels of KldB with examples for each level (adapted from \citep[8]{Bundesagentur2011a})}
-  \end{table}
-
-
-\begin{table}[]
   \resizebox{\textwidth}{!}{%
-  \begin{tabular}{clll}
+  \begin{tabular}{ccll}
   \hline
-  \multicolumn{1}{l}{\textbf{level of requirement}} & \textbf{class ID} & \textbf{name long} & \textbf{name short} \\ \hline
+  \multicolumn{1}{l}{\textbf{Level of Requirement}} & \textbf{Class ID} & \textbf{Name Long} & \textbf{Name Short} \\ \hline
   1 & xxxx1 & Helfer- und Anlerntätigkeit        & Helfer     \\
   2 & xxxx2 & fachlich ausgerichtete Tätigkeiten & Fachkraft  \\
   3 & xxxx3 & komplexe Spezialstentätigkeiten    & Spezialist \\
   4 & xxxx4 & hoch komplexe Tätigkeiten          & Experte    \\ \hline
   \end{tabular}%
   }
-  \caption[Level of requirements on level 5]{\label{tab: T4} Level of requirements on level 5 (adapted from \citep[2]{Bundesagentur2011b})}
+  \caption[Level of Requirements on Level 5]{\label{tab: T4} Level of Requirements on Level 5 (adapted from \citep[2]{Bundesagentur2011b})}
   \end{table}
 
 The \ac{KldB} 2010 thus represents a valuable and information-rich occupational classification scheme for Germany, that also reflects the current trends in the labor market \citep{Paulus2013}. It can capitalize, above all, on its sophisticated construction process. Instead of just including expert knowledge into the taxonomy, the development process is based on systematical consideration of occupations and statistical procedures for taxonomy development. Furthermore, the taxonomy was reviewed qualitatively several times concerning professions. 
@@ -312,14 +315,14 @@ Initially, the training dataset contained a total of 269788 examples. However, d
   \begin{subfigure}{.5\textwidth}
     \centering
     \includegraphics[width=.9\linewidth]{training_data_short_L1.png}
-    \caption{\label{fig: F9} Class distribution level 1}
+    \caption{\label{fig: F9} Class Distribution Level 1}
   \end{subfigure}%
   \begin{subfigure}{.5\textwidth}
     \centering
     \includegraphics[width=.9\linewidth]{training_data_short_L3.png}
-    \caption{\label{fig: F10} Class distribution level 3}
+    \caption{\label{fig: F10} Class Distribution Level 3}
   \end{subfigure}
-  \caption{Class distribution of the training data}
+  \caption{Class Distribution of the Training Data}
   \end{figure}
 
 Figures \ref{fig: F9} and \ref{fig: F10} show the distribution of the classes in level 1 and level 3.\footnote{The class distribution of the long dataset is given in the appendix.} Both figures show the absolute number of examples for each \textit{kldb} in the respective levels. In figure \ref{fig: F10} the number of examples is colored with the belonging \textit{kldb} level 1 class to give a better overview of the 144 \textit{kldb} on level 3. In general, from both levels, it is clear that the data is not distributed equally. For the class distribution of level 1 on Figure \ref{fig: F9}, class 1 and class 9 have really few examples, while class 2 has considerably more examples than all other classes. Although the data is imbalanced, all classes have at least some examples to get meaningful performance measurements. At level 3, the uneven distribution is even more apparent. Compared to level 1, there are many classes with only one example, which is problematic for obtaining interpretable measurements. This issue will be discussed in the results section. Note that \textit{kldb} 0 is missing for level 1. Thus, it cannot be trained with the classifier. 0 stands for ``Militär". Jobs in this category are generally not posted frequently on the Employment Agency Job Board page, so it was not possible to get examples for this \textit{kldb}. On level 3 eight classes do not have any examples.
@@ -332,7 +335,7 @@ The classification process is divided into several steps. Figure \ref{fig: F8} g
 \begin{figure}[hb!]
   \center
   \includegraphics[scale=0.5]{pipeline_MA.png}
-  \caption{\label{fig: F8} Training pipeline}
+  \caption{\label{fig: F8} Training Pipeline}
 \end{figure}
 
 The transformed data is then reduced to lower dimensions using principal component analysis. The resulting data is the input for the classifier.In the last step, the four classifiers are trained. Note that the \ac{BERT} deep learning algorithm follows a different pipeline, which is why the algorithm is presented separately. Here, the data is put into the deep learning model directly after preprocessing, and the model is trained. The targeting of the data has already been described in the previous chapter. The procedure and the associated methods are explained in detail in the following.
@@ -361,7 +364,7 @@ The values for the vector are generated by counting for each text the frequency 
   java developer   & 1    & 1         & 0      \\
   python developer & 0    & 1         & 1      \\ \hline
   \end{tabular}
-  \caption{\label{tab: T11} Encoding with count vectorizer}
+  \caption{\label{tab: T11} Encoding with Count Vectorizer}
   \end{table}
 
 
@@ -469,17 +472,16 @@ From the job title dataset and the \textit{kldb} dataset, I create pairs of simi
 \begin{figure}[hb!]
   \center
   \includegraphics[scale=0.5]{SBERT.png}
-  \caption[Sentence-BERT siamese structure]{\label{fig: F5} Sentence-\ac{BERT} siamese architecture \citep[3]{reimers2019}}
+  \caption[Sentence-BERT Siamese Structure]{\label{fig: F5} Sentence-\ac{BERT} Siamese Architecture \citep[3]{reimers2019}}
 \end{figure}
 
 \subsection{Dimensionality Reduction}
 Dimensionality reduction techniques based for example on \ac{PCA} play an essential role in reducing computation time and saving computing resources \citep{ayesha2020}. Figure \ref{fig: F6} shows the runtime of all three classifiers with different data sizes and both with and without \ac{PCA}. 
 
-
-\begin{figure}[hb!]
+\begin{figure}[]
   \center
   \includegraphics[scale=0.5]{running_time_PCA.jpeg}
-  \caption{\label{fig: F6} Running time of word2vec with different data sizes}
+  \caption{\label{fig: F6} Runtime of Word2vec with Different Data Sizes}
 \end{figure}
 
 The input for the classifiers are the word2vec word embeddings without the additional information. The bright lines show the runtimes without dimensionality reduction, while the dark-colored lines report the runtime with \ac{PCA} transformation. It becomes clear that the runtime for the transformed embeddings is generally lower. The magnitude of the differences is almost irrelevant for a dataset of 500. However, for the non-transformed embeddings, the runtime increases considerably with the dataset size for all classifiers. This is most evident with \ac{RF}. With increasing dataset size the runtime of the transformed embeddings also increases for all classifiers. However, it does so at a much slower pace. Therefore, it can be concluded that the transformation contributes to keeping the runtime lower for large datasets. As already described in chapter 3, the training dataset is pretty large, so it is reasonable to reduce the dimensions. 
@@ -495,7 +497,7 @@ where $z$ is the eigenvector and $\lambda$ the eigenvalue. In order to decompose
 \subsection{Classifiers}
 In the following, based on a theoretical discussion of each classifier, the exact modeling is justified. The focus and depth of the explanations of the properties of the classifiers, such as decision function or regularization, depend on the settings chosen for the classification algorithms. Therefore, not all properties are described to the same extent for all classifiers. The \ac{BERT} deep learning model is already described in chapter 4.3. 
 
-\subsubsection{Logistic Regression}
+\subsubsection*{Logistic Regression}
 \ac{MLR}, a generalized linear model, is one of the most used analytical tools in social and natural science for exploring the relationships between features and categorical outcomes. For solving classification problems, it learns weights and a bias (intercept) from the input vector. Figure \ref{fig: F7} illustrates the idea of the calculation of \ac{MLR}. To classify examples, first, the weighted sum of the input vector is calculated. For multi-classification, the weighted sum has to be calculated for each class. Thus, given a $f \times 1$ feature vector x with $[x_1, x_2, ..., x_f]$, a weight vector $w_k$ with $k$ indicating the class k of the set of classes K, a bias vector $b_k$, the weighted sum is defined as the dot product of $w_k$ and $\textbf{x}$ plus the $b_k$. Representing the weight vectors of each class in a $[K \times f]$ matrix $\textbf{W}$, the weighted sum can be formally expressed as $\textbf{W}x+b$. In Figure \ref{fig: F7}, the blue lines, for example, are a row in $\textbf{W}$ and are the weight vectors related to a class labeled with 1 \citep{jurafsky2021}.
 
 \begin{figure}[hb!]
@@ -519,7 +521,7 @@ For \ac{MLR} it is common to add a regularization parameter. This avoids overfit
 
 The following setting will be used for the \ac{MLR}: A \ac{MLR} with a L2 penalty with a C value of 1 is used. Since the input vectors, especially for count vectorizer and for \ac{TF-IDF} are high-dimensional, the limited-memory Broyden-Fletcher-Goldfarb-Shannon solver is set for solving. For some training, converge problems appeared, which is why the maximal iteration of the classifier is set to 10000.
 
-\subsubsection{Support Vector Machines}
+\subsubsection*{Support Vector Machines}
  The general idea of a \ac{SVM} is to map ``the input vectors x into a high-dimensional feature space Z through some nonlinear mapping chosen a priori [...], where an optimal separating hyperplane is constructed'' \citep[138]{Vapnik2000}. This optimal hyperplane maximizes the margin, which is the distance from the hyperplane to the closest points, so-called Support Vectors, across both classes \citep{Han2012}. Formally, given a training dataset with n training vectors $x_i \in R^n, i = 1,....,n$ and the target classes $y_1,...y_i$ with $y_i \in \{-1, 1\}$, the following quadratic programming primal problem has to be solved in order to find the optimal hyperplane:
 \[\min_{w,b} \frac{1}{2}w^{T}w \] 
 \[\text{subject to } y_i(w^T\phi(x_i)+b) \geq 1\]
@@ -543,7 +545,7 @@ In order to apply \ac{SVM} to multi-class problems, several approaches have been
 
 In order to find a robust classifier, I checked \ac{SVM}s with different parameters, as well as different multi-class approaches. I found that a \ac{SVM} using a soft margin with a $C=1$ and a one-vs-rest approach yielded the best results. I also tested different kernels, like  RBF Kernel or linear kernel. The latter, formally  $k(x, x') = x^Tx'$ \citep{Jordan2006}, achieved the best results, which is why I chose it for the classifier. 
 
-\subsubsection{Random Forest Classifier}
+\subsubsection*{Random Forest Classifier}
 In contrast to the previous two classifiers, \ac{RF} is an ensemble learning technique. The main idea of ensemble learning techniques is to create several learners and combine them. Those learners are, for example, a Decision Tree or neural networks and are usually homogeneous, meaning that each learner is based on the same machine learning algorithm. The different ensemble techniques are built on three pillars: the data sampling technique, the strategy of the training, and the combination method \citep{polikar2012, zhou2009}. 
 
 The first pillar, data sampling, is important because it is not desirable to have the same outputs for all classifiers. Thus, ensemble techniques require diversity in the output, i.e. the outputs should be optimally independent and negatively correlated. Several methods for achieving diversity are already well established. Bagging techniques, for example, rely on bootstrap. \citep{polikar2012}. The second pillar raises the question of which techniques should be applied to train the learners of the method. The most popular strategies for the training are bagging and boosting \citep{polikar2012}. The last pillar is about the combining method. Each classifier of the method will output an individual classification result, and those results have to be combined in some way to achieve an overall result. There are plenty of methods like majority voting or borda count \citep{polikar2012}.
@@ -588,12 +590,12 @@ Based on the above explanations, the implemented \ac{RF} has the following setti
 Appropriate measurements are crucial for being able to meaningfully compare the performance of different algorithms \citep{Ferri2009}. There exist several metrics for the evaluation of classification approaches in the literature \citep{Fatourechi2008}. In the following, the selected measurements for performance measurement will be justified. 
 
 Most metrics rely on a confusion matrix. For the multi-class case, this confusion matrix is defined as follows \citep{Kautz2017}: 
-\begin{table}[hb!]
+\begin{table}[]
   \center
   \begin{tabular}{lllll}
   \hline
-            & positive examples      &           &             &             \\ \hline
-  positive prediction  & $c_{1,1}$ & $c_{1,2}$ & $\dots$     & $c_{1,n}$   \\
+            & Positive Examples      &           &             &             \\ \hline
+  Positive Prediction  & $c_{1,1}$ & $c_{1,2}$ & $\dots$     & $c_{1,n}$   \\
             & $c_{2,1}$ & $c_{i,j}$ &             &             \\
             &  $\vdots$         &           & $\ddots$ &   $\vdots$\\
             & $c_{n,1}$ &           & $\dots$     & $c_{n,n}$   \\ \hline
@@ -624,7 +626,7 @@ There is a trade-off between precision and recall \citep{Buckland1994}. The F-sc
 
 \[F_{macro} = 2 \cdot \frac{precision_{macro} \cdot recall_{macro} }{precision_{macro} + recall_{macro} }\ \]
 
-A closer look at the formula of the micro scores shows that actually, the micro-precision score and the recall score are the same since aggregating the false negatives and aggregating the false positive results in the same number. If the precision and recall are the same, it follows from the F-measure calculation that it has to be as well equal. And even further, the micro score is reducing to the accuracy, thus suffering from the same problem as accuracy \citep{grandini2020}.
+A closer look at the formula of the micro scores shows that actually, the micro-precision score and the recall score are the same since aggregating the false negatives and aggregating the false positive results in the same number. If the precision and recall are the same, it follows from the F-measure calculation that it has to be equal as well. And even further, the micro score is reducing to the accuracy, thus suffering from the same problem as accuracy \citep{grandini2020}.
 
 Since the job title classification involves multi-class classification and the descriptive analysis has shown that the data is imbalanced, it is not reasonable to base the evaluation solely on the \ac{OA}. Showing that micro scores of precision, recall, and F1-scorereduce to accuracy, it is crucial to take the macro scores into account to capture the performance of the minority classes well.
 
@@ -638,16 +640,16 @@ As explained above, the results are compared from three perspectives: Vectorizat
   \hline
   {} &    \textbf{LR} &   \textbf{SVM} &    \textbf{RF} \\
   \hline
-count vectorizer &  0.72 &  0.69 &  0.65 \\
+Count Vectorizer &  0.72 &  0.69 &  0.65 \\
 TF-IDF           &  0.72 &  0.69 &  0.65 \\
-word2vec\_I      &  0.54 &  0.53 &  0.61 \\
-word2vec\_II     &  0.54 &  0.52 &  0.62 \\
-doc2vec\_I       &  0.48 &  0.46 &  0.56 \\
-doc2vec\_II      &  0.45 &  0.42 &  0.53 \\
+Word2vec\_I      &  0.54 &  0.53 &  0.61 \\
+Word2vec\_II     &  0.54 &  0.52 &  0.62 \\
+Doc2vec\_I       &  0.48 &  0.46 &  0.56 \\
+Doc2vec\_II      &  0.45 &  0.42 &  0.53 \\
 BERT            &  0.78 &  0.78 &  0.77 \\
   \hline
   \end{tabular}
-  \caption{\label{tab: T5} Evaluation of level 1 classification - accuracy}
+  \caption{\label{tab: T5} Evaluation of Level 1 Classification - Accuracy}
 \end{table}
 
 
@@ -657,17 +659,17 @@ BERT            &  0.78 &  0.78 &  0.77 \\
   \hline
   {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
   \hline
-  count vectorizer &  p: 0.76, r: 0.61, F1: 0.66 &  p: 0.72, r: 0.58, F1: 0.63 &  p: 0.66, r: 0.53, F1: 0.57 \\
+  Count Vectorizer &  p: 0.76, r: 0.61, F1: 0.66 &  p: 0.72, r: 0.58, F1: 0.63 &  p: 0.66, r: 0.53, F1: 0.57 \\
   TF-IDF           &  p: 0.77, r: 0.61, F1: 0.65 &  p: 0.73, r: 0.58, F1: 0.62 &  p: 0.67, r: 0.53, F1: 0.57 \\
-  word2vec\_I      &  p: 0.58, r: 0.39, F1: 0.42 &   p: 0.46, r: 0.40, F1: 0.41 &  p: 0.58, r: 0.52, F1: 0.54 \\
-  word2vec\_II     &  p: 0.59, r: 0.41, F1: 0.45 &  p: 0.48, r: 0.41, F1: 0.43 &  p: 0.59, r: 0.53, F1: 0.55 \\
-  doc2vec\_I       &  p: 0.51, r: 0.33, F1: 0.35 &  p: 0.41, r: 0.33, F1: 0.34 &   p: 0.59, r: 0.40, F1: 0.43 \\
+  Word2vec\_I      &  p: 0.58, r: 0.39, F1: 0.42 &   p: 0.46, r: 0.40, F1: 0.41 &  p: 0.58, r: 0.52, F1: 0.54 \\
+  Word2vec\_II     &  p: 0.59, r: 0.41, F1: 0.45 &  p: 0.48, r: 0.41, F1: 0.43 &  p: 0.59, r: 0.53, F1: 0.55 \\
+  Doc2vec\_I       &  p: 0.51, r: 0.33, F1: 0.35 &  p: 0.41, r: 0.33, F1: 0.34 &   p: 0.59, r: 0.40, F1: 0.43 \\
   Doc2vec\_II      &   p: 0.54, r: 0.30, F1: 0.32 &   p: 0.37, r: 0.30, F1: 0.31 &   p: 0.55, r: 0.38, F1: 0.40 \\
   BERT            &  p: 0.76, r: 0.76, F1: 0.76 &  p: 0.75, r: 0.77, F1: 0.76 &  p: 0.78, r: 0.72, F1: 0.74 \\
   \hline
   \end{tabular}
     }
-  \caption{\label{tab: T6} Evaluation of level 1 classification - macro}
+  \caption{\label{tab: T6} Evaluation of Level 1 Classification - Macro}
   \end{table}
 
 
@@ -676,30 +678,30 @@ BERT            &  0.78 &  0.78 &  0.77 \\
   \begin{tabular}{llllllll}
   \hline
    &
-    \textbf{accuracy} &
-    \textbf{precision macro} &
-    \textbf{recall macro} &
-    \textbf{F1 macro} & \\ \hline
-  \textbf{BERT clf level 1} &
+    \textbf{Accuracy} &
+    \textbf{Precision Macro} &
+    \textbf{Recall Macro} &
+    \textbf{F1 Macro} & \\ \hline
+  \textbf{BERT Clf Level 1} &
     0.76 &
     0.71 &
     0.71 &
     0.71 & \\
-  \textbf{BERT clf level 3} &
+  \textbf{BERT Clf Level 3} &
     0.44 &
     0.20 &
     0.18 &
     0.17 &\\ \hline
   \end{tabular}
   }
-  \caption{\label{tab: T12} Evaluation of level 1 and 3 BERT deep learning model}
+  \caption{\label{tab: T12} Evaluation of Level 1 and 3 BERT Deep Learning Model}
   \end{table}
 
-Comparing the accuracy of the vectorization techniques, with approx. $78\%$ accuracy the \ac{BERT} vectorizer outperforms the other methods. A look at the macro table \ref{tab: T6} for BERT confirms the high performance with relatively similar macro scores over all classifiers. Only in combination with \ac{RF}, the recall and thus the F1-score is lower with \ac{BERT} compared to the other classifiers. Further, the two sparse techniques count vectorizer and \ac{TF-IDF} performed quite well, especially compared to the word embedding techniques word2vec and doc2vec regardless of having additional knowledge or not for \ac{LR} and \ac{SVM}. Related to \ac{LR} and \ac{SVM}, the worst performance is achieved by doc2vec. However, word2vec also performs considerably below the sparse vectors and \ac{BERT}. For example, word2vec\_I has $18\%$ less accuracy than the count vectorizer for \ac{LR}. This picture is confirmed when looking at the macro table. The difference between word2vec and doc2vec on one side compared to the sparse vectors and the \ac{BERT} vectorizer on the other side shows up more strongly. Again for \ac{LR}, in comparison with word2vec\_I, the count vectorizer performed $24\%$ better, measured by the F1-score. 
+Comparing the accuracy of the vectorization techniques, with approx. $78\%$ accuracy the \ac{BERT} vectorizer outperforms the other methods. A look at the macro table \ref{tab: T6} for \ac{BERT} confirms the high performance with relatively similar macro scores over all classifiers. Only in combination with \ac{RF}, the recall and thus the F1-score is lower with \ac{BERT} compared to the other classifiers. Further, the two sparse techniques count vectorizer and \ac{TF-IDF} performed quite well, especially compared to the word embedding techniques word2vec and doc2vec regardless of having additional knowledge or not for \ac{LR} and \ac{SVM}. Related to \ac{LR} and \ac{SVM}, the worst performance is achieved by doc2vec. However, word2vec also performs considerably below the sparse vectors and \ac{BERT}. For example, word2vec\_I has $18\%$ less accuracy than the count vectorizer for \ac{LR}. This picture is confirmed when looking at the macro table. The difference between word2vec and doc2vec on one side compared to the sparse vectors and the \ac{BERT} vectorizer on the other side shows up more strongly. Again for \ac{LR}, in comparison with word2vec\_I, the count vectorizer performed $24\%$ better, measured by the F1-score. 
 
 A different picture is given for \ac{RF}. The differences between the sparse methods and the word2vec techniques is much smaller and for the macro scores almost vanished, while doc2vec performs lower. Finally, compared to \ac{BERT} vectorizer, all other vectorizers are performing lower, taking the macro score as a performance metric instead of accuracy. Note that doc2vec has ill-defined scores for \ac{LR} and \ac{RF} and word2vec for \ac{SVM} since they have no predictions for some classes. Considering the formula of the macro score above, if a class has zero examples, this class is set to zero but is included in the average. Hence, the macro scores for these vectorization techniques combined with the respective classifiers must be interpreted with caution. 
 
-The analysis of the classification algorithms confirms the vague impression in the literature. While LR and SVM have an excellent performance for the dense vectorization techniques, RF shows the best performance for the two word embedding techniques word2vec and doc2vec. For BERT, on the other hand, all classification algorithms turn out to be strong. The BERT deep learning model performed lower than the BERT vectorizer but better than the other vectorization techniques. 
+The analysis of the classification algorithms confirms the vague impression in the literature. While LR and SVM have an excellent performance for the dense vectorization techniques, RF shows the best performance for the two word embedding techniques word2vec and doc2vec. For \ac{BERT}, on the other hand, all classification algorithms turn out to be strong. The \ac{BERT} deep learning model performed lower than the \ac{BERT} vectorizer but better than the other vectorization techniques. 
 
 Concerning the last analysis dimension, the focus relies on word2vec\_II and doc2vec\_II, which contain additional knowledge for the embeddings.\footnote{The \ac{BERT} model contains as well additional knowledge since search words pairs also were used for the fine-tuning. However, the model comparison is difficult since \ac{BERT} deep learning model was trained differently and allows no direct comparison} The accuracy score in table \ref{tab: T6}  of word2vec\_II shows no improvement by adding knowledge. For doc2vec, the results are even slightly worse, which is also reflected in the macro results. The macro results for word2vec show slightly better performance adding knowledge for \ac{SVM} and \ac{LR}, but for \ac{RF} this improvement has almost disappeared.
 
@@ -711,16 +713,16 @@ Table \ref{tab: T8} and \ref{tab: T10} contain the results of level 3. Again the
 \hline
 {} &   \textbf{LR} &   \textbf{SVM} &    \textbf{RF} \\
 \hline
-count vectorizer &  0.50 &  0.52 &  0.44 \\
+Count Vectorizer &  0.50 &  0.52 &  0.44 \\
 TF-IDF           &  0.48 &  0.53 &  0.45 \\
-word2vec\_I      &  0.30 &  0.15 &  0.36 \\
-word2vec\_II     &  0.30 &  0.20 &  0.35 \\
-doc2vec\_I       &  0.19 &  0.19 &  0.30 \\
-doc2vec\_II      &  0.16 &  0.16 &  0.27 \\
+Word2vec\_I      &  0.30 &  0.15 &  0.36 \\
+Word2vec\_II     &  0.30 &  0.20 &  0.35 \\
+Doc2vec\_I       &  0.19 &  0.19 &  0.30 \\
+Doc2vec\_II      &  0.16 &  0.16 &  0.27 \\
 BERT            &  0.50 &  0.46 &  0.45 \\
 \hline
 \end{tabular}
-\caption{\label{tab: T8} Evaluation of level 3 classification - Accuracy}
+\caption{\label{tab: T8} Evaluation of Level 3 Classification - Accuracy}
 \end{table}
 
 
@@ -730,41 +732,40 @@ BERT            &  0.50 &  0.46 &  0.45 \\
 \hline
 {} &                          \textbf{LR} &                         \textbf{SVM} &                          \textbf{RF} \\
 \hline
-count vectorizer &   p: 0.41, r: 0.27, F1: 0.30 &   p: 0.40, r: 0.34, F1: 0.35 &  p: 0.36, r: 0.25, F1: 0.28 \\
+Count Vectorizer &   p: 0.41, r: 0.27, F1: 0.30 &   p: 0.40, r: 0.34, F1: 0.35 &  p: 0.36, r: 0.25, F1: 0.28 \\
 TF-IDF           &   p: 0.40, r: 0.23, F1: 0.27 &  p: 0.39, r: 0.33, F1: 0.35 &  p: 0.39, r: 0.26, F1: 0.29 \\
-word2vec\_I      &  p: 0.18, r: 0.12, F1: 0.12 &  p: 0.08, r: 0.06, F1: 0.05 &   p: 0.24, r: 0.19, F1: 0.20 \\
-word2vec\_II     &  p: 0.25, r: 0.14, F1: 0.17 &   p: 0.13, r: 0.11, F1: 0.10 &   p: 0.27, r: 0.20, F1: 0.22 \\
-doc2vec\_I       &  p: 0.11, r: 0.05, F1: 0.05 &  p: 0.12, r: 0.09, F1: 0.09 &  p: 0.22, r: 0.13, F1: 0.14 \\
-doc2vec\_II      &  p: 0.09, r: 0.04, F1: 0.04 &  p: 0.11, r: 0.07, F1: 0.08 &  p: 0.19, r: 0.11, F1: 0.12 \\
+Word2vec\_I      &  p: 0.18, r: 0.12, F1: 0.12 &  p: 0.08, r: 0.06, F1: 0.05 &   p: 0.24, r: 0.19, F1: 0.20 \\
+Word2vec\_II     &  p: 0.25, r: 0.14, F1: 0.17 &   p: 0.13, r: 0.11, F1: 0.10 &   p: 0.27, r: 0.20, F1: 0.22 \\
+Doc2vec\_I       &  p: 0.11, r: 0.05, F1: 0.05 &  p: 0.12, r: 0.09, F1: 0.09 &  p: 0.22, r: 0.13, F1: 0.14 \\
+Doc2vec\_II      &  p: 0.09, r: 0.04, F1: 0.04 &  p: 0.11, r: 0.07, F1: 0.08 &  p: 0.19, r: 0.11, F1: 0.12 \\
 BERT            &  p: 0.58, r: 0.51, F1: 0.53 &  p: 0.52, r: 0.48, F1: 0.48 &  p: 0.48, r: 0.33, F1: 0.36 \\
 \hline
 \end{tabular}
 }
-\caption{\label{tab: T10} Evaluation of level 3 classification - macro}
+\caption{\label{tab: T10} Evaluation of Level 3 Classification - Macro}
 \end{table}
 
 In general, the performance of level 3 is lower than level 1, which is due to the higher number of classes and lower number of examples in the classes. In contrast to level 1, there is no noticeable difference in accuracy between \ac{BERT} and the sparse vectors. However, looking at the macro scores, \ac{BERT} has a much higher recall, and thus a higher F1-score than the other techniques. In general, while the macro results for all other techniques reveal much worse performance compared to the accuracy score, \ac{BERT} is stable overall metrics. Thus, again it can be concluded that \ac{BERT} outperforms the other classifiers. Both sparse vectors performed relative equally. Comparing the sparse vectors against the word embeddings word2vec and doc2vec, the latter are the inferior. Same as for level 1, doc2vec has the worst performance.
 
-Comparing the classifiers for level 3 shows the same picture for sparse vectors and word embeddings. Sparse vectors and \ac{BERT} vectorizer perform better with \ac{LR} and \ac{SVM}, while the word embeddings have the best result with \ac{RF}. In contrast to level 1, the best performance for \ac{BERT} is achieved by \ac{LR} on level 3, especially compared to the deep learning model, which performed much lower than the \ac{BERT} vectorization and looking at the macro results even much worse than the sparse techniques. However, concerning the results of BERT of LR and SVM, a peculiarity should be noted. During training, there was no convergence of \ac{SVM} with \ac{BERT} in a real runtime. Therefore, a maximal iteration of $10000$ was set. This might have affected the performance of \ac{SVM}. Thus, one should be careful to rank \ac{LR} as considerably better than \ac{SVM}. 
+Comparing the classifiers for level 3 shows the same picture for sparse vectors and word embeddings. Sparse vectors and \ac{BERT} vectorizer perform better with \ac{LR} and \ac{SVM}, while the word embeddings have the best result with \ac{RF}. In contrast to level 1, the best performance for \ac{BERT} is achieved by \ac{LR} on level 3, especially compared to the deep learning model, which performed much lower than the \ac{BERT} vectorization and looking at the macro results even much worse than the sparse techniques. However, concerning the results of \ac{BERT} of LR and SVM, a peculiarity should be noted. During training, there was no convergence of \ac{SVM} with \ac{BERT} in a real runtime. Therefore, a maximal iteration of $10000$ was set. This might have affected the performance of \ac{SVM}. Thus, one should be careful to rank \ac{LR} as considerably better than \ac{SVM}. 
 
 Including additional knowledge in word2vec reveals no noticeable improvement for \ac{LR} and \ac{RF}. For \ac{SVM}, there seems to be a slight improvement. The trend of macro results across all classifiers seems to confirm the improvement, although, for RF, the improvement is not too great and should not be given too much attention due to the ill-defined scores. The same problem applies to doc2vec. Roughly compared, there is no difference between doc2vec\_I and doc2vec\_II. However, the somewhat poorer performance of doc2vec\_II becomes apparent with some classification algorithms. 
 
 
 \subsection{Deep Dive into the Results}
-Looking at the results, we see some trends emerging. Comparing the vectorization techniques in both level 1 and level 3, the \ac{BERT} vectorizer has the best performance. The sparse ones perform better than the embedding techniques word2vec and do2vec for LR and SVM, while there is little difference for RF. Doc2vec performs the worst in general. Concerning the classifiers, \ac{RF} has lower performance overall but a better performance for word2vec and doc2vec compared to their results for LR and RF. While the deep learning model for level 1 has a comparable but lower performance than BERT vectorization, it slips down to the performance of sparse vectors at level 3. Finally, the additional knowledge seems to lead to slightly better results for word2vec except for \ac{RF} for level 1. Doc2vec, in contrast, often shows slightly better results without adding the knowledge. Another noticeable result is that macro results are often worse than the accuracy implied, except for the \ac{BERT} vectorizer. All these trends require explanation. To get a better insight into the black box of classifiers and vectorization techniques, it is helpful to look at the actual predictions of the classifiers.
+Looking at the results, we see some trends emerging. Comparing the vectorization techniques in both level 1 and level 3, the \ac{BERT} vectorizer has the best performance. The sparse ones perform better than the embedding techniques word2vec and do2vec for LR and SVM, while there is little difference for RF. Doc2vec performs the worst in general. Concerning the classifiers, \ac{RF} has lower performance overall but a better performance for word2vec and doc2vec compared to their results for LR and RF. While the deep learning model for level 1 has a comparable but lower performance than \ac{BERT} vectorization, it slips down to the performance of sparse vectors at level 3. Finally, the additional knowledge seems to lead to slightly better results for word2vec except for \ac{RF} for level 1. Doc2vec, in contrast, often shows slightly better results without adding the knowledge. Another noticeable result is that macro results are often worse than the accuracy implied, except for the \ac{BERT} vectorizer. All these trends require explanation. To get a better insight into the black box of classifiers and vectorization techniques, it is helpful to look at the actual predictions of the classifiers.
 
-\subsubsection*{Possible Explanations for Level 1 Results}
+\subsection*{Possible Explanations for Level 1 Results}
 For this purpose, the predictions of the test dataset are used. In the first step, the predictions for all methods and classifiers are obtained. Then the distribution of the class labels is analyzed to find possible patterns. The left-hand side of figure \ref{fig: F13} shows the share of prediction labels of \ac{LR} for all vectorization techniques except the ones with additional knowledge. For all methods, class 2 exhibit the highest prediction shares. 
 Interestingly, the share of the two embedding techniques, word2vec and docv2vec, is about the same but much higher than for other methods. Likewise, the sparse vectors form a group and have a substantially higher share than \ac{BERT}. If we look at the proportions of \ac{BERT}, the labels are more evenly distributed. There are two possible explanations for this. Either class 2 is represented in a high proportion in the test dataset, and word2vec and doc2vec have led to better recognition, or the classifiers are more or less biased towards class 2, depending on the method. The class distribution in Figure \ref{fig: F9} shows that the data is imbalanced in favor of class 2. In addition the macro scores, which capture the imbalanced data better, are lower for most models . Thus, it is likely that the classifiers are biased. 
 
-To shed light on this issue, one can look at the correct predictions. The right-hand side of figure \ref{fig: F13} shows the correct predictions for each method for \ac{LR}, as well as the number of true labels for each class. At first glance, it looks like the classifiers predicted class 2 very well, especially compared to \ac{BERT}. However, for the other labels, the two embedding techniques, doc2vec and word2vec, have a much worse performance than the other methods, indicating a bias. The situation is similar for the sparse vectors compared to BERT. Obviously, the excellent performance for class 2 is not due to the good differentiation of class 2, but to the fact that simply a very high proportion of predictions lay in class 2. 
-
-\begin{figure}
+\begin{figure}[hb!]
   \centering
   \begin{subfigure}[b]{0.475\textwidth}
       \centering
       \includegraphics[width=\textwidth]{predictions_LR.jpg}
-      {{\small Share of predictions labels for level 1 - LR}
+      { \bigskip
+        {\small Share of predictions labels for level 1 - LR}
       }    
   \end{subfigure}
   \hfill
@@ -773,8 +774,10 @@ To shed light on this issue, one can look at the correct predictions. The right-
       \includegraphics[width=\textwidth]{predictions_correct_relative_LR.jpg}
       {{\small Frequency of correct predictions for each labels and frequency of true labels - LR}}    
   \end{subfigure}
-\caption{\label{fig: F13} Confusion matrices - LR}
+\caption{\label{fig: F13} Predictions Level 1- LR}
 \end{figure}
+
+To shed light on this issue, one can look at the correct predictions. The right-hand side of figure \ref{fig: F13} shows the correct predictions for each method for \ac{LR}, as well as the number of true labels for each class. At first glance, it looks like the classifiers predicted class 2 very well, especially compared to \ac{BERT}. However, for the other labels, the two embedding techniques, doc2vec and word2vec, have a much worse performance than the other methods, indicating a bias. The situation is similar for the sparse vectors compared to \ac{BERT}. Obviously, the excellent performance for class 2 is not due to the good differentiation of class 2, but to the fact that simply a very high proportion of predictions lay in class 2. 
 
 \begin{figure}
   \centering
@@ -804,20 +807,16 @@ To shed light on this issue, one can look at the correct predictions. The right-
   \caption{\label{fig: F17} Confusion matrices - LR}
 \end{figure}
 
-To add further evidence for the presence of the bias, it is interesting to look at the predictions of class label 2 in comparison to the true labels. For this purpose, the confusion matrix as explained in \ref{tab: T1} can be considered. Figure \ref{fig: F17} shows the confusion matrices for all methods without additional knowledge. Also, \ac{TF-IDF} is left out because the sparse vectors behave relatively similarly. Thus, it is enough to check one of the techniques. The x-axis represents the predicted labels, and the y-axis the actual labels. For doc2vec and word2vec, a vertical line is visible at the predicted label 2. This line shows that both methods often classified labels as 2, although they belong to one of the other labels. At the same time, they did not do so for the other labels. For doc2vec, this vertical line is even more apparent. The count vectorizer also has a stronger vertical line compared to BERT, while BERT seems to have treated all labels equally. Figure \ref{fig: F17} thus again provides strong evidence for the bias.\footnote{Detecting a labeling bias for a classification algorithm requires systematic analysis, as proposed by \citet{jiang2020}. Since this is beyond the scope of this paper, the confusion matrix, which gives a good indication of whether a possible bias exists,
+To add further evidence for the presence of the bias, it is interesting to look at the predictions of class label 2 in comparison to the true labels. For this purpose, the confusion matrix as explained in \ref{tab: T1} can be considered. Figure \ref{fig: F17} shows the confusion matrices for all methods without additional knowledge. Also, \ac{TF-IDF} is left out because the sparse vectors behave relatively similarly. Thus, it is enough to check one of the techniques \footnote{For the sake of completeness, the TF-IDF confusion matrices are included in the appendix.} The x-axis represents the predicted labels, and the y-axis the actual labels. For doc2vec and word2vec, a vertical line is visible at the predicted label 2. This line shows that both methods often classified labels as 2, although they belong to one of the other labels. At the same time, they did not do so for the other labels. For doc2vec, this vertical line is even more apparent. The count vectorizer also has a stronger vertical line compared to \ac{BERT}, while \ac{BERT} seems to have treated all labels equally. Figure \ref{fig: F17} thus again provides strong evidence for the bias.\footnote{Detecting a labeling bias for a classification algorithm requires systematic analysis, as proposed by \citet{jiang2020}. Since this is beyond the scope of this paper, the confusion matrix, which gives a good indication of whether a possible bias exists,
 is used here.}
 
-Investigating \ac{SVM}, it shows the same picture as \ac{LR}. The corresponding plots are in the appendix. In contrast, \ac{RF} behaves differently. Figure \ref{fig: F18} shows the share of predictions on the left-hand side and the frequency of correct predictions on the right-hand side. While the sparse techniques almost maintain their share of label predictions, word2vec shows a significant drop in the share of predictions for class 2. It is also lower for doc2vec, but not to the same extent. Looking at the right-hand side figure, we can conclude that the sparse techniques and word2vec have the same number of predictions for almost all labels and are closer to BERT. Just like using \ac{LR},doc2vec classifies again very well for label 2 because the share of predictions for 2 is generally higher, but it underestimates the other labels. From Figure 18, no clear bias can be inferred for the sparse techniques and word2vec. However, there seems to be no difference between the methods. The confusion matrices show no difference between word2vec and count vectorizer, but there is slight favoritism for label 2. Meanwhile, doc2vec shows a clear favoring of label 2. \ac{BERT} remains unchanged.
-
-\begin{figure}
+\begin{figure}[hb!]
   \centering
   \begin{subfigure}[b]{0.475\textwidth}
       \centering
       \includegraphics[width=\textwidth]{predictions_RF.jpg}
       {
-        {
-
-
+        {\bigskip
           \small Share of predictions labels for level 1 - RF}
       }    
   \end{subfigure}
@@ -827,11 +826,11 @@ Investigating \ac{SVM}, it shows the same picture as \ac{LR}. The corresponding 
       \includegraphics[width=\textwidth]{predictions_correct_relative_RF.jpg}
       {{\small Frequency of correct predictions for each labels and frequency of true labels - \ac{RF}}}    
   \end{subfigure}
-\caption{\label{fig: F18} Confusion matrices level 1- RF}
+\caption{\label{fig: F18} Predictions Level 1- RF}
 \end{figure}
 
 
-\begin{figure}
+\begin{figure}[hb!]
   \centering
   \begin{subfigure}[b]{0.475\textwidth}
       \centering
@@ -859,26 +858,21 @@ Investigating \ac{SVM}, it shows the same picture as \ac{LR}. The corresponding 
   \caption{\label{fig: F20} Confusion matrices level 1 - RF}
 \end{figure}
 
+Investigating \ac{SVM}, it shows the same picture as \ac{LR}. The corresponding plots are in the appendix. In contrast, \ac{RF} behaves differently. Figure \ref{fig: F18} shows the share of predictions on the left-hand side and the frequency of correct predictions on the right-hand side. While the sparse techniques almost maintain their share of label predictions, word2vec shows a significant drop in the share of predictions for class 2. It is also lower for doc2vec, but not to the same extent. Looking at the right-hand side figure, we can conclude that the sparse techniques and word2vec have the same number of predictions for almost all labels and are closer to \ac{BERT}. Just like using \ac{LR}, doc2vec classifies again very well for label 2 because the share of predictions for 2 is generally higher, but it underestimates the other labels. From Figure 18, no clear bias can be inferred for the sparse techniques and word2vec. However, there seems to be no difference between the methods. The confusion matrices show no difference between word2vec and count vectorizer, but there is slight favoritism for label 2. Meanwhile, doc2vec shows a clear favoring of label 2. \ac{BERT} remains unchanged.
+
 Based on the previous analyses, the question arises as to how the results obtained relate to the performances in tables \ref{tab: T5} and \ref{tab: T6}. In light of the literature on fundamentally imbalanced data, the analysis provides a possible explanation for the disparity in performance. In their research, \citet{padurariu2019} compared imbalanced text data with several vectorization and classification techniques. They conclude for smaller datasets that sparse techniques are not as biased as more complex techniques, like doc2vec. Furthermore, the classifiers play a role as well. Decision Trees can handle imbalanced data better than linear techniques like \ac{SVM} and \ac{LR}. Systematic reviews and empirical studies confirm the better handling of imbalanced data by Decision Trees and \ac{RF} \citep{kaur2019, muchlinski2016, krawczyk2016}. 
 
 In line with this literature, the analysis above shows that for the linear classifiers the sparse vectors are not as affected by the bias as word2vec and doc2vec. This is reflected in the scores of LR and of SVM in Table \ref{tab: T5} and \ref{tab: T6} and may explain the better performance compared to word2vec and doc2vec. Besides a strong bias, the worst performance of doc2vec could be attributed to the fact that doc2vec was not trained from a pretrained model. According to the fact that \ac{BERT} is not affected by the bias, it performs better. Furthermore, although the bias in RF is present, all methods are affected by it to a similar extent, except for doc2vec. This explains the decrease of the differences in scores between the sparse techniques and word2vec and the persistent poor performance of doc2vec. At the same time, it also explains that word2vec and doc2vec perform better overall with RF because RF can handle imbalanced data better. Since both methods are more affected by the bias overall, this has positively affected their performance. The outstanding performance of \ac{BERT} with \ac{RF} cannot be explained by the analysis above.
 
-Besides this, the analysis does not explain the generally better performance of LR and SVM compared to RF for the dense techniques and \ac{BERT}. One would expect RF to perform better overall based on the imbalanced data. However, \ac{SVM} is said to handle large features better since they can learn independently of the dimensionality of the feature space. They are known to perform well for sparse vectors with a lot of relevant features, which is usually the case for text classification \citep{Joachims1998}. In addition for multi-class tasks, as mentione
-d in the literature review, often different versions of \ac{SVM} are used and showed good performance \citep{Aiolli2005, Angulo2003,Benabdeslem2006, guo2015, Mayoraz1999,Tang2019,tomar2015comparison}. \ac{LR} is preferred mainly for the sake of interpretability. A clear theoretical argument for the better performance of LR in this application cannot be found. Ultimately, the results confirm previous findings in the literature. The performance of SVM and especially of \ac{LR} might be due to the fact that \ac{LR} and \ac{SVM} simply work better with the data and the feature \citep{maglogiannis2007}. Considering the deep learning \ac{BERT} confusion matrix in figure \ref{fig: F25}, there seems to be no bias problem, which leaves the question of why does \ac{BERT} vectorizer with \ac{LR} work better? One explanation is the difference in the size of the data. The \ac{BERT} vectorizer was trained with much more data. The deep learning model probably performs better with the bigger dataset. However, the interpretability and transparency are lower compared to the \ac{BERT} vectorizer. As explained in the methods section, I controlled which pairs were given as input for the fine-tuning of the \ac{BERT} vectorizer and with what similarity, making it much more intuitive than the deep learning model that extracts features automatically. 
-
-\begin{figure}[hb!]
+\begin{figure}[]
   \center
   \includegraphics[scale=0.5]{cm_bert_clf_l1.jpg}
   \caption{\label{fig: F25} Covariance Matrix of BERT - Level 1)}
 \end{figure}
 
+Besides this, the analysis does not explain the generally better performance of LR and SVM compared to RF for the dense techniques and \ac{BERT}. One would expect RF to perform better overall based on the imbalanced data. However, \ac{SVM} is said to handle large features better since they can learn independently of the dimensionality of the feature space. They are known to perform well for sparse vectors with a lot of relevant features, which is usually the case for text classification \citep{Joachims1998}. In addition for multi-class tasks, as mentioned in the literature review, often different versions of \ac{SVM} are used and showed good performance \citep{Aiolli2005, Angulo2003,Benabdeslem2006, guo2015, Mayoraz1999,Tang2019,tomar2015comparison}. \ac{LR} is preferred mainly for the sake of interpretability. A clear theoretical argument for the better performance of LR in this application cannot be found. Ultimately, the results confirm previous findings in the literature. The performance of SVM and especially of \ac{LR} might be due to the fact that \ac{LR} and \ac{SVM} simply work better with the data and the feature \citep{maglogiannis2007}. Considering the deep learning \ac{BERT} confusion matrix in figure \ref{fig: F25}, there seems to be no bias problem, which leaves the question of why does \ac{BERT} vectorizer with \ac{LR} work better? One explanation is the difference in the size of the data. The \ac{BERT} vectorizer was trained with much more data. The deep learning model probably performs better with the bigger dataset. However, the interpretability and transparency are lower compared to the \ac{BERT} vectorizer. As explained in the methods section, I controlled which pairs were given as input for the fine-tuning of the \ac{BERT} vectorizer and with what similarity, making it much more intuitive than the deep learning model that extracts features automatically. 
 
-% The additional models for level 1 show no meaningful differences. The analysis of the covariance matrices does not show any significant results as well. For the sake of completeness, these are listed in the appendix.
-
-From the last comparison perspective, it is still unexplained why doc2vec\_II performed lower, and word2vec\_II performed slightly better. \ref{fig: F23} and \ref{fig: F24} report the corresponding confusion matrices for \ac{LR} and \ac{RF} respectively. The share of predictions and the correct predictions are reported in the appendix. Considering word2vec, there are no considerable differences. Both models seem to be biased to the same extent using \ac{LR}. The same holds for \ac{RF}. Thus, the slight variation between both models might be due to the additional knowledge. In contrast, doc2vec\_II has more predictions with label $2$ belonging to other labels. Therefore, the additional knowledge in the doc2vec model might be somewhat more biased, or adding the additional knowledge is harmful to the doc2vec vectorizer. 
-
-
-\begin{figure}
+\begin{figure}[]
   \centering
   \begin{subfigure}[b]{0.475\textwidth}
       \centering
@@ -906,7 +900,7 @@ From the last comparison perspective, it is still unexplained why doc2vec\_II pe
   \caption{\label{fig: F23} Confusion matrices word2vec with and without additional knowldege level 1}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[]
   \centering
   \begin{subfigure}[b]{0.475\textwidth}
       \centering
@@ -934,6 +928,8 @@ From the last comparison perspective, it is still unexplained why doc2vec\_II pe
   \caption{\label{fig: F24} Confusion matrices doc2vec with and without additional knowldege level 1}
 \end{figure}
 
+\FloatBarrier
+From the last comparison perspective, it is still unexplained why doc2vec\_II performed lower, and word2vec\_II performed slightly better. \ref{fig: F23} and \ref{fig: F24} report the corresponding confusion matrices for \ac{LR} and \ac{RF} respectively. The share of predictions and the correct predictions are reported in the appendix. Considering word2vec, there are no considerable differences. Both models seem to be biased to the same extent using \ac{LR}. The same holds for \ac{RF}. Thus, the slight variation between both models might be due to the additional knowledge. In contrast, doc2vec\_II has more predictions with label $2$ belonging to other labels. Therefore, the additional knowledge in the doc2vec model might be somewhat more biased, or adding the additional knowledge is harmful to the doc2vec vectorizer. 
 
 \subsubsection*{Possible Explanations for Level 3 Results}
 Looking at figure \ref{fig: F9} and the fact that level 3 reveals quite the same trends for the classifiers and methods as level 1, it is reasonable to assume that the classifiers of level 3 suffer from the same problem. However, the considerably higher number of classes makes it challenging to examine the bias visually, as was done for level 1 for the first two analyses. Instead, only the confusion matrices are studied.
@@ -1014,7 +1010,7 @@ The additional knowledge models behave similarly to level 1. The confusion matri
 \section{Conclusion and Limitations}
 The starting point of this work was to examine the classification of job titles of German job postings with the taxonomy \ac{KldB} 2010. Based on the literature on text classification and the challenges of short text classification, the analysis was conducted along three pillar: application of different vectorization techniques, training of different classification algorithms, and treatment of short job titles by adding additional knowledge. 
 
-The results revealed some interesting trends. The \ac{BERT} vectorizer in combination with \ac{LR} has shown the best performance. Due to imbalanced data, the other classification algorithms might have developed a label bias in different settings, both for level 1 and level 3. \ac{RF} can reduce this bias for doc2vec and word2vec, but not to the extent that it overpowers the sparse vectors or BERT results, especially in combination with the linear classification algorithms. The deep learning model of \ac{BERT} performs, in general and especially for level 3, worse than the \ac{BERT} vectorizer. Adding additional knowledge does not lead to clear improvement. The performance of word2vec seems to improve slightly, whereas that of doc2vec deteriorates slightly. 
+The results revealed some interesting trends. The \ac{BERT} vectorizer in combination with \ac{LR} has shown the best performance. Due to imbalanced data, the other classification algorithms might have developed a label bias in different settings, both for level 1 and level 3. \ac{RF} can reduce this bias for doc2vec and word2vec, but not to the extent that it overpowers the sparse vectors or \ac{BERT} results, especially in combination with the linear classification algorithms. The deep learning model of \ac{BERT} performs, in general and especially for level 3, worse than the \ac{BERT} vectorizer. Adding additional knowledge does not lead to clear improvement. The performance of word2vec seems to improve slightly, whereas that of doc2vec deteriorates slightly. 
 
 In conclusion, this paper suggests that the \ac{BERT} vectorizer is, due to the stable and excellent performance against imbalanced data and compared to the other methods, a promising method for classifying job titles into the \textit{kldb} classes, especially in combination with \ac{LR}. The possibility of controlling which pairs are used as input for the fine-tuning gives the \ac{BERT} vectorizer the advantage of being interpretable and transparent. Furthermore, there is much space for improvements with this vectorizer method. Future research could combine pairs in other ways, for instance by including the label names of the \textit{kldb} or by combining search words for different levels with different probabilities. This would result in vast datasets with millions of pairs for the fine-tuning process. However, corresponding computing resources must then also be available for the training process. 
 
