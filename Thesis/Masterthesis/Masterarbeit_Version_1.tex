@@ -865,7 +865,7 @@ is used here.}
   \caption{\label{fig: F20} Confusion Matrices Level 1 - RF}
 \end{figure}
 
-Investigating \ac{SVM}, it shows the same picture as \ac{LR}. The corresponding plots are given in the appendix \ref{sec:B}. In contrast, \ac{RF} behaves differently. Figure \ref{fig: F18} shows the share of predictions on the left-hand side and the frequency of correct predictions on the right-hand side. While the sparse techniques almost maintain their share of label predictions, word2vec shows a significant drop in the share of predictions for class 2. It is also lower for doc2vec, but not to the same extent. Looking at the right-hand side figure, we can conclude that the sparse techniques and word2vec have the same number of predictions for almost all labels and are closer to \ac{BERT}. Just like using \ac{LR}, doc2vec classifies again very well for label 2 because the share of predictions for 2 is generally higher, but it underestimates the other labels. From Figure \ref{fig: F18}, no clear bias can be inferred for the sparse techniques and word2vec. The confusion matrices show no difference between word2vec and count vectorizer, but there is slight favoritism for label 2. Meanwhile, doc2vec shows a clear favoring of label 2. \ac{BERT} remains unchanged.
+Investigating \ac{SVM}, it shows a similar picture for the confusion matrices as \ac{LR}. However, the share of predictions for label 2 differs from LR in the sense that both sparse vectors have more predictions for label 2 than using \ac{LR} and word2vec has a significantly lower share for label 2. The corresponding plots are given in the appendix \ref{sec:B}. In contrast, \ac{RF} behaves differently. Figure \ref{fig: F18} shows the share of predictions on the left-hand side and the frequency of correct predictions on the right-hand side. While the sparse techniques almost maintain their share of label predictions, word2vec shows a significant drop in the share of predictions for class 2. It is also lower for doc2vec, but not to the same extent. Looking at the right-hand side figure, we can conclude that the sparse techniques and word2vec have the same number of predictions for almost all labels and are closer to \ac{BERT}. Just like using \ac{LR}, doc2vec classifies again very well for label 2 because the share of predictions for 2 is generally higher, but it underestimates the other labels. From Figure \ref{fig: F18}, no clear bias can be inferred for the sparse techniques and word2vec. The confusion matrices show no difference between word2vec and count vectorizer, but there is slight favoritism for label 2. Meanwhile, doc2vec shows a clear favoring of label 2. \ac{BERT} remains unchanged.
 
 Based on the previous analyses, the question arises as to how the results obtained relate to the performances in tables \ref{tab: T5} and \ref{tab: T6}. In light of the literature on fundamentally imbalanced data, the analysis provides a possible explanation for the disparity in performance. In their research, \citet{padurariu2019} compared imbalanced text data with several vectorization and classification techniques. They conclude for smaller datasets that sparse techniques are not as biased as more complex techniques, like doc2vec. Furthermore, the classifiers play a role as well. Decision Trees can handle imbalanced data better than linear techniques like \ac{SVM} and \ac{LR}. Systematic reviews and empirical studies confirm the better handling of imbalanced data by Decision Trees and \ac{RF} \citep{kaur2019, muchlinski2016, krawczyk2016}. 
 
@@ -907,7 +907,7 @@ In line with this literature, the analysis above shows that for the linear class
 
 Besides this, the analysis does not explain the generally better performance of \ac{LR} and \ac{SVM} compared to \ac{RF} for the dense techniques and \ac{BERT}. One would expect \ac{RF} to perform better overall based on the imbalanced data. However, \ac{SVM} is said to handle large features better since they can learn independently of the dimensionality of the feature space. They are known to perform well for sparse vectors with a lot of relevant features, which is usually the case for text classification \citep{Joachims1998}. In addition for multi-class tasks, as mentioned in the literature review, often different versions of \ac{SVM} are used and showed good performance \citep{Aiolli2005, Angulo2003,Benabdeslem2006, guo2015, Mayoraz1999,Tang2019,tomar2015comparison}. \ac{LR} is preferred mainly for the sake of interpretability. A clear theoretical argument for the better performance of \ac{LR} in this application cannot be found. Ultimately, the results confirm previous findings in the literature. The performance of \ac{SVM} and especially of \ac{LR} might be due to the fact that \ac{LR} and \ac{SVM} simply work better with the data and the feature \citep{maglogiannis2007}. Considering the deep learning \ac{BERT} confusion matrix in figure \ref{fig: F25}, there seems to be no bias problem, which leaves the question of why does \ac{BERT} vectorizer with \ac{LR} work better? One explanation is the difference in the size of the data. The \ac{BERT} vectorizer was trained with much more data. The deep learning model probably performs better with the bigger dataset. However, the interpretability and transparency are lower compared to the \ac{BERT} vectorizer. As explained in the methods section, I controlled which pairs were given as input for the fine-tuning of the \ac{BERT} vectorizer and with what similarity, making it much more intuitive than the deep learning model that extracts features automatically. 
 
-From the last comparison perspective, it is still unexplained why doc2vec\_II performed lower, and word2vec\_II performed slightly better. Figure \ref{fig: F23} reports the corresponding confusion matrices for \ac{LR}. The share of predictions and the correct predictions are reported in the appendix \ref{sec:B}. Considering word2vec, there are no considerable differences. Both models seem to be biased to the same extent using \ac{LR}. The same holds for \ac{SVM} and \ac{RF}. The correponding matrices are reported in the appendix. Thus, the slight variation between both models might be due to the additional knowledge. In contrast, doc2vec\_II has more predictions with label $2$ belonging to other labels. Therefore, the additional knowledge in the doc2vec model might be somewhat more biased, or adding the additional knowledge is harmful to the doc2vec vectorizer. 
+From the last comparison perspective, it is still unexplained why doc2vec\_II performed lower, and word2vec\_II performed slightly better. Figure \ref{fig: F23} reports the corresponding confusion matrices for \ac{LR}. The share of predictions and the correct predictions are reported in the appendix \ref{sec:B}. Considering word2vec, there are no considerable differences. Both models seem to be biased to the same extent using \ac{LR}. The same holds for \ac{RF}. Only when using \ac{SVM}, the bias for word2vec\_II seems to have slightly decreased. The correponding matrices are reported in the appendix. Thus, the slight variation between both models might be due to the additional knowledge. In contrast, doc2vec\_II has more predictions with label $2$ belonging to other labels. Therefore, the additional knowledge in the doc2vec model might be somewhat more biased, or adding the additional knowledge is harmful to the doc2vec vectorizer. 
 
 \subsubsection*{Possible Explanations for Level 3 Results}
 Looking at figure \ref{fig: F9} and the fact that level 3 reveals quite the same trends for the classifiers and methods as level 1, it is reasonable to assume that the classifiers of level 3 suffer from the same problem. However, the considerably higher number of classes makes it challenging to examine the bias visually, as was done for level 1 for the first two analyses. Instead, only the confusion matrices are studied.
@@ -1042,7 +1042,7 @@ The paper was written as part of a project by cause\&effect DFSG UG, which colla
 \appendix
 \section{Data}
 \label{sec:A}
-\subsection*{Data snippet raw data}
+\subsection*{Data Snippet Raw Data}
 \begin{lstlisting}[language=json]
   {
     "hashId": "-IgNS05-jeri5aZhe0_VK35Y0-6xQAoADg3b0MyraTI=",
@@ -1116,7 +1116,7 @@ The paper was written as part of a project by cause\&effect DFSG UG, which colla
  {'id': '9', 'title': 'telefonische kundenbetreuung'}]
 \end{lstlisting}
 
-\subsection*{Class distribution of level 1 und level 3}
+\subsection*{Class Distribution of Level 1 und Level 3 (complete Dataset)}
 \begin{figure}[hb!]
   \begin{subfigure}{.5\textwidth}
     \centering
@@ -1136,11 +1136,139 @@ The paper was written as part of a project by cause\&effect DFSG UG, which colla
 \section{Prediction Results- Level 1}
 \label{sec:B}
 \subsection*{Predictions - SVM}
-\subsection*{Confusion Matrices for all Vectorization Techniques - SVM}
-\subsection*{Confusion matrices TF-IDF - LR and RF}
-\subsection*{Predictions of word2vec and doc2vec with additional knowledge}
+\begin{figure}[hb!]
+  \centering
+  \begin{subfigure}[b]{0.475\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{predictions_SVM_L1.jpg}
+      {
+        {\bigskip
+          \small Share of predictions labels for level 1 - SVM}
+      }    
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}  
+      \centering 
+      \includegraphics[width=\textwidth]{predictions_correct_relative_SVM_L1.jpg}
+      {{\small Frequency of correct predictions for each labels and frequency of true labels - SVM}}    
+  \end{subfigure}
+\caption{Predictions Level 1- SVM}
+\end{figure}
 
-\subsection*{Confusion Matrices Word2vec and Doc2vec - Additional Knowledge}
+\newpage
+
+\subsection*{Confusion Matrices for all Vectorization Techniques - SVM}
+\begin{figure}[hb!]
+  \centering
+  \begin{subfigure}[b]{0.475\textwidth}  
+    \centering 
+    \includegraphics[width=\textwidth]{cm_count_SVM_L1.jpg}
+    {{\small Count Vectorizer SVM}}    
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}   
+      \centering 
+      \includegraphics[width=\textwidth]{cm_bert_SVM_L1.jpg}
+      {{\small BERT}}    
+  \end{subfigure}  
+  \vskip\baselineskip
+  \begin{subfigure}[b]{0.475\textwidth}  
+    \centering 
+    \includegraphics[width=\textwidth]{cm_word2vec_without_SVM_L1.jpg}
+    {{\small Word2vec\_I SVM}}    
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}   
+      \centering 
+      \includegraphics[width=\textwidth]{cm_doc2vec_without_SVM_L1.jpg}
+      {{\small Doc2vec\_I SVM}}    
+  \end{subfigure}
+  \vskip\baselineskip
+  \begin{subfigure}[b]{0.475\textwidth}  
+    \centering 
+    \includegraphics[width=\textwidth]{cm_tfidf_SVM_L1.jpg}
+    {{\small Word2vec\_I SVM}}    
+  \end{subfigure}
+  \caption{Confusion Matrices for all Vectorization Techniques - SVM}
+\end{figure}
+
+\newpage
+\FloatBarrier
+\subsection*{Confusion matrices TF-IDF - LR and RF}
+\begin{figure}[hb!]
+  \centering
+  \begin{subfigure}[b]{0.475\textwidth}
+      \centering
+      \includegraphics[width=\textwidth]{cm_tfidf_LR_L1.jpg}
+      {{\small TF-IDF LR}}    
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}  
+      \centering 
+      \includegraphics[width=\textwidth]{cm_tfidf_RF_L1.jpg}
+      {{\small TF-IDF RF}}    
+  \end{subfigure}
+\caption{TF-IDF RF}
+\end{figure}
+
+\subsection*{Predictions of word2vec and doc2vec with additional knowledge}
+\begin{figure}[hb!]
+  \centering
+  \begin{subfigure}[b]{0.475\textwidth}  
+    \centering 
+    \includegraphics[width=\textwidth]{predictions_correct_relative_word_doc_LR.jpg}
+    {{\small Predictions additional knowledge - LR}}    
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}   
+      \centering 
+      \includegraphics[width=\textwidth]{predictions_correct_relative_word_doc_RF.jpg}
+      {{\small Predictions additional knowledge - RF}}    
+  \end{subfigure}  
+  \vskip\baselineskip
+  \begin{subfigure}[b]{0.475\textwidth}  
+    \centering 
+    \includegraphics[width=\textwidth]{predictions_correct_relative_word_doc_SVM.jpg}
+    {{\small Predictions additional knowledge - SVM}}    
+  \end{subfigure}
+  \caption{Predictions additional knowledge for all classifiers}
+\end{figure}
+
+\newpage
+
+\subsection*{Confusion Matrices Word2vec and Doc2vec - Additional Knowledge - SVM}
+\begin{figure}[hb!]
+  \centering
+  \begin{subfigure}[b]{0.475\textwidth}  
+    \centering 
+    \includegraphics[width=\textwidth]{cm_word2vec_without_SVM_L1.jpg}
+    {{\small word2vec\_I SVM}}    
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}   
+      \centering 
+      \includegraphics[width=\textwidth]{cm_word2vec_with_SVM_L1.jpg}
+      {{\small word2vec\_II SVM}}    
+  \end{subfigure}  
+  \vskip\baselineskip
+  \begin{subfigure}[b]{0.475\textwidth}  
+    \centering 
+    \includegraphics[width=\textwidth]{cm_doc2vec_without_SVM_L1.jpg}
+    {{\small doc2vec\_I SVM}}    
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[b]{0.475\textwidth}   
+      \centering 
+      \includegraphics[width=\textwidth]{cm_doc2vec_with_SVM_L1.jpg}
+      {{\small doc2vec\_II SVM}}    
+  \end{subfigure}
+  \caption{Confusion Matrices Word2vec and Doc2vec With and Without Additional Knowldege Level 1 - SVM}
+\end{figure}
+
+\newpage
+
+\FloatBarrier
+\subsection*{Confusion Matrices Word2vec and Doc2vec - Additional Knowledge - RF}
 \begin{figure}[hb!]
   \centering
   \begin{subfigure}[b]{0.475\textwidth}  
@@ -1166,7 +1294,7 @@ The paper was written as part of a project by cause\&effect DFSG UG, which colla
       \includegraphics[width=\textwidth]{cm_doc2vec_with_RF.jpg}
       {{\small doc2vec\_II RF}}    
   \end{subfigure}
-  \caption{\label{fig: F24} Confusion Matrices Word2vec and Doc2vec With and Without Additional Knowldege Level 1 - RF}
+  \caption{Confusion Matrices Word2vec and Doc2vec With and Without Additional Knowldege Level 1 - RF}
 \end{figure}
 
 \newpage
@@ -1176,7 +1304,7 @@ The paper was written as part of a project by cause\&effect DFSG UG, which colla
 \begin{figure}[hb!]
   \center
   \includegraphics[scale=0.5]{cm_bert_clf_3.jpg}
-  \caption{\label{fig: F26} Confusion Matrix - BERT Deep Learning Model}
+  \caption{Confusion Matrix - BERT Deep Learning Model}
 \end{figure}
 
 \newpage
@@ -1194,7 +1322,7 @@ The paper was written as part of a project by cause\&effect DFSG UG, which colla
       \includegraphics[width=\textwidth]{cm_tfidf_RF.jpg}
       {{\small TF-IDF - RF}}    
   \end{subfigure}  
-  \caption{\label{fig: F24} Confusion Matrices TF-IDF - LR and RF}
+  \caption{Confusion Matrices TF-IDF - LR and RF}
 \end{figure}
 
 \newpage
@@ -1230,7 +1358,7 @@ The paper was written as part of a project by cause\&effect DFSG UG, which colla
     \includegraphics[width=\textwidth]{cm_tfidf_SVM.jpg}
     {{\small Word2vec\_I SVM}}    
   \end{subfigure}
-  \caption{\label{fig: F29} Confusion Matrices for all Vectorization Techniques - SVM}
+  \caption{Confusion Matrices for all Vectorization Techniques - SVM}
 \end{figure}
 
 \end{document}
