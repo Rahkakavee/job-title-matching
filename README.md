@@ -6,8 +6,7 @@ This repository provides the source code for the Masterthesis "Job Title Classif
 
 The source code is structured as follows: 
 ```
-src                                                            
-├─ descriptive                                             
+src                                                       ├─descriptive                                             
 │  ├─ descriptive_analysis                                 
 │  ├─ limitation_analysis                                  
 ├─ focussing                                               
@@ -34,7 +33,7 @@ src
 ## B. Pipline of the Work
 The pipeline of the work is presented below. The code is built in parallel to the steps of the pipeline. Transformed Data I refers to the vectorizer folder and Transformed Data II to the reduction. The training of the classification algorithms can be found in modeling/ training. There are two versions of the training. One with k-fold classification and one without. 
 
-![]()
+![](pipeline_MA.png)
 
 ## C. Training the classifiers 
 - The models used for the training process are not uploaded. Please create the vectorizer models by using the respecitve scripts in the folder vectorizer. 
