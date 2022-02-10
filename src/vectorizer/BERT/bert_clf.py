@@ -5,7 +5,7 @@ import transformers
 from transformers import AutoTokenizer, TFAutoModelForSequenceClassification
 import json
 
-"""BERT Model with one Fine tuning layer and classification. This model uses TPU for training. Run in Google Colab"""
+"""BERT Model with one Fine tuning layer and classification. This model uses TPU for training. If possible run with TPU (e.g. Google Colab) or without TPU on machine (higher runtime)"""
 
 tpu = tf.distribute.cluster_resolver.TPUClusterResolver()
 tf.config.experimental_connect_to_cluster(tpu)

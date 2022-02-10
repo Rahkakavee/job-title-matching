@@ -11,8 +11,8 @@ class TFIDF:
         self.vectorizer.fit(self.train_sentences)
 
     def transform_data(self):
+        self.fit_vectorizer()
         if len(self.test_sentences) > 0:
-            self.fit_vectorizer()
             train = self.vectorizer.transform(self.train_sentences).toarray()
             test = self.vectorizer.transform(self.test_sentences).toarray()
             return train, test
