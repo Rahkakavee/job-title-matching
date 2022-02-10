@@ -15,6 +15,7 @@ class LRClassifier:
             C=1.0,
             solver="lbfgs",
             multi_class="multinomial",
+            max_iter=10000,
         )
 
         self.train = train
@@ -29,28 +30,30 @@ class LRClassifier:
         """evaluate data"""
         accuracy = self.clf.score(X=self.test, y=self.y_test)
 
+        predictions = self.clf.predict(self.test)
+
         precision_score_macro = precision_score(
-            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
+            y_pred=predictions, y_true=self.y_test, average="macro"
         )
 
         precision_score_micro = precision_score(
-            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="micro"
+            y_pred=predictions, y_true=self.y_test, average="micro"
         )
 
         recall_score_macro = recall_score(
-            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
+            y_pred=predictions, y_true=self.y_test, average="macro"
         )
 
         recall_score_micro = recall_score(
-            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="micro"
+            y_pred=predictions, y_true=self.y_test, average="micro"
         )
 
         f1_score_macro = f1_score(
-            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
+            y_pred=predictions, y_true=self.y_test, average="macro"
         )
 
         f1_score_micro = f1_score(
-            y_pred=self.clf.predict(self.test),
+            y_pred=predictions,
             y_true=self.y_test,
             average="micro",
         )

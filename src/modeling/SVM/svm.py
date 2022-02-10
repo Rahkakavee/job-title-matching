@@ -15,13 +15,15 @@ class SVMClassifier:
         self.clf = OneVsRestClassifier(
             BaggingClassifier(
                 SVC(C=1.0, kernel="linear", gamma="scale"),
-                max_samples=1.0,
+                max_samples=1.0 / n_estimators,
                 n_estimators=n_estimators,
                 n_jobs=-1,
                 verbose=True,
             )
         )
-
+        # self.clf = OneVsRestClassifier(
+        #     SVC(C=1.0, kernel="linear", gamma="scale", verbose=True, max_iter=10000), n_jobs=-1
+        # )
         self.train = train
         self.test = test
         self.y_train = y_train
@@ -32,30 +34,33 @@ class SVMClassifier:
 
     def evaluate(self, output_dict: bool) -> dict:
         """evaluate data"""
+
+        predictions = self.clf.predict(self.test)
+
         accuracy = self.clf.score(X=self.test, y=self.y_test)
 
         precision_score_macro = precision_score(
-            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
+            y_pred=predictions, y_true=self.y_test, average="macro"
         )
 
         precision_score_micro = precision_score(
-            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="micro"
+            y_pred=predictions, y_true=self.y_test, average="micro"
         )
 
         recall_score_macro = recall_score(
-            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
+            y_pred=predictions, y_true=self.y_test, average="macro"
         )
 
         recall_score_micro = recall_score(
-            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="micro"
+            y_pred=predictions, y_true=self.y_test, average="micro"
         )
 
         f1_score_macro = f1_score(
-            y_pred=self.clf.predict(self.test), y_true=self.y_test, average="macro"
+            y_pred=predictions, y_true=self.y_test, average="macro"
         )
 
         f1_score_micro = f1_score(
-            y_pred=self.clf.predict(self.test),
+            y_pred=predictions,
             y_true=self.y_test,
             average="micro",
         )
