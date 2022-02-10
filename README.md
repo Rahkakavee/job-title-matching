@@ -6,7 +6,8 @@ This repository provides the source code for the Masterthesis "Job Title Classif
 
 The source code is structured as follows: 
 ```
-src                                                       ├─descriptive                                             
+src                                                       
+├─descriptive                                             
 │  ├─ descriptive_analysis                                 
 │  ├─ limitation_analysis                                  
 ├─ focussing                                               
