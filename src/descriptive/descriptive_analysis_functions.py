@@ -166,10 +166,9 @@ def co_occurence_with_kldbs(data: List, kldbs_dkzs: Dict):
         index="alternativeKldB", columns="kldb", values="countings"
     )
 
+    cmap = sns.color_palette("Blues", as_cmap=True)
     pyplot.figure(figsize=(13, 13))
-    ax = sns.heatmap(
-        df_pivot_, cmap="mako_r", annot=True, annot_kws={"size": 8}, fmt="g"
-    )
+    ax = sns.heatmap(df_pivot_, cmap=cmap, annot=True, annot_kws={"size": 8}, fmt="g")
     ax.invert_xaxis()
     ax.set_xlabel("Hauptkldbs")
     ax.set_ylabel("Alternativekldbs")
@@ -193,6 +192,6 @@ def kldbs_counting(data: List, searchterms: List):
         xlabel="kldbs level 3",
         ylabel="Frequency in percent",
         legend=False,
-        color="lightseagreen",
+        color="lightblue",
     )
     return plot

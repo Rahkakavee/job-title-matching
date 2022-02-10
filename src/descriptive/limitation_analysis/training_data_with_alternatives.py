@@ -106,7 +106,7 @@ plt_softwareentwickler = co_occurence_with_kldbs(
     data=softwareentwickler, kldbs_dkzs=kldbs_dkzs
 )
 
-fig_servicekraft = plt_servicekraft.get_figure()
-fig_servicekraft.savefig(
+fig_softwareentwickler = plt_softwareentwickler.get_figure()
+fig_softwareentwickler.savefig(
     "visualization/limitations/co_occurence_softwareentwickler.jpg"
 )
